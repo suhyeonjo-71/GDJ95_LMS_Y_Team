@@ -20,6 +20,7 @@ import com.example.lms.service.admin.AdminCommonMetaDataService;
 import com.example.lms.service.admin.SysAuthService;
 import com.example.lms.service.user.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -48,9 +49,13 @@ public class UserManagementController {
     @GetMapping("/userManagement")
     public String userManagement(Model model, 
                                  @RequestParam(defaultValue = "1") Integer page, 
-                                 @RequestParam(defaultValue = "10") Integer limit) {
+                                 @RequestParam(defaultValue = "10") Integer limit,
+                                 HttpSession session) {
         
-        // 페이징 계산
+    	SysUserDTO sessionUserDto = (SysUserDTO) session.getAttribute("loginUser");
+    	String loginUserName = sessionUserDto.getUserName();
+
+    	// 페이징 계산
         // page 1 -> startRow 0, page 2 -> startRow 10
         Integer startRow = (page - 1) * limit;
         
@@ -68,6 +73,7 @@ public class UserManagementController {
         
         log.info("totalCount : " + totalCount);
         
+        model.addAttribute("loginUserName", loginUserName);
         model.addAttribute("userList", userInfoMapList);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);

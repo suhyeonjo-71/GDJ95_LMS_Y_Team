@@ -47,6 +47,7 @@ public class UserController {
 			
 			// 세션불러오기
 			SysUserDTO loginSysUserDTO = (SysUserDTO) session.getAttribute("loginUser");
+			String loginUserName = loginSysUserDTO.getUserName();
 			
 			
 			// 사이드 메뉴 권한 필터 처리
@@ -64,6 +65,7 @@ public class UserController {
 			Map<String, Object> userInfoMap = userService.userInfoMap(loginSysUserDTO);
 			
 			//모델 반환값
+			model.addAttribute("loginUserName", loginUserName);
 			model.addAttribute("userInfo", userInfoMap);
 			log.info("userInfoMap 조회 완료: {}", userInfoMap);
 			model.addAttribute("useAdmin", useAdmin);

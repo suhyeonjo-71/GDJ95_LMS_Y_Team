@@ -162,7 +162,7 @@ public class StudentCourseService {
             dto.setAssignmentNo(ass.getAssignmentNo());
             dto.setAssignmentTitle(ass.getAssignmentTitle());
             dto.setAssignmentDeadline(ass.getAssignmentDeadline());
-            dto.setAssignmentSubmitted(ass.getSubmitted());
+            dto.setAssignmentSubmitted(ass.getAssignmentSubmitted());
         }
 
         // 출석 요약

@@ -49,6 +49,7 @@ public class CourseManagementController {
     	
     	SysUserDTO sessionUserDto = (SysUserDTO) session.getAttribute("loginUser");
     	String authCd = sessionUserDto.getAuthCode();
+    	String loginUserName = sessionUserDto.getUserName();
 
         // 학생이면
         if (authCd.equals("S001")) {
@@ -95,7 +96,7 @@ public class CourseManagementController {
             log.info("totalCounttotalCounttotalCount" + totalCount);
             log.info("totalPagestotalPagestotalPages" + totalPages);
             
-            
+            model.addAttribute("loginUserName", loginUserName);
             model.addAttribute("courseList", courseList);
             model.addAttribute("selectCourseYearSemesterList", selectCourseYearSemesterList);
             model.addAttribute("currentPage", page);
@@ -127,6 +128,8 @@ public class CourseManagementController {
         SysUserDTO sessionUserDto = (SysUserDTO) session.getAttribute("loginUser");
     	String authCd = sessionUserDto.getAuthCode();
     	Integer userNo = sessionUserDto.getUserNo();
+    	
+    	String loginUserName = sessionUserDto.getUserName();
 
     	log.info("userNouserNouserNouserNouserNouserNouserNouserNouserNo1 : " + userNo);
     	
@@ -167,6 +170,7 @@ public class CourseManagementController {
             Integer totalCount = (Integer) courseMap.get("totalCount");
             Integer totalPages = (Integer) courseMap.get("totalPages");
 
+            model.addAttribute("loginUserName", loginUserName);
             model.addAttribute("courseList", courseList);
             model.addAttribute("selectCourseYearSemesterList", selectCourseYearSemesterList);
             model.addAttribute("currentPage", page);
