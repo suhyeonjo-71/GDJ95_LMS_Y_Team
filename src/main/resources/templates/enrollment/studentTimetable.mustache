@@ -2,93 +2,192 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>내 시간표</title>
+    <title>내 시간표 | 학사관리시스템</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <style> body { font-family: 'Pretendard', sans-serif; } </style>
+    <style>
+        /* ============================================
+           RESET & GLOBAL
+        ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #F5F7FA;
+            color: #333;
+        }
+
+        /* ============================================
+           CARD — 전체 박스
+        ============================================ */
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 14px;
+            padding: 30px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 4px 20px rgba(30, 64, 175, 0.12);
+            transition: transform .3s ease;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        /* 중심 정렬 */
+        .timetable-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* ============================================
+           TABLE 
+        ============================================ */
+        .table-wrap {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #E5E7EB;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        thead th {
+            background-color: #EFF6FF;
+            color: #1E3A8A;
+            padding: 12px;
+            font-weight: 600;
+            border-bottom: 2px solid #DBEAFE;
+        }
+
+        .compact-cell {
+            height: 65px !important;
+        }
+
+        tbody td {
+            border: 1px solid #E5E7EB;
+            padding: 0;
+        }
+
+        /* ============================================
+           시간표 블록
+        ============================================ */
+        .timetable-block {
+            width: 100%;
+            height: 100%;
+            background-color: #DBEAFE; /* blue-200 */
+            color: #1E40AF;            /* blue-800 */
+            border-radius: 10px;
+            padding: 6px 4px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color .2s ease;
+        }
+        .timetable-block:hover {
+            background-color: #BFDBFE;
+        }
+
+        .timetable-name {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            color: #1E3A8A;
+        }
+        .timetable-room {
+            font-size: 11px;
+            color: #475569;
+        }
+        .timetable-time {
+            font-size: 11px;
+            color: #64748B;
+        }
+
+    </style>
 </head>
 
-<body class="bg-[#F5F7FA] text-gray-800">
+<body class="text-gray-800">
 
-{{> studentLayout/studentHeader }}
+{{> studentLayout/studentPageHeader }}
 
 <main class="max-w-6xl mx-auto px-4 py-10">
 
-    <!-- 타이틀 -->
-    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        <i class="fa-solid fa-calendar-days text-blue-600"></i>
-        내 시간표
-    </h2>
+    <!-- 전체 박스(Card) 시작 -->
+    <div class="card timetable-wrapper">
 
-    <!-- 시간표 전체 박스 -->
-    <div class="bg-white shadow-md rounded-xl border border-gray-200 p-6">
+        <!-- 페이지 제목 -->
+        <div class="mb-6">
+            <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                <i class="fa-solid fa-calendar-days text-blue-600"></i>
+                내 시간표
+            </h1>
+            <p class="text-sm text-gray-500 mt-1">
+                현재 학기 시간표입니다. 과목을 클릭하면 강의 상세 페이지로 이동합니다.
+            </p>
+        </div>
 
         <!-- 시간표 테이블 -->
-        <table class="w-full border-collapse text-sm text-gray-700">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="w-20">교시</th>
+                        <th>월</th>
+                        <th>화</th>
+                        <th>수</th>
+                        <th>목</th>
+                        <th>금</th>
+                    </tr>
+                </thead>
 
-            <!-- 요일 헤더 -->
-            <thead>
-            <tr class="bg-blue-50">
-                <th class="w-20 py-3 border">교시</th>
-                <th class="py-3 border">월</th>
-                <th class="py-3 border">화</th>
-                <th class="py-3 border">수</th>
-                <th class="py-3 border">목</th>
-                <th class="py-3 border">금</th>
-            </tr>
-            </thead>
+                <tbody>
+                {{#periods}}
+                <tr>
 
-            <!-- 본문 -->
-            <tbody>
+                    <!-- 교시 번호 -->
+                    <td class="compact-cell bg-gray-50 font-semibold">
+                        {{period}}
+                    </td>
 
-            {{#periods}}
-            <tr>
-                <!-- 교시 번호 -->
-                <td class="text-center py-3 font-semibold border bg-gray-50">
-                    {{period}}
-                </td>
+                    {{#yoils}}
+                    <td class="compact-cell">
 
-                {{#yoils}}
-				<td class="h-20 border align-top">
-				
-				    {{#timetable}}
-				    <div 
-				        class="w-full h-full flex flex-col items-center justify-center 
-				               bg-blue-100 text-blue-800 rounded cursor-pointer hover:bg-blue-200 transition"
-				        onclick="location.href='/studentCourseDetail?courseNo={{courseNo}}'">
-				        
-				        <p class="font-semibold text-blue-900 text-xs">
-				            {{courseName}}
-				        </p>
-				        <p class="text-[11px] text-gray-600">
-				            {{courseClassroom}}
-				        </p>
-				        <p class="text-[11px] text-gray-500">
-				            {{courseTimeStart}}~{{courseTimeEnd}}교시
-				        </p>
-				    </div>
-				    {{/timetable}}
-				
-				    {{^timetable}}
-				    <div class="w-full h-full"></div>
-				    {{/timetable}}
-				
-				</td>
-				{{/yoils}}
-                
+                        {{#timetable}}
+                        <div class="timetable-block"
+                             onclick="location.href='/studentCourseDetail?courseNo={{courseNo}}'">
 
-            </tr>
-            {{/periods}}
+                            <div class="timetable-name">{{courseName}}</div>
+                            <div class="timetable-room">{{courseClassroom}}</div>
+                            <div class="timetable-time">{{courseTimeStart}}교시 ~ {{courseTimeEnd}}교시</div>
 
-            </tbody>
-        </table>
+                        </div>
+                        {{/timetable}}
+
+                        {{^timetable}}
+                        <div style="width: 100%; height: 100%;"></div>
+                        {{/timetable}}
+
+                    </td>
+                    {{/yoils}}
+
+                </tr>
+                {{/periods}}
+                </tbody>
+            </table>
+        </div>
 
     </div>
+    <!-- 전체 박스 끝 -->
 
 </main>
 

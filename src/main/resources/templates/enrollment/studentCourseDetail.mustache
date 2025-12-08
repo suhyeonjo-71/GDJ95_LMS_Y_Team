@@ -7,24 +7,150 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
-	<link rel="stylesheet"
+    <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-	
+
+    <!-- ============================
+         BLUE MODERN LMS CSS
+    ============================ -->
     <style>
-        body { font-family: 'Pretendard', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Pretendard', 'Arial', sans-serif;
+            background-color: #F5F7FA;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* CARD */
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(30, 64, 175, 0.12);
+            border: 1px solid #E5E7EB;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* BUTTON */
+        .btn-primary {
+            background-color: #2563EB;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+            transition: background-color .3s, transform .3s;
+        }
+        .btn-primary:hover {
+            background-color: #1D4ED8;
+            transform: scale(1.05);
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid #D1D5DB;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #374151;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+        .btn-outline:hover {
+            background: #F3F4F6;
+        }
+
+        /* DANGER BUTTON */
+        .btn-danger {
+            background-color: #EF4444;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .btn-danger:hover {
+            background-color: #DC2626;
+        }
+
+        /* ALERT */
+        .alert-blue {
+            background-color: #DBEAFE;
+            color: #1E40AF;
+            border: 1px solid #BFDBFE;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        /* TABLE */
+        .table-wrap {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #E5E7EB;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background-color: #EFF6FF;
+            color: #1E3A8A;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #DBEAFE;
+            font-weight: 600;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #E5E7EB;
+            color: #374151;
+        }
+        tr:hover {
+            background-color: rgba(37, 99, 235, 0.10);
+        }
+
+        /* SECTION TITLE */
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E40AF;
+            margin-bottom: 10px;
+        }
+
+        .desc-box {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            padding: 16px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            color: #475569;
+        }
     </style>
 </head>
 
-<body class="bg-[#F5F7FA] text-gray-800">
+<body class="text-gray-800">
 
-{{> studentLayout/studentHeader }}
+{{> studentLayout/studentPageHeader }}
 
 <main class="max-w-5xl mx-auto px-4 py-10">
 
-    <div class="bg-white rounded-xl shadow p-8 border border-gray-100">
+    <div class="card">
 
         <!-- 제목 -->
-        <h2 class="text-2xl font-semibold text-gray-900 mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+            <i class="fa-solid fa-book text-blue-600"></i>
             {{detail.courseName}}
         </h2>
 
@@ -32,72 +158,69 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-6">
 
             <div class="space-y-2">
-                <p><span class="font-medium text-gray-700">교수명:</span> {{detail.professorName}}</p>
-                <p><span class="font-medium text-gray-700">학과:</span> {{detail.deptName}}</p>
-                <p><span class="font-medium text-gray-700">학점:</span> {{detail.courseScore}} 학점</p>
-                <p><span class="font-medium text-gray-700">정원:</span> {{detail.courseCapacity}} 명</p>
+                <p><span class="font-semibold text-gray-700">교수명:</span> {{detail.professorName}}</p>
+                <p><span class="font-semibold text-gray-700">학과:</span> {{detail.deptName}}</p>
+                <p><span class="font-semibold text-gray-700">학점:</span> {{detail.courseScore}} 학점</p>
+                <p><span class="font-semibold text-gray-700">정원:</span> {{detail.courseCapacity}} 명</p>
             </div>
 
             <div class="space-y-2">
-                <p><span class="font-medium text-gray-700">개설년도:</span> {{detail.courseYear}}</p>
-                <p><span class="font-medium text-gray-700">학기:</span> {{detail.courseSemester}} 학기</p>
-                <p><span class="font-medium text-gray-700">강의실:</span> {{detail.courseClassroom}}</p>
+                <p><span class="font-semibold text-gray-700">개설년도:</span> {{detail.courseYear}}</p>
+                <p><span class="font-semibold text-gray-700">학기:</span> {{detail.courseSemester}} 학기</p>
+                <p><span class="font-semibold text-gray-700">강의실:</span> {{detail.courseClassroom}}</p>
             </div>
 
         </div>
 
-        <!-- 구분선 -->
-        <hr class="my-8">
+        <hr class="my-8 border-gray-300">
 
         <!-- 강의 설명 -->
         <div class="mb-10">
-            <h3 class="text-lg font-medium text-gray-900 mb-3">강의 설명</h3>
-            <div class="bg-gray-50 rounded-lg p-4 border text-sm text-gray-700 whitespace-pre-wrap">
+            <h3 class="section-title">강의 설명</h3>
+            <div class="desc-box">
                 {{detail.courseDescription}}
             </div>
         </div>
 
-        <!-- 강의 시간표 -->
+        <!-- 시간표 -->
         <div>
-            <h3 class="text-lg font-medium text-gray-900 mb-3">강의 시간표</h3>
+            <h3 class="section-title">강의 시간표</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>요일</th>
+                            <th>교시</th>
+                        </tr>
+                    </thead>
 
-            <table class="w-full text-sm border-collapse border border-gray-200 rounded-lg overflow-hidden">
-                <thead class="bg-gray-50 border-b">
-                    <tr>
-                        <th class="py-2 px-3 text-left">요일</th>
-                        <th class="py-2 px-3 text-left">교시</th>
-                    </tr>
-                </thead>
+                    <tbody>
+                        {{#detail.courseTimeList}}
+                        <tr>
+                            <td>{{yoilName}}</td>
+                            <td>{{courseTimeStart}} ~ {{courseTimeEnd}} 교시</td>
+                        </tr>
+                        {{/detail.courseTimeList}}
 
-                <tbody>
-                    {{#detail.courseTimeList}}
-                    <tr class="border-b">
-                        <td class="py-2 px-3">{{yoilName}}</td>
-                        <td class="py-2 px-3">{{courseTimeStart}} ~ {{courseTimeEnd}} 교시</td>
-                    </tr>
-                    {{/detail.courseTimeList}}
-
-                    {{^detail.courseTimeList}}
-                    <tr>
-                        <td colspan="2" class="py-4 text-center text-gray-500">
-                            등록된 강의 시간이 없습니다.
-                        </td>
-                    </tr>
-                    {{/detail.courseTimeList}}
-                </tbody>
-            </table>
+                        {{^detail.courseTimeList}}
+                        <tr>
+                            <td colspan="2" class="py-4 text-center text-gray-500">
+                                등록된 강의 시간이 없습니다.
+                            </td>
+                        </tr>
+                        {{/detail.courseTimeList}}
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- 뒤로가기 -->
-		<div class="mt-10 flex justify-end">
-		    <button onclick="history.back()"
-		        class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200
-		               bg-white text-gray-700 shadow-sm hover:bg-gray-50 transition text-sm">
-		        <i class="fa-solid fa-arrow-left text-gray-500"></i>
-		        목록으로
-		    </button>
-		</div>
-
+        <div class="mt-10 flex justify-end">
+            <button onclick="history.back()" class="btn-outline flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-arrow-left text-gray-500"></i>
+                목록으로
+            </button>
+        </div>
 
     </div>
 

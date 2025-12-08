@@ -1,0 +1,19 @@
+<style>
+.admin-hero-bg {
+    background-image: linear-gradient(to right, rgba(37, 99, 235, 0.9), rgba(30, 64, 175, 0.8)),
+    url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+}
+</style>
+
+{{> studentLayout/studentHeader }}
+
+<div class="admin-hero-bg h-40 p-8 text-white">
+    <div class="max-w-7xl mx-auto h-full flex flex-col justify-end">
+        <h2 class="text-3xl font-bold">{{pageTitle}}</h2>
+        <p class="text-sm text-gray-200 mt-2">{{pageDescription}}</p>
+    </div>
+</div>
+
+{{> studentLayout/studentMainNav }}

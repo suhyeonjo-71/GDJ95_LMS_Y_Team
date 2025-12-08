@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseDetailMapper">
+
+    <!-- ======================================================= -->
+    <!-- 1) 강의 기본 정보 조회                                   -->
+    <!-- ======================================================= -->
+    <select id="selectCourseDetail"
+            parameterType="int"
+            resultType="com.example.lms.dto.StudentCourseDetailDTO">
+
+        SELECT 
+		    c.course_no AS courseNo,
+		    c.course_name AS courseName,
+		    c.course_year AS courseYear,
+		    c.course_semester AS courseSemester,
+		    c.course_score AS courseScore,
+		    c.course_capacity AS courseCapacity,
+		    c.course_description AS courseDescription,
+		    c.course_classroom AS courseClassroom,
+		    d.dept_name AS deptName,
+		    u.user_name AS professorName
+		FROM tb_course c
+		LEFT JOIN tb_dept d ON c.dept_code = d.dept_code
+		LEFT JOIN tb_sysuser u ON c.professor_user_no = u.user_no
+		WHERE c.course_no = #{courseNo}
+
+    </select>
+
+    <!-- ======================================================= -->
+    <!-- 2) 강의 시간 리스트 조회                                 -->
+    <!-- ======================================================= -->
+    <select id="selectCourseTimeList"
+            parameterType="int"
+            resultType="com.example.lms.dto.CourseTimeDTO">
+
+        SELECT 
+            course_time_yoil AS yoilName,
+            course_time_start AS courseTimeStart,
+            course_time_end AS courseTimeEnd
+        FROM tb_course_time
+        WHERE course_no = #{courseNo}
+        ORDER BY course_time_yoil, course_time_start
+    </select>
+
+    <!-- ======================================================= -->
+    <!-- 3) 현재 수강 신청 인원 조회                              -->
+    <!-- ======================================================= -->
+    <select id="selectCurrentEnrollmentCount"
+            parameterType="int"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM tb_enrollment
+        WHERE course_no = #{courseNo}
+          AND enrollment_status = 0   <!-- 정상 신청 -->
+    </select>
+
+</mapper>

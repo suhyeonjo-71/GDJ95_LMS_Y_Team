@@ -12,113 +12,164 @@
 
     <style>
         body { font-family: 'Pretendard', sans-serif; }
+
+        /* 카드 */
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(30, 64, 175, 0.12);
+            border: 1px solid #E5E7EB;
+        }
+
+        /* primary 버튼 */
+        .btn-primary {
+            background-color: #2563EB;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+            transition: background .2s, transform .2s;
+        }
+        .btn-primary:hover {
+            background-color: #1D4ED8;
+            transform: scale(1.05);
+        }
+
+        /* Alert */
+        .alert-blue {
+            background-color: #DBEAFE;
+            color: #1E40AF;
+            border: 1px solid #BFDBFE;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background-color: #EFF6FF;
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            border-bottom: 2px solid #DBEAFE;
+            color: #1E3A8A;
+        }
+        td {
+            padding: 12px;
+            font-size: 14px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        tr:hover {
+            background-color: rgba(37, 99, 235, 0.08);
+        }
     </style>
 </head>
 
 <body class="bg-[#F5F7FA] text-gray-800">
 
-{{> studentLayout/studentHeader }}
+{{> studentLayout/studentPageHeader }}
 
 <main class="max-w-6xl mx-auto px-4 py-10">
 
-    <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
+    <div class="card">
 
-        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <i class="fa-solid fa-list-check text-blue-600"></i>
-            수강신청 내역
-        </h2>
+        <!-- 제목 + 우측 상단 버튼 정렬 -->
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-blue-600"></i>
+                수강신청 내역
+            </h2>
 
+            <a href="/courseListForEnrollment" class="btn-primary">
+                <i class="fa-solid fa-plus"></i>
+                수강신청 하러 가기
+            </a>
+        </div>
+
+        <!-- 메시지 -->
         {{#message}}
-        <div class="mb-6 px-4 py-3 rounded-lg bg-blue-50 text-blue-700 text-sm shadow">
+        <div class="alert-blue mb-6">
             {{message}}
         </div>
         {{/message}}
 
-        <table class="w-full border-collapse shadow rounded-lg overflow-hidden">
-            <thead class="bg-blue-50 border-b">
-            <tr class="text-left text-sm text-gray-700">
-                <th class="py-3 px-4">강의명</th>
-                <th class="py-3 px-4">교수명</th>
-                <th class="py-3 px-4">학점</th>
-                <th class="py-3 px-4">요일</th>
-                <th class="py-3 px-4">교시</th>
-                <th class="py-3 px-4">신청일</th>
-                <th class="py-3 px-4 text-center">취소</th>
+        <!-- 테이블 -->
+        <table>
+            <thead>
+            <tr>
+                <th>강의명</th>
+                <th>교수명</th>
+                <th>학점</th>
+                <th>요일</th>
+                <th>교시</th>
+                <th>신청일</th>
+                <th class="text-center">취소</th>
             </tr>
             </thead>
 
             <tbody>
-
             {{#list}}
-            <tr class="border-b hover:bg-gray-50 text-sm">
-                <td class="py-3 px-4">{{courseName}}</td>
-                <td class="py-3 px-4">{{professorName}}</td>
-                <td class="py-3 px-4">{{courseScore}}</td>
-                <td class="py-3 px-4">{{yoilName}}</td>
-                <td class="py-3 px-4">{{courseTimeStart}} ~ {{courseTimeEnd}}</td>
-                <td class="py-3 px-4">{{createdate}}</td>
+            <tr>
+                <td>{{courseName}}</td>
+                <td>{{professorName}}</td>
+                <td>{{courseScore}}</td>
+                <td>{{yoilName}}</td>
+                <td>{{courseTimeStart}} ~ {{courseTimeEnd}}</td>
+                <td>{{createdate}}</td>
 
-                <td class="py-3 px-4 text-center">
-				    <!-- 활성 상태 → 취소 가능 -->
-				    <form method="post" action="/cancelEnrollment">
-				        <input type="hidden" name="enrollmentNo" value="{{enrollmentNo}}">
-				        <button class="px-3 py-1 bg-red-500 text-white rounded">
-				            취소
-				        </button>
-				    </form>
-				</td>
+                <td class="text-center">
+                    <form method="post" action="/cancelEnrollment">
+                        <input type="hidden" name="enrollmentNo" value="{{enrollmentNo}}">
+                        <button class="btn-danger text-xs px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600">
+                            취소
+                        </button>
+                    </form>
+                </td>
             </tr>
             {{/list}}
 
             {{^list}}
             <tr>
-                <td colspan="7" class="py-6 text-center text-gray-500 text-sm">
+                <td colspan="7" class="py-6 text-center text-gray-500">
                     수강신청 내역이 없습니다.
                 </td>
             </tr>
             {{/list}}
-
             </tbody>
         </table>
 
         <!-- 페이징 -->
-        <div class="flex justify-center mt-8 gap-1">
+        <div class="flex justify-center mt-8 gap-1 text-sm">
 
             {{#hasPrev}}
-            <a href="?currentPage=1"
-               class="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200 text-sm">« 첫 페이지</a>
-
-            <a href="?currentPage={{prevPage}}"
-               class="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200 text-sm">‹ 이전</a>
+            <a href="?currentPage=1" class="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200">« 첫 페이지</a>
+            <a href="?currentPage={{prevPage}}" class="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200">‹ 이전</a>
             {{/hasPrev}}
 
             {{#pageList}}
             <a href="?currentPage={{page}}"
-               class="px-4 py-2 border rounded text-sm
-               {{#current}}bg-blue-600 text-white font-bold{{/current}}">
+               class="px-4 py-2 border rounded {{#current}}bg-blue-600 text-white font-bold{{/current}}">
                 {{page}}
             </a>
             {{/pageList}}
 
             {{#hasNext}}
-            <a href="?currentPage={{nextPage}}"
-               class="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200 text-sm">다음 ›</a>
-
-            <a href="?currentPage={{lastPage}}"
-               class="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200 text-sm">마지막 »</a>
+            <a href="?currentPage={{nextPage}}" class="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200">다음 ›</a>
+            <a href="?currentPage={{lastPage}}" class="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200">마지막 »</a>
             {{/hasNext}}
+
         </div>
-		
-		<!-- 뒤로가기 -->
-        <div class="mt-10 flex justify-end">
-		    <a href="/courseListForEnrollment"
-		       class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 
-		              bg-white text-gray-700 shadow-sm hover:bg-gray-50 transition text-sm">
-		        <i class="fa-solid fa-arrow-left text-gray-500"></i>
-		        목록으로
-		    </a>
-		</div>
-		
+
     </div>
 
 </main>

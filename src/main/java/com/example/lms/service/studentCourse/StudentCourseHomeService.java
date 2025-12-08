@@ -55,10 +55,30 @@ public class StudentCourseHomeService {
         return mapper.selectStudentGradeSummary(courseNo, studentUserNo);
     }
 
-    // ----------------------------
-    // 최근 질문
-    // ----------------------------
-    public List<StudentQuestionDTO> getRecentQuestionList(int courseNo, int studentUserNo) {
-        return mapper.selectRecentQuestionList(courseNo, studentUserNo);
-    }
+	 // ----------------------------
+	 // 최근 질문
+	 // ----------------------------
+	 public List<StudentQuestionDTO> getRecentQuestionList(int courseNo, int studentUserNo, String loginUserRole) {
+	
+	     List<StudentQuestionDTO> list = mapper.selectRecentQuestionList(courseNo, studentUserNo);
+	
+	     for (StudentQuestionDTO q : list) {
+	
+	         boolean isPrivate = Boolean.TRUE.equals(q.getPrivatePost());
+	         boolean isWriter = q.getWriterUserNo() == studentUserNo;
+	         boolean isProfessor = "PROFESSOR".equals(loginUserRole);
+	
+	         boolean canView = !isPrivate || isWriter || isProfessor;
+	         
+	         q.setCanView(canView);
+	         
+	         // 🔥 비공개인데 볼 권한 없으면 제목 가리기
+	         if (!canView) {
+	             q.setQuestionTitle("비밀글입니다.");
+	         }
+	     }
+	
+	     return list;
+	 }
+
 }

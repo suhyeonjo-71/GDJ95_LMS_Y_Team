@@ -17,7 +17,7 @@
 
 <body class="bg-[#F5F7FA] text-gray-800">
 
-{{> studentLayout/studentHeader }}
+{{> studentLayout/studentCoursePageHeader }}
 
 <main class="max-w-6xl mx-auto px-4 py-10">
 
@@ -34,8 +34,6 @@
             문의하기
         </a>
     </div>
-
-    {{> studentCourse/_studentCourseSubNav }}
 
     <!-- 문의 리스트 박스 (공지랑 동일 카드 스타일) -->
     <div class="mt-4 bg-white rounded-2xl shadow-md border border-gray-200 p-6">
@@ -94,7 +92,7 @@
                     </span>
                     {{/answered}}
                     {{^answered}}
-                    <span class="px-2 py-1 rounded-full bg-yellow-50 text-yellow-700 font-medium">
+                    <span class="px-2 py-1 rounded-full bg-red-50 text-red-700 font-medium">
                         미답변
                     </span>
                     {{/answered}}

@@ -26,14 +26,17 @@ public class StudentCourseHomeController {
     // -------------------------------------------
     @GetMapping("/studentCourseHome")
     public String studentCourseHome(
-            @RequestParam int courseNo,
+    		@RequestParam("courseNo") int courseNo,
             HttpSession session,
             Model model) {
     	
-        SysUserDTO user = (SysUserDTO) session.getAttribute("loginUser");
-        if (user == null) return "redirect:/login";
+    	// 로그인 사용자 정보
+        SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
+        if (loginUser == null) return "redirect:/login";
+        
+        String userRole = loginUser.getUserAuth();   // STUDENT 또는 PROFESSOR
 
-        int studentUserNo = user.getUserNo();
+        int studentUserNo = loginUser.getUserNo();
 
         // <!-- 강의 기본 정보 -->
         StudentCourseHomeDTO courseInfo = service.getStudentCourseHome(courseNo, studentUserNo);
@@ -56,9 +59,16 @@ public class StudentCourseHomeController {
         model.addAttribute("grade", service.getStudentGradeSummary(courseNo, studentUserNo));
 
         // <!-- 최근 Q&A -->
-        List<StudentQuestionDTO> recentQuestions = service.getRecentQuestionList(courseNo, studentUserNo);
+     // <!-- 최근 Q&A -->
+        List<StudentQuestionDTO> recentQuestions =
+                service.getRecentQuestionList(courseNo, studentUserNo, userRole);
         model.addAttribute("questionList", recentQuestions);
 
+        
+        // HEADER 표시용
+        model.addAttribute("loginUserName", loginUser.getUserName());
+        model.addAttribute("nav_enrollment", "text-blue-600 border-blue-600");
+        
         return "studentCourse/studentCourseHome";
     }
 }

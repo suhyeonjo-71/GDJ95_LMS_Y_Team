@@ -34,6 +34,14 @@ public class StudentCourseBaseController {
 
         List<StudentCourseDTO> courseList = service.getMyCourseList(loginUser.getUserNo());
         model.addAttribute("courseList", courseList);
+        
+        // HEADER 표시용
+        model.addAttribute("pageTitle", "내 수강과목");
+        model.addAttribute("pageDescription", "현재 수강 중인 강좌 목록을 확인할 수 있습니다.");
+        model.addAttribute("loginUserName", loginUser.getUserName());
+        
+        model.addAttribute("nav_enrollment", "text-blue-600 border-blue-600");
+        
 
         return "studentCourse/myCourses";
     }
@@ -74,6 +82,13 @@ public class StudentCourseBaseController {
 
         model.addAttribute("periods", periods);
         model.addAttribute("grid", grid);
+        
+        // HEADER 표시용
+        model.addAttribute("pageTitle", "내 시간표");
+        model.addAttribute("pageDescription", "이번 학기의 개인 시간표를 확인할 수 있습니다.");
+        model.addAttribute("loginUserName", loginUser.getUserName());
+        
+        model.addAttribute("nav_enrollment", "text-blue-600 border-blue-600");
 
         return "enrollment/studentTimetable";
     }

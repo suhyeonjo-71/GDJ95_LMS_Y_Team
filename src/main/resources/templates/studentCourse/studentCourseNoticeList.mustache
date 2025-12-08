@@ -1,113 +1,196 @@
-<!DOCTYPE html>
+a<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>강의 공지사항 목록</title>
+<meta charset="UTF-8">
+<title>강의 공지사항 목록</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <style>
-        body { font-family: 'Pretendard', sans-serif; }
-    </style>
+<style>
+/* ============================================
+   GLOBAL RESET
+============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Pretendard', sans-serif;
+    background-color: #F5F7FA;
+    color: #333;
+}
+
+/* ============================================
+   CARD (수강신청 스타일 적용)
+============================================ */
+.card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(30, 64, 175, 0.12);
+}
+
+/* ============================================
+   TABLE (Blue Smart)
+============================================ */
+.table-wrap {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #E5E7EB;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+thead th {
+    background-color: #EFF6FF;
+    color: #1E3A8A;
+    padding: 12px;
+    border-bottom: 2px solid #DBEAFE;
+    font-weight: 600;
+}
+tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #E5E7EB;
+    font-size: 14px;
+}
+tbody tr:hover {
+    background-color: rgba(37, 99, 235, 0.10);
+}
+
+/* ============================================
+   PAGINATION
+============================================ */
+.pagination-area a {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    border: 1px solid #D1D5DB;
+    background: white;
+    margin: 0 3px;
+    transition: 0.25s;
+}
+.pagination-area a:hover {
+    background-color: #2563EB;
+    color: white;
+    border-color: #2563EB;
+}
+.active-page {
+    background-color: #2563EB !important;
+    color: white !important;
+    border-color: #2563EB !important;
+}
+.nav-btn {
+    background-color: #E5EFFE;
+}
+.nav-btn:hover {
+    background-color: #2563EB;
+    color: white;
+}
+
+/* 제목 스타일 */
+.page-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1E3A8A;
+}
+</style>
+
 </head>
 
-<body class="bg-[#F5F7FA] text-gray-800">
+<body>
 
-{{> studentLayout/studentHeader }}
-{{> studentCourse/_studentCourseSubNav }}
+{{> studentLayout/studentCoursePageHeader }}
+
+<!-- 서브 네비 (강의 홈과 폭 동일하게) -->
+<div class="mt-8 w-full">
+    <div class="max-w-6xl mx-auto px-4">
+        {{> studentLayout/_studentCourseSubNav }}
+    </div>
+</div>
 
 <main class="max-w-6xl mx-auto px-4 py-10">
 
-    <!-- 상단 타이틀 -->
-    <div class="mb-8 flex items-center justify-between">
-        <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <i class="fa-solid fa-bullhorn text-blue-600"></i>
-            강의 공지사항
-        </h2>
-    </div>
 
-    <!-- 공지사항 리스트 박스 (문의사항과 동일한 카드/표 스타일) -->
-    <div class="mt-4 bg-white rounded-2xl shadow-md border border-gray-200 p-6">
-        <table class="w-full text-sm text-left">
+<!-- ============================= -->
+<!-- 📌 카드 (제목 + 리스트 + 페이징 통합) -->
+<!-- ============================= -->
+<div class="card">
+
+    <!-- 제목 -->
+    <h2 class="page-title flex items-center gap-3 mb-6">
+        <i class="fa-solid fa-bullhorn text-blue-600 text-xl"></i>
+        강의 공지사항 목록
+    </h2>
+
+
+    <!-- 리스트 영역 -->
+    <div class="table-wrap">
+        <table>
             <thead>
-            <tr class="bg-gray-50 text-gray-700 border-b">
-                <th class="px-4 py-3 w-16">번호</th>
-                <th class="px-4 py-3">제목</th>
-                <th class="px-4 py-3 w-40">작성일</th>
-            </tr>
+                <tr>
+                    <th class="w-16">번호</th>
+                    <th>제목</th>
+                    <th class="w-40">작성일</th>
+                </tr>
             </thead>
 
             <tbody>
-            {{#list}}
-            <tr class="border-b hover:bg-gray-50">
+                {{#list}}
+                <tr onclick="location.href='/studentCourseNoticeDetail?courseNoticeNo={{courseNoticeNo}}&courseNo={{courseNo}}'">
+                    <td>{{index}}</td>
+                    <td>
+                        <span class="hover:text-blue-600 cursor-pointer font-medium">
+                            {{courseNoticeTitle}}
+                        </span>
+                    </td>
+                    <td class="text-sm text-gray-600">{{createdate}}</td>
+                </tr>
+                {{/list}}
 
-                <!-- 번호 -->
-                <td class="px-4 py-3 text-xs text-gray-700">
-                    {{index}}
-                </td>
-
-                <!-- 제목 -->
-                <td class="px-4 py-3">
-                    <a href="/studentCourseNoticeDetail?courseNoticeNo={{courseNoticeNo}}&courseNo={{courseNo}}"
-                       class="text-gray-900 hover:text-blue-600 font-medium line-clamp-1">
-                        {{courseNoticeTitle}}
-                    </a>
-                </td>
-
-                <!-- 작성일 -->
-                <td class="px-4 py-3 text-xs text-gray-500">
-                    {{createdate}}
-                </td>
-            </tr>
-            {{/list}}
-
-            {{^list}}
-            <tr>
-                <td colspan="5" class="text-center py-6 text-gray-500">
-                    등록된 공지가 없습니다.
-                </td>
-            </tr>
-            {{/list}}
+                {{^list}}
+                <tr>
+                    <td colspan="3" class="text-center py-6 text-gray-500">
+                        등록된 공지가 없습니다.
+                    </td>
+                </tr>
+                {{/list}}
             </tbody>
         </table>
     </div>
 
-    <!-- 페이징 -->
-    <div class="flex justify-center mt-8">
-        <div class="flex items-center gap-2">
 
-            {{#hasPrev}}
-            <a href="/studentCourseNoticeList?courseNo={{courseNo}}&currentPage={{prevPage}}"
-               class="px-3 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm">
-                이전
-            </a>
-            {{/hasPrev}}
+    <!-- ============================= -->
+    <!-- 📌 Pagination -->
+    <!-- ============================= -->
+    <div class="flex justify-center mt-8 pagination-area">
 
-            {{#pageList}}
-            {{#current}}
-            <span class="px-3 py-2 bg-blue-600 text-white rounded text-sm">{{page}}</span>
-            {{/current}}
-            {{^current}}
-            <a href="/studentCourseNoticeList?courseNo={{courseNo}}&currentPage={{page}}"
-               class="px-3 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm">
-                {{page}}
-            </a>
-            {{/current}}
-            {{/pageList}}
+        {{#hasPrev}}
+        <a class="nav-btn" href="?currentPage=1">« 처음</a>
+        <a class="nav-btn" href="?currentPage={{prevPage}}">‹ 이전</a>
+        {{/hasPrev}}
 
-            {{#hasNext}}
-            <a href="/studentCourseNoticeList?courseNo={{courseNo}}&currentPage={{nextPage}}"
-               class="px-3 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm">
-                다음
-            </a>
-            {{/hasNext}}
+        {{#pageList}}
+        <a href="?currentPage={{page}}" class="{{#current}}active-page{{/current}}">
+            {{page}}
+        </a>
+        {{/pageList}}
 
-        </div>
+        {{#hasNext}}
+        <a class="nav-btn" href="?currentPage={{nextPage}}">다음 ›</a>
+        <a class="nav-btn" href="?currentPage={{lastPage}}">마지막 »</a>
+        {{/hasNext}}
+
     </div>
+
+</div> <!-- card end -->
+
 
 </main>
 

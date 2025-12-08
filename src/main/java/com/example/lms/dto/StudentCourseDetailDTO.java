@@ -26,5 +26,7 @@ public class StudentCourseDetailDTO {
     private String professorName;       // 담당 교수명
 
     private List<CourseTimeDTO> courseTimeList;   // 강의 시간 정보 리스트
+    
+    private int currentCount;   // 현재 신청 인원
 	
 }

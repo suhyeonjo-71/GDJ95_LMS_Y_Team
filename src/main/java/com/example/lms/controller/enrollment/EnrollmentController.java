@@ -102,7 +102,14 @@ public class EnrollmentController {
         model.addAttribute("hasNext", currentPage < lastPage);
         model.addAttribute("prevPage", currentPage - 1);
         model.addAttribute("nextPage", currentPage + 1);
-
+        
+        // HEADER 표시용
+        model.addAttribute("pageTitle", "수강가능 강의");
+        model.addAttribute("pageDescription", "강의 정보를 확인하고 수강신청을 진행할 수 있습니다");
+        model.addAttribute("loginUserName", loginUser.getUserName());
+        
+        model.addAttribute("nav_enrollment", "text-blue-600 border-blue-600");
+        
         return "enrollment/courseListForEnrollment";
     }
 
@@ -193,7 +200,12 @@ public class EnrollmentController {
         model.addAttribute("prevPage", currentPage - 1);
         model.addAttribute("nextPage", currentPage + 1);
 
-        model.addAttribute("nav_enrollmentList", "border-blue-600 text-blue-600");
+        // HEADER 표시용
+        model.addAttribute("pageTitle", "수강신청 내역");
+        model.addAttribute("pageDescription", "신청 완료한 강의와 취소 내역을 확인할 수 있습니다.");
+        model.addAttribute("loginUserName", loginUser.getUserName());
+        
+        model.addAttribute("nav_enrollment", true);
 
         return "enrollment/enrollmentList";
     }

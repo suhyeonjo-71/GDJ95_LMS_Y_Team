@@ -41,7 +41,7 @@ public class StudentAssignmentController {
 
         model.addAttribute("courseNo", courseNo);
         model.addAttribute("assignmentList", list);
-
+        
         return "studentCourse/studentAssignmentList";
     }
 
