@@ -92,6 +92,7 @@
 		AND d.enrollment_status = '0'
 		AND c.course_time_yoil = #{courseTimeYoil}
 		AND e.user_auth NOT IN ('S_GRADU04', 'S_LEAVE02','S_COMPL05') -- 졸업생 휴학생 수료생 사용불가
+		AND a.course_status = '1' -- 개설된 강의만 표출
 		ORDER BY c.course_time_start ASC
 	
 	</select>
