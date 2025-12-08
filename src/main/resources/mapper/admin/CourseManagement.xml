@@ -411,7 +411,11 @@
 			b.user_phone AS userPhone,
 			a.course_score AS courseScore, -- 이수학점
 			a.course_classroom AS courseClassroom, -- 강의실
-			a.course_status AS courseStatus, -- 개설 상태
+			a.course_status AS courseStatus,  -- 개설상태코드
+			CASE a.course_status
+			    WHEN 1 THEN '개설'
+			    ELSE '종료'
+			END AS courseStatusName, -- 개설 상태코드 한글명
 			a.createdate AS createdate, -- 개설일자
 			a.updatedate AS updatedate -- 업데이트일자
 		FROM

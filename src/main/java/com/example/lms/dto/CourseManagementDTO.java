@@ -59,4 +59,7 @@ public class CourseManagementDTO {
 
 		// 조회 카테고리 셀렉박스용
 		private String courseYearSemester; // 연도별-학기별
+		
+		// 개설코드한글명 필요함
+		private String courseStatusName; // 0 종료 , 1 개설
 }
