@@ -23,9 +23,7 @@ public class StudentCourseBaseController {
 
     private final StudentCourseBaseService service;
 
-    // ---------------------------------------------------------
     // 내 수강 과목 목록
-    // ---------------------------------------------------------
     @GetMapping("/myCourses")
     public String myCourses(HttpSession session, Model model) {
 

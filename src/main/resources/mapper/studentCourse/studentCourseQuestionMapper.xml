@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.lms.mapper.courseQuestion.CourseQuestionMapper">
+<mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseQuestionMapper">
 
     <!-- 전체 질문 개수 -->
     <select id="countQuestion" parameterType="int" resultType="int">

@@ -3,6 +3,22 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseMapper">
+	<select id="selectStudentCourseHeaderInfo" 
+			resultType="com.example.lms.dto.StudentCourseDetailDTO">
+	    SELECT 
+	        c.course_no AS courseNo,
+	        c.course_name AS courseName,
+	        p.user_name AS professorName,
+	        c.course_classroom AS courseClassroom,
+	        c.course_score AS courseScore,
+	        ct.course_time_yoil AS yoilName,
+	        ct.course_time_start AS courseTimeStart,
+	        ct.course_time_end AS courseTimeEnd
+	    FROM tb_course c
+	    JOIN tb_sysuser p ON c.professor_user_no = p.user_no
+	    JOIN tb_course_time ct ON c.course_no = ct.course_no
+	    WHERE c.course_no = #{courseNo}
+	</select>
 
     <!-- 학생용 공지 목록 -->
     <select id="selectStudentCourseNoticeList"

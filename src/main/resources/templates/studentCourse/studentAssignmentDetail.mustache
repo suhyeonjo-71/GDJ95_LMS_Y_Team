@@ -12,6 +12,13 @@
 
     <style>
         body { font-family: 'Pretendard', sans-serif; }
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 22px rgba(30, 64, 175, 0.08);
+            border: 1px solid #E5E7EB;
+        }
     </style>
 </head>
 
@@ -19,141 +26,140 @@
 
 {{> studentLayout/studentCoursePageHeader }}
 
-<main class="max-w-4xl mx-auto px-4 py-10">
-
-    <!-- 상단: 뒤로가기 버튼 -->
-    <div class="mb-6 flex justify-start">
-        <a href="/student/assignment/list?courseNo={{assignment.courseNo}}"
-           class="inline-flex items-center gap-2 px-4 py-2 rounded-lg
-                  bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium
-                  transition">
-            <i class="fa-solid fa-arrow-left text-xs"></i>
-            과제 목록으로 돌아가기
-        </a>
+<div class="mt-8 w-full">
+    <div class="max-w-6xl mx-auto px-4">
+        {{> studentLayout/_studentCourseSubNav }}
     </div>
+</div>
 
-    <!-- ================================================================= -->
-    <!-- 📌 과제 정보 영역 -->
-    <!-- ================================================================= -->
-    <section class="bg-white rounded-xl shadow-md p-8 mb-8 border border-gray-200">
+<main class="max-w-6xl mx-auto px-4 py-10">
+
+    <!-- 과제 정보 -->
+    <section class="card mb-8">
+
         <h1 class="text-2xl font-bold text-gray-900 mb-3">
-            {{assignment.assignmentTitle}}
+            {{detail.assignmentTitle}}
         </h1>
 
-        <div class="flex flex-wrap items-center gap-3 text-sm text-gray-700 mb-4">
-            <span class="inline-flex items-center gap-1">
-                <span class="font-semibold">마감일</span>
-                <span>:</span>
-                <span>{{assignment.assignmentDeadline}}</span>
+        <div class="flex items-center gap-2 text-sm mb-4">
+            <span class="font-semibold text-gray-700">마감일</span>
+            <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded-md">
+                {{detail.assignmentDeadline}}
             </span>
+
+            {{#detail.deadlinePassed}}
+            <span class="px-3 py-1.5 bg-red-100 text-red-600 text-xs rounded-full font-semibold">
+                마감됨
+            </span>
+            {{/detail.deadlinePassed}}
         </div>
 
-        <p class="text-sm text-gray-700 whitespace-pre-line mb-6">
-            {{assignment.assignmentDescription}}
+        <p class="text-sm text-gray-700 whitespace-pre-line leading-relaxed mb-6">
+            {{detail.assignmentDescription}}
         </p>
 
-        <!-- 제출 상태 -->
-        {{#assignment.submitted}}
-        <div class="text-sm text-green-600 font-medium mb-2">
-            ✔ 이미 제출했습니다 ({{assignment.submittedDate}})
+        <!-- 제출 여부 -->
+        {{#detail.submitted}}
+        <div class="bg-green-50 border border-green-200 text-green-700 text-sm px-4 py-3 rounded-lg flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-circle-check"></i>
+            제출 완료 ({{detail.submittedDate}})
         </div>
 
-        {{#assignment.assignmentSubmissionFileUrl}}
-        <div class="text-sm">
-            제출 파일 :
-            <a href="{{assignment.assignmentSubmissionFileUrl}}"
-               class="text-blue-600 underline ml-1"
-               target="_blank">
-                파일 열기
+        {{#detail.assignmentSubmissionFileUrl}}
+        <div class="mt-2 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-file-lines text-blue-600"></i>
+            <a href="{{detail.assignmentSubmissionFileUrl}}" class="text-blue-600 underline" target="_blank">
+                제출 파일 열기
             </a>
         </div>
-        {{/assignment.assignmentSubmissionFileUrl}}
-        {{/assignment.submitted}}
+        {{/detail.assignmentSubmissionFileUrl}}
+        {{/detail.submitted}}
 
-        {{^assignment.submitted}}
-        <div class="text-sm text-red-600 font-medium">
-            ✘ 아직 제출하지 않았습니다
+        {{^detail.submitted}}
+        <div class="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-lg flex items-center gap-2">
+            <i class="fa-solid fa-circle-xmark"></i>
+            아직 제출하지 않았습니다.
         </div>
-        {{/assignment.submitted}}
+        {{/detail.submitted}}
+
     </section>
 
-    <!-- ================================================================= -->
-    <!-- 📌 제출 / 수정 영역 (마감 여부에 따라 제어) -->
-    <!-- ================================================================= -->
-
-    {{#assignment.deadlinePassed}}
-    <!-- 마감 지난 경우: 안내만 -->
-    <section class="bg-white rounded-xl shadow-md p-8 border border-gray-200 text-center">
-        <h2 class="text-xl font-semibold text-gray-900 mb-3">
-            제출 기간이 마감되었습니다
-        </h2>
+    <!-- 제출 / 수정 -->
+    {{#detail.deadlinePassed}}
+    <section class="card text-center">
+        <h2 class="text-xl font-semibold text-gray-900 mb-3">제출 기간 마감</h2>
         <p class="text-sm text-gray-600">
             마감일 이후에는 과제를 제출하거나 수정할 수 없습니다.
         </p>
     </section>
-    {{/assignment.deadlinePassed}}
+    {{/detail.deadlinePassed}}
 
-    {{^assignment.deadlinePassed}}
-    <!-- 마감 전: 제출/수정 가능 -->
-    <section class="bg-white rounded-xl shadow-md p-8 border border-gray-200">
+    {{^detail.deadlinePassed}}
+    <section class="card">
 
         <h2 class="text-xl font-semibold text-gray-900 mb-6">
-            {{#assignment.submitted}}과제 수정하기{{/assignment.submitted}}
-            {{^assignment.submitted}}과제 제출하기{{/assignment.submitted}}
+            {{#detail.submitted}}과제 수정하기{{/detail.submitted}}
+            {{^detail.submitted}}과제 제출하기{{/detail.submitted}}
         </h2>
 
-        <form action="/student/assignment/submit"
-              method="post"
-              enctype="multipart/form-data"
-              class="space-y-6">
+        <form action="/student/assignment/submit" method="post" enctype="multipart/form-data" class="space-y-6">
 
-            <input type="hidden" name="assignmentNo" value="{{assignment.assignmentNo}}">
-            <input type="hidden" name="courseNo" value="{{assignment.courseNo}}">
+            <input type="hidden" name="assignmentNo" value="{{detail.assignmentNo}}">
+            <input type="hidden" name="courseNo" value="{{detail.courseNo}}">
 
-            <!-- 내용 입력 -->
+            <!-- 내용 -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    내용
-                </label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">내용</label>
+
+                <!-- ⚠ 안전 위해 content 값은 일단 제거(원하면 뒤에 다시 넣어줌) -->
                 <textarea name="content"
-                          class="w-full border border-gray-300 rounded-lg p-3 h-40
-                                 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                          placeholder="여기에 과제 내용을 입력하세요">{{assignment.assignmentSubmissionContent}}</textarea>
+                          class="w-full border border-gray-300 rounded-lg p-3 h-40 text-sm"
+                          placeholder="여기에 과제 내용을 입력하세요"></textarea>
             </div>
 
             <!-- 파일 업로드 -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    파일 업로드
-                </label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">파일 업로드</label>
 
                 <input type="file" name="file"
-                       class="block w-full text-sm text-gray-700 border border-gray-300
-                              rounded-lg p-2">
+                       class="block w-full border border-gray-300 rounded-lg p-2 text-sm">
 
-                {{#assignment.assignmentSubmissionFileUrl}}
-                <p class="mt-2 text-xs text-gray-600">
-                    현재 제출된 파일 :
-                    <a href="{{assignment.assignmentSubmissionFileUrl}}"
-                       target="_blank"
-                       class="text-blue-600 underline ml-1">
-                        기존 제출 파일 보기
-                    </a>
-                </p>
-                {{/assignment.assignmentSubmissionFileUrl}}
+                {{#detail.assignmentSubmissionFileUrl}}
+                <div class="mt-3 p-3 border rounded-lg bg-gray-50 flex items-center justify-between">
+
+                    <div class="text-xs text-gray-700 flex items-center gap-2">
+                        <i class="fa-solid fa-file-lines text-blue-600"></i>
+                        <span>제출된 파일:</span>
+                        <a href="{{detail.assignmentSubmissionFileUrl}}" class="text-blue-600 underline" target="_blank">
+                            파일 보기
+                        </a>
+                    </div>
+
+                    <button type="button"
+                            onclick="document.getElementById('fileDeleteForm').submit();"
+                            class="px-3 py-1.5 text-xs rounded-lg bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 transition flex items-center gap-1">
+                        <i class="fa-solid fa-trash-can"></i>
+                        삭제
+                    </button>
+                </div>
+                {{/detail.assignmentSubmissionFileUrl}}
             </div>
 
-            <!-- 제출 버튼 -->
             <button type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg
-                           text-sm font-semibold transition">
-                {{#assignment.submitted}}수정하기{{/assignment.submitted}}
-                {{^assignment.submitted}}제출하기{{/assignment.submitted}}
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg text-sm font-semibold transition">
+                {{#detail.submitted}}수정하기{{/detail.submitted}}
+                {{^detail.submitted}}제출하기{{/detail.submitted}}
             </button>
 
         </form>
     </section>
-    {{/assignment.deadlinePassed}}
+
+    <form id="fileDeleteForm" action="/student/assignment/fileDelete" method="post">
+        <input type="hidden" name="assignmentNo" value="{{detail.assignmentNo}}">
+        <input type="hidden" name="courseNo" value="{{detail.courseNo}}">
+    </form>
+
+    {{/detail.deadlinePassed}}
 
 </main>
 

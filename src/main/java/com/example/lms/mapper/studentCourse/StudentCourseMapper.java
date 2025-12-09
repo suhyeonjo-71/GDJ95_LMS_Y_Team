@@ -19,7 +19,9 @@ import com.example.lms.dto.StudentTimetableDTO;
 
 @Mapper
 public interface StudentCourseMapper {
-
+	StudentCourseDetailDTO selectStudentCourseHeaderInfo(
+	        @Param("courseNo") int courseNo,
+	        @Param("studentUserNo") int studentUserNo);
 
     // 공지
     List<StudentCourseNoticeDTO> selectStudentCourseNoticeList(

@@ -9,7 +9,7 @@ public class StudentAssignmentListDTO {
     private String assignmentTitle;
     private String assignmentDeadline;
 
-    private Boolean assignmentSubmitted;        // 제출 여부
+    private Boolean submitted;        // 제출 여부
 
     private Integer courseNo;         // 과목 번호
 }

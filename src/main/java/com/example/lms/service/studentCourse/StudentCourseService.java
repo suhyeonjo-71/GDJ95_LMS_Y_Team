@@ -20,7 +20,7 @@ import com.example.lms.dto.StudentCourseHomeDTO;
 import com.example.lms.dto.StudentCourseNoticeDTO;
 import com.example.lms.dto.StudentQuestionDTO;
 import com.example.lms.dto.StudentTimetableDTO;
-import com.example.lms.mapper.courseQuestion.CourseQuestionMapper;
+import com.example.lms.mapper.studentCourse.StudentCourseQuestionMapper;
 import com.example.lms.mapper.studentCourse.StudentCourseMapper;
 
 @Service
@@ -162,7 +162,7 @@ public class StudentCourseService {
             dto.setAssignmentNo(ass.getAssignmentNo());
             dto.setAssignmentTitle(ass.getAssignmentTitle());
             dto.setAssignmentDeadline(ass.getAssignmentDeadline());
-            dto.setAssignmentSubmitted(ass.getAssignmentSubmitted());
+            dto.setSubmitted(ass.getSubmitted());
         }
 
         // 출석 요약
@@ -261,7 +261,7 @@ public class StudentCourseService {
     }
     
     @Autowired
-    private CourseQuestionMapper courseQuestionMapper;
+    private StudentCourseQuestionMapper courseQuestionMapper;
 
     // ---------------------------------------------------------
     // 학생용 질문 전체 리스트 + 페이징 + 비밀글 처리
@@ -315,5 +315,10 @@ public class StudentCourseService {
 
         return result;
     }
+    
+	 // 강의 헤더 + 서브네비 정보 (공지/과제/출석/성적/질문 공통)
+	 public StudentCourseDetailDTO getStudentCourseHeaderInfo(int courseNo, int studentUserNo) {
+	     return studentCourseMapper.selectStudentCourseHeaderInfo(courseNo, studentUserNo);
+	 }
 
 }

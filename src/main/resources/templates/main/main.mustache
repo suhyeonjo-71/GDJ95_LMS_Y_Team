@@ -255,12 +255,6 @@
 				              border-b-2 border-transparent hover:border-blue-600 transition">
 				        <i class="fa-solid fa-table"></i> 내 시간표
 				    </a>
-				
-			        <a id="certificateLink"
-			           href="/main/certificateOfGraduation"
-			           class="flex items-center gap-2 py-4 text-gray-600 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition cursor-pointer">
-			            <i class="fa-solid fa-file-lines"></i> 졸업증명서 발급 (팝업)
-			        </a>
 			        {{/useStudent}}
 			        
 			        {{#useProfessor}}
@@ -354,6 +348,10 @@
 			        <a href="/myInfo/courseManagement" class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
 			            <i class="fa-solid fa-book w-5"></i> 학점 관리
 			        </a>
+			        <a id="certificateLink" href="/main/certificateOfGraduation"
+			           class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
+			            <i class="fa-solid fa-file-lines w-5"></i> 졸업증명서 발급
+			   		</a>
 			        {{/useStudent}}
 			        
 			        {{#useProfessor}}

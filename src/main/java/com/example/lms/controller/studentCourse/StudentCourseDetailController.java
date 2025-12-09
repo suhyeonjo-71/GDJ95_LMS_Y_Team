@@ -18,9 +18,7 @@ public class StudentCourseDetailController {
 
     private final StudentCourseDetailService studentCourseDetailService;
 
-    // --------------------------------------------------
     // 학생 수강신청 - 강의 상세 조회
-    // --------------------------------------------------
     @GetMapping("/studentCourseDetail")
     public String courseDetail(
             @RequestParam("courseNo") int courseNo,
@@ -31,13 +29,13 @@ public class StudentCourseDetailController {
         SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login";
 
-        // 1) 강의 상세 정보 조회
+        // 강의 상세 정보 조회
         StudentCourseDetailDTO detail = studentCourseDetailService.getCourseDetail(courseNo);
 
-        // 2) 강의 정보 전달
+        // 강의 정보 전달
         model.addAttribute("course", detail);
 
-        // 3) 강의 시간 리스트 전달 (DTO 내부 List)
+        // 강의 시간 리스트 전달 (DTO 내부 List)
         model.addAttribute("timeList", detail.getCourseTimeList());
 
         // HEADER 표시용

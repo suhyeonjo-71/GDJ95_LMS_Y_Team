@@ -57,7 +57,7 @@ public class StudentCourseHomeDTO {
     private Integer assignmentNo;
     private String assignmentTitle;
     private String assignmentDeadline;
-    private Boolean assignmentSubmitted;  // 제출 여부
+    private Boolean submitted;  // 제출 여부
     private Double assignmentScore;       // 교수 점수
 
     // -----------------------------

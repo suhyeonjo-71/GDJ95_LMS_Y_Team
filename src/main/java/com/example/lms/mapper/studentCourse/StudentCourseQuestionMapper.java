@@ -1,4 +1,4 @@
-package com.example.lms.mapper.courseQuestion;
+package com.example.lms.mapper.studentCourse;
 
 import java.util.List;
 
@@ -9,9 +9,7 @@ import com.example.lms.dto.CourseQuestionAnswerDTO;
 import com.example.lms.dto.CourseQuestionDTO;
 
 @Mapper
-public interface CourseQuestionMapper {
-
-    int countQuestion(@Param("courseNo") int courseNo);
+public interface StudentCourseQuestionMapper {
 
     List<CourseQuestionDTO> selectPagedQuestionList(
             @Param("courseNo") int courseNo,
@@ -41,4 +39,7 @@ public interface CourseQuestionMapper {
     int updateAnswer(CourseQuestionAnswerDTO dto);
 
     int selectCourseNoByQuestion(@Param("courseQuestionNo") int courseQuestionNo);
+
+    int countQuestion(@Param("courseNo") int courseNo);
+
 }

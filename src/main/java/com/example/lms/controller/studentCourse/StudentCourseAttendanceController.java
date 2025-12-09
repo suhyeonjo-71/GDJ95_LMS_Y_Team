@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.lms.dto.AttendanceSummaryDTO;
 import com.example.lms.dto.StudentAttendanceDTO;
+import com.example.lms.dto.StudentCourseDetailDTO;
 import com.example.lms.dto.SysUserDTO;
 import com.example.lms.service.studentCourse.StudentCourseAttendanceService;
+import com.example.lms.service.studentCourse.StudentCourseService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class StudentCourseAttendanceController {
 
     private final StudentCourseAttendanceService service;
+    private final StudentCourseService studentCourseService;
 
     // ---------------------------------------------------------
     // 학생 출석 페이지
@@ -31,9 +34,16 @@ public class StudentCourseAttendanceController {
             Model model) {
 
         SysUserDTO user = (SysUserDTO) session.getAttribute("loginUser");
-        if(user == null) return "redirect:/login";
+        if (user == null) return "redirect:/login";
 
         int studentUserNo = user.getUserNo();
+
+        StudentCourseDetailDTO courseHeader =
+                studentCourseService.getStudentCourseDetail(courseNo);
+
+        model.addAttribute("course", courseHeader);
+        model.addAttribute("courseNo", courseNo);
+        model.addAttribute("nav_attendance", true);
 
         // 회차별 출석 상세
         List<StudentAttendanceDTO> detailList =
@@ -43,7 +53,6 @@ public class StudentCourseAttendanceController {
         AttendanceSummaryDTO summary =
                 service.getAttendanceSummary(courseNo, studentUserNo);
 
-        model.addAttribute("courseNo", courseNo);
         model.addAttribute("detailList", detailList);
         model.addAttribute("summary", summary);
 
