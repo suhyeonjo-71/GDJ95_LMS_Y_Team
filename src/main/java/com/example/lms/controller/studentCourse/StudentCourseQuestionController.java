@@ -96,7 +96,11 @@ public class StudentCourseQuestionController {
 
         CourseQuestionDTO question =
                 service.getQuestionDetail(courseQuestionNo, loginUser);
-
+        
+        if (!question.isCanView()) {
+            return "redirect:/studentCourseQuestionList?courseNo=" + question.getCourseNo();
+        }
+        
         StudentCourseDetailDTO courseHeader =
         		 studentCourseService.getStudentCourseHeaderInfo(question.getCourseNo(), loginUser.getUserNo());
 

@@ -140,22 +140,8 @@ public class StudentCourseService {
         // 최근 공지 3개
         List<StudentCourseNoticeDTO> notices = studentCourseMapper.selectRecentNotices(courseNo);
 
-        if (notices.size() > 0) {
-            dto.setNoticeNo1(notices.get(0).getCourseNoticeNo());
-            dto.setNoticeTitle1(notices.get(0).getCourseNoticeTitle());
-            dto.setNoticeDate1(notices.get(0).getCreatedate());
-        }
-        if (notices.size() > 1) {
-            dto.setNoticeNo2(notices.get(1).getCourseNoticeNo());
-            dto.setNoticeTitle2(notices.get(1).getCourseNoticeTitle());
-            dto.setNoticeDate2(notices.get(1).getCreatedate());
-        }
-        if (notices.size() > 2) {
-            dto.setNoticeNo3(notices.get(2).getCourseNoticeNo());
-            dto.setNoticeTitle3(notices.get(2).getCourseNoticeTitle());
-            dto.setNoticeDate3(notices.get(2).getCreatedate());
-        }
-
+        dto.setNoticeList(notices);
+        
         // 과제 요약 1개
         StudentAssignmentListDTO ass = studentCourseMapper.selectAssignmentSummary(courseNo, studentUserNo);
         if (ass != null) {
@@ -182,26 +168,10 @@ public class StudentCourseService {
         }
 
         // 최근 질문 3개
-        List<StudentQuestionDTO> questions = getRecentQuestionList(courseNo, studentUserNo);
-
-        if (questions.size() > 0) {
-            dto.setQuestionNo1(questions.get(0).getQuestionNo());
-            dto.setQuestionTitle1(questions.get(0).getQuestionTitle());
-            dto.setQuestionDate1(questions.get(0).getCreatedate());
-            dto.setQuestionAnswered1(questions.get(0).getAnswered());
-        }
-        if (questions.size() > 1) {
-            dto.setQuestionNo2(questions.get(1).getQuestionNo());
-            dto.setQuestionTitle2(questions.get(1).getQuestionTitle());
-            dto.setQuestionDate2(questions.get(1).getCreatedate());
-            dto.setQuestionAnswered2(questions.get(1).getAnswered());
-        }
-        if (questions.size() > 2) {
-            dto.setQuestionNo3(questions.get(2).getQuestionNo());
-            dto.setQuestionTitle3(questions.get(2).getQuestionTitle());
-            dto.setQuestionDate3(questions.get(2).getCreatedate());
-            dto.setQuestionAnswered3(questions.get(2).getAnswered());
-        }
+List<StudentQuestionDTO> questions = getRecentQuestionList(courseNo, studentUserNo); 
+        
+        // DTO에 List<StudentQuestionDTO> questionList 필드가 있다는 가정 하에:
+        dto.setRecentQuestions(questions);
         
         return dto;
     }
@@ -298,7 +268,7 @@ public class StudentCourseService {
 
             q.setIndex(displayIndex--);
 
-            boolean isPrivate = q.isPrivatePost();
+            boolean isPrivate = (q.getPrivatePost() == 1);
             boolean isWriter = q.getWriterUserNo() == studentUserNo;
 
             boolean canView = !isPrivate || isWriter;
@@ -306,7 +276,9 @@ public class StudentCourseService {
 
             if (!canView) {
                 q.setCourseQuestionTitle("비밀글입니다.");
+                q.setWriterName("비공개");
             }
+
         }
 
         result.put("list", list);

@@ -51,7 +51,6 @@ tbody td {
 }
 tbody tr:hover {
     background-color:rgba(37,99,235,0.08);
-    cursor:pointer;
 }
 
 /* 상태 배지 */
@@ -93,6 +92,15 @@ tbody tr:hover {
     font-weight:800;
     color:#1E3A8A;
 }
+
+/* 모달 애니메이션 */
+@keyframes fadeIn {
+    from { opacity:0; transform:translateY(10px); }
+    to   { opacity:1; transform:translateY(0); }
+}
+.animate-fadeIn {
+    animation: fadeIn 0.25s ease-out;
+}
 </style>
 
 </head>
@@ -113,7 +121,6 @@ tbody tr:hover {
 <!-- 카드 -->
 <div class="card">
 
-    <!-- 상단 제목 + 버튼 -->
     <div class="flex justify-between items-center mb-6">
         <h2 class="page-title flex items-center gap-3">
             <i class="fa-solid fa-circle-question text-blue-600 text-xl"></i>
@@ -142,42 +149,38 @@ tbody tr:hover {
             <tbody>
 
             {{#questionList}}
-            <tr onclick="location.href='/studentCourseQuestionDetail?courseQuestionNo={{courseQuestionNo}}'">
-
+            <tr 
+			    onclick="{{#canView}}location.href='/studentCourseQuestionDetail?courseQuestionNo={{courseQuestionNo}}'{{/canView}}
+			             {{^canView}}openPrivateModal(){{/canView}}"
+			    class="
+			        {{#canView}}hover:bg-blue-50 cursor-pointer{{/canView}}
+			        {{^canView}}bg-gray-50 cursor-not-allowed{{/canView}}
+			    "
+			>
                 <!-- 번호 -->
                 <td>{{index}}</td>
 
                 <!-- 제목 -->
                 <td>
-                    {{#privatePost}}
-                        <i class="fa-solid fa-lock text-gray-400 text-xs mr-1"></i>
-                    {{/privatePost}}
-
                     {{#canView}}
-                    <span class="hover:text-blue-600 font-medium">
-                        {{courseQuestionTitle}}
-                    </span>
+                        <span class="hover:text-blue-600 font-medium">{{courseQuestionTitle}}</span>
                     {{/canView}}
 
                     {{^canView}}
-                    <span class="text-gray-400">비밀글입니다.</span>
+                        <span class="text-gray-400">비밀글입니다.</span>
                     {{/canView}}
                 </td>
 
-                <!-- 작성자 -->
                 <td>{{writerName}}</td>
-
-                <!-- 작성일 -->
                 <td class="text-sm text-gray-600">{{createdate}}</td>
 
-                <!-- 상태 -->
                 <td>
                     {{#answered}}
-                    <span class="badge badge-green">답변완료</span>
+                        <span class="badge badge-green">답변완료</span>
                     {{/answered}}
 
                     {{^answered}}
-                    <span class="badge badge-red">미답변</span>
+                        <span class="badge badge-red">미답변</span>
                     {{/answered}}
                 </td>
 
@@ -186,9 +189,7 @@ tbody tr:hover {
 
             {{^questionList}}
             <tr>
-                <td colspan="5" class="text-center py-6 text-gray-500">
-                    등록된 문의가 없습니다.
-                </td>
+                <td colspan="5" class="text-center py-6 text-gray-500">등록된 문의가 없습니다.</td>
             </tr>
             {{/questionList}}
 
@@ -198,7 +199,6 @@ tbody tr:hover {
 
     <!-- 페이징 -->
     <div class="flex justify-center mt-8 pagination-area">
-
         {{#hasPrev}}
         <a class="nav-btn" href="?courseNo={{courseNo}}&currentPage=1">« 처음</a>
         <a class="nav-btn" href="?courseNo={{courseNo}}&currentPage={{prevPage}}">‹ 이전</a>
@@ -215,12 +215,49 @@ tbody tr:hover {
         <a class="nav-btn" href="?courseNo={{courseNo}}&currentPage={{nextPage}}">다음 ›</a>
         <a class="nav-btn" href="?courseNo={{courseNo}}&currentPage={{lastPage}}">마지막 »</a>
         {{/hasNext}}
-
     </div>
 
 </div>
 
 </main>
+
+
+<!-- ====================================================== -->
+<!-- 🔒 비밀글 모달 -->
+<!-- ====================================================== -->
+<div id="privateModal"
+     class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-[360px] animate-fadeIn">
+        <h3 class="text-lg font-bold text-gray-900 mb-2">비밀글입니다</h3>
+
+        <p class="text-sm text-gray-600 leading-6">
+            이 글은 작성자와 담당 교수만 열람할 수 있습니다.
+        </p>
+
+        <div class="flex justify-end gap-3 mt-6">
+            <button onclick="closePrivateModal()"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                확인
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function openPrivateModal() {
+    document.getElementById("privateModal").classList.remove("hidden");
+}
+
+function closePrivateModal() {
+    document.getElementById("privateModal").classList.add("hidden");
+}
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePrivateModal();
+});
+</script>
 
 </body>
 </html>

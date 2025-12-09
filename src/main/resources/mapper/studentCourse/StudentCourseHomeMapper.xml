@@ -5,9 +5,7 @@
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseHomeMapper">
 
-    <!-- =========================
-         강의 홈 정보
-         ========================= -->
+    <!-- 강의 홈 정보 -->
     <select id="selectCourseHome" parameterType="map" resultType="com.example.lms.dto.StudentCourseHomeDTO">
         
         SELECT 
@@ -38,9 +36,7 @@
 
     </select>
 
-    <!-- =========================
-         최근 공지
-         ========================= -->
+    <!-- 최근 공지 -->
     <select id="selectRecentNotices" parameterType="int"
         resultType="com.example.lms.dto.StudentCourseNoticeDTO">
 
@@ -54,16 +50,14 @@
 	</select>
 
 
-    <!-- =========================
-         최근 과제
-         ========================= -->
+    <!-- 최근 과제 -->
     <select id="selectRecentAssignment" parameterType="map" resultType="com.example.lms.dto.StudentAssignmentListDTO">
         SELECT 
 		    a.assignment_no AS assignmentNo,
 		    a.assignment_title AS assignmentTitle,
 		    DATE_FORMAT(a.assignment_due_date, '%Y-%m-%d') AS assignmentDeadline,
 		    IFNULL(s.assignment_score, 0) AS assignmentScore,
-		    CASE WHEN s.assignment_submission_no IS NULL THEN 0 ELSE 1 END AS assignmentSubmitted
+            CASE WHEN s.assignment_submission_no IS NULL THEN 0 ELSE 1 END AS submitted
 		FROM tb_assignment a
 		LEFT JOIN tb_assignment_submission s
 		    ON a.assignment_no = s.assignment_no AND s.writer_user_no = #{studentUserNo}
@@ -72,9 +66,7 @@
 		LIMIT 1   
     </select>
 
-    <!-- =========================
-         출석 요약
-         ========================= -->
+    <!-- 출석 요약 -->
     <select id="selectAttendanceSummary" parameterType="map" resultType="com.example.lms.dto.AttendanceSummaryDTO">
         SELECT SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END) AS attendanceCount,
                SUM(CASE WHEN attendance_status = 1 THEN 1 ELSE 0 END) AS lateCount,
@@ -84,9 +76,7 @@
         WHERE course_no = #{courseNo} AND student_user_no = #{studentUserNo}
     </select>
 
-    <!-- =========================
-         성적 요약
-         ========================= -->
+    <!-- 성적 요약 -->
     <select id="selectStudentGradeSummary" parameterType="map" resultType="com.example.lms.dto.StudentGradeDTO">
         SELECT grade_value AS gradeValue,
                grade_score AS gradeScore
@@ -94,20 +84,20 @@
         WHERE course_no = #{courseNo} AND student_user_no = #{studentUserNo}
     </select>
 
-    <!-- =========================
-         최근 Q&A
-         ========================= -->
-    <select id="selectRecentQuestionList" parameterType="map" resultType="com.example.lms.dto.StudentQuestionDTO">
+    <!-- 최근 Q&A -->
+    <select id="selectRecentQuestions" parameterType="int" resultType="com.example.lms.dto.StudentQuestionDTO">
 	    SELECT 
 	        course_question_no AS questionNo,
-	        course_question_title AS questionTitle,
+	        course_question_title AS questionTitle, 
 	        writer_user_no AS writerUserNo,
 	        is_private AS privatePost,
-	        CASE WHEN EXISTS (
-	            SELECT 1 
-	            FROM tb_course_question_answer a
-	            WHERE a.course_question_no = tb.course_question_no
-	        ) THEN 1 ELSE 0 END AS answered,
+	        
+            (
+                SELECT COUNT(*) 
+                FROM tb_course_question_answer a
+                WHERE a.course_question_no = tb.course_question_no
+            ) AS answerCount,
+            
 	        DATE_FORMAT(createdate, '%Y-%m-%d %H:%i:%s') AS createdate
 	    FROM tb_course_question tb
 	    WHERE course_no = #{courseNo}

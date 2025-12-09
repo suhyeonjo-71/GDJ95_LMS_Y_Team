@@ -24,5 +24,5 @@ public interface StudentCourseHomeMapper {
 
     StudentGradeDTO selectStudentGradeSummary(int courseNo, int studentUserNo);
 
-    List<StudentQuestionDTO> selectRecentQuestionList(int courseNo, int studentUserNo);
+    List<StudentQuestionDTO> selectRecentQuestions(int courseNo);
 }

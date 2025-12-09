@@ -56,7 +56,8 @@ public class StudentCourseHomeController {
         List<StudentQuestionDTO> recentQuestions =
                 service.getRecentQuestionList(courseNo, studentUserNo, loginUser.getUserAuth());
         model.addAttribute("questionList", recentQuestions);
-
+        
+       
         model.addAttribute("loginUserName", loginUser.getUserName());
 
         return "studentCourse/studentCourseHome";

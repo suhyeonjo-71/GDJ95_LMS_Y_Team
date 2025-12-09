@@ -58,27 +58,39 @@ public class StudentCourseHomeService {
 	 // ----------------------------
 	 // 최근 질문
 	 // ----------------------------
-	 public List<StudentQuestionDTO> getRecentQuestionList(int courseNo, int studentUserNo, String loginUserRole) {
-	
-	     List<StudentQuestionDTO> list = mapper.selectRecentQuestionList(courseNo, studentUserNo);
-	
-	     for (StudentQuestionDTO q : list) {
-	
-	         boolean isPrivate = Boolean.TRUE.equals(q.getPrivatePost());
-	         boolean isWriter = q.getWriterUserNo() == studentUserNo;
-	         boolean isProfessor = "PROFESSOR".equals(loginUserRole);
-	
-	         boolean canView = !isPrivate || isWriter || isProfessor;
-	         
-	         q.setCanView(canView);
-	         
-	         // 🔥 비공개인데 볼 권한 없으면 제목 가리기
-	         if (!canView) {
-	             q.setQuestionTitle("비밀글입니다.");
-	         }
-	     }
-	
-	     return list;
-	 }
+    public List<StudentQuestionDTO> getRecentQuestionList(
+            int courseNo, 
+            int studentUserNo, 
+            String userAuth // <-- 원인 해결: 세 번째 인자 String userAuth 받도록 수정
+        ) {
+
+            // 1. 매퍼 호출: courseNo만 넘기도록 수정 (Mapper 정의에 따름)
+            List<StudentQuestionDTO> list = mapper.selectRecentQuestions(courseNo); 
+
+            // 2. 권한 확인: 강사(PROFESSOR) 또는 관리자(ADMIN)인지 확인
+            boolean isInstructorOrAdmin = "PROFESSOR".equals(userAuth) || "ADMIN".equals(userAuth); 
+
+            for (StudentQuestionDTO q : list) {
+
+                // 3. 비밀글 접근 권한 로직
+            	boolean isPrivate = (q.getPrivatePost() != null && q.getPrivatePost() == 1);
+                boolean isWriter = (q.getWriterUserNo() != null && q.getWriterUserNo() == studentUserNo);
+
+                // 뷰 가능 조건: 비밀글이 아니거나 (!isPrivate) || 글 작성자이거나 (isWriter) || 강사/관리자일 경우 (isInstructorOrAdmin)
+                boolean canView = !isPrivate || isWriter || isInstructorOrAdmin;
+                q.setCanView(canView);
+
+                // 4. 답변 여부
+                boolean answered = (q.getAnswerCount() != null && q.getAnswerCount() > 0);
+                q.setAnswered(answered);
+
+                // 5. 비밀글이면 제목 가리기
+                if (!canView) {
+                    q.setQuestionTitle("비밀글입니다."); // q.setCourseQuestionTitle("비밀글입니다."); 도 가능, DTO 필드에 따라
+                }
+            }
+
+            return list;
+        }
 
 }
