@@ -267,8 +267,7 @@
 
                     <label for="excelFile" class="border-2 border-dashed border-gray-300 p-10 rounded-lg text-gray-500 cursor-pointer block hover:border-blue-400 transition">
                         <i class="fa-solid fa-cloud-upload-alt text-4xl mb-3"></i>
-                        <!-- ⭐️ 수정된 부분: 드래그 문구 제거 ⭐️ -->
-                        <p id="fileNameDisplay">클릭하여 엑셀 파일 업로드</p> 
+                        <p id="fileNameDisplay">파일을 드래그하거나 클릭하여 업로드</p>
                         <p class="text-sm">.xlsx, .xls 파일만 지원됩니다</p>
                         <button type="button" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition text-sm">
                             파일 선택
@@ -640,7 +639,7 @@
         $deptUploadForm[0].reset();
         // input[type=file] 값을 초기화해야 드롭된 파일 정보도 제거됨
         $excelFile.val(''); 
-        $fileNameDisplay.text('파일을 클릭하여 업로드');
+        $fileNameDisplay.text('파일을 드래그하거나 클릭하여 업로드');
         $submitUploadBtn.prop('disabled', true);
         $batchUploadModal.removeClass('hidden').addClass('flex');
     }
@@ -778,8 +777,6 @@
             }
         });
 
-        
-        
         // ⭐️ 9. 파일 선택 영역/버튼 클릭 시 input[type=file] 강제 실행 로직 (재조정) ⭐️
         $dropArea.on('click', function(e) {
             // 클릭된 요소가 input 자체가 아닐 때만 trigger를 실행하여 확실하게 팝업을 띄웁니다.
@@ -790,8 +787,6 @@
             }
         });
 
-        /* 파일선택상자 두번 출력으로 주석 처리
-        
         // ⭐️ 10. 드래그 앤 드롭 이벤트 구현 (유지) ⭐️
         // dragenter, dragover: 파일이 영역 위로 들어왔을 때
         $dropArea.on('dragenter dragover', function(e) {
@@ -836,9 +831,7 @@
                 }
             }
         });
-		
-        */
-        
+
         // 7. 엑셀 일괄 업로드 폼 제출 처리 
         $deptUploadForm.on('submit', function(e) {
             e.preventDefault();

@@ -96,14 +96,12 @@ public class UserController {
 		        
 		        log.info("UserController$$updateUserInfo : 개인 정보 수정 성공");
 		        
-		        // 1. 성공 메시지 전달
+		        //  성공 메시지 전달
 		        redirectAttributes.addFlashAttribute("message", "개인 정보가 성공적으로 변경되었습니다.");
 		        
-		        // 임시 방편으로 변경된 정보만 갱신 (가장 이상적인 방법은 서비스 레이어에서 DB 재조회 후 세션 갱신)
 		        // loginSysUserDTO.setUserName(updatedUserDTO.getUserName()); -- 1208 잠시 주석처리함 버그생김
-		        // ... 변경된 모든 필드를 loginSysUserDTO에 반영해야 합니다.
 		        
-		        // 3. 원래 페이지(상세 정보 뷰)로 리다이렉트
+		        // 원래 페이지(상세 정보 뷰)로 리다이렉트
 		        return "redirect:/myInfo/userInfo";
 		        
 		    } else {
