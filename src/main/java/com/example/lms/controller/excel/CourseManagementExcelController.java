@@ -114,8 +114,9 @@ public class CourseManagementExcelController {
 	        row.createCell(7).setCellValue(createdate != null ? createdate : "-");
 	        Integer courseScore = course.getCourseScore();
 	        row.createCell(8).setCellValue(courseScore != null ? courseScore.toString() : "0");
-	        Double gradeFinalScore = course.getGradeFinalScore();
-	        row.createCell(9).setCellValue(gradeFinalScore != null ? gradeFinalScore.toString() : "0.0");
+	        // Double gradeFinalScore = course.getGradeFinalScore();
+	        // row.createCell(9).setCellValue(gradeFinalScore != null ? gradeFinalScore.toString() : "0.0");
+	        row.createCell(9).setCellValue(course.getGradeFinalScoreNullChk());
 	        row.createCell(10).setCellValue(course.getGradeValue());
 
 	     // 관리자 헤더의 마지막 인덱스 (11)에 학생 이름 추가

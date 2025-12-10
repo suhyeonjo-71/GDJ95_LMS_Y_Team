@@ -386,7 +386,7 @@
 					te.course_no = d.course_no
 					AND te.student_user_no = d.student_user_no
 				WHERE 1=1
-						AND d.student_user_no = #{userNo}
+						AND te.student_user_no = #{userNo}
 						AND te.enrollment_status = '0'
 					<if test="selectedCourseYearAndSemester != null and selectedCourseYearAndSemester.trim() != ''">
 		                AND CONCAT(CAST(a.course_year AS CHAR), "-", CAST(a.course_semester AS CHAR)) = #{selectedCourseYearAndSemester}
