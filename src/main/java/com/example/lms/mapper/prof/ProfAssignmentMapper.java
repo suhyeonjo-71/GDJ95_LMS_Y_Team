@@ -25,6 +25,12 @@ public interface ProfAssignmentMapper {
 	List<ProfCourseAssignmentDTO> selectCourseSubmissionList(@Param("assignmentNo") int assignmentNo,
             											@Param("courseNo") int courseNo);
 	
+	// 점수 저장
+	void updateSubmissionScore(@Param("submissionNo") int submissionNo, @Param("score") Integer score);
+	
+	// 과제 제출 번호 : 사용자번호
+	int selectWriterUserNoBySubmissionNo(int submissionNo);
+	
 	// 등록
 	int insertAssignment(AssignmentDTO a);
 	

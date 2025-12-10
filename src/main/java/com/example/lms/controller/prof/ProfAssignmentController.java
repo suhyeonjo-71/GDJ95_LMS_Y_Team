@@ -15,6 +15,7 @@ import com.example.lms.dto.AssignmentDTO;
 import com.example.lms.dto.ProfCourseAssignmentDTO;
 import com.example.lms.dto.SysUserDTO;
 import com.example.lms.service.prof.ProfAssignmentService;
+import com.example.lms.service.prof.ProfCourseGradeService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,6 +24,9 @@ public class ProfAssignmentController {
 
     @Autowired
     ProfAssignmentService assignmentService;
+    
+    @Autowired
+    ProfCourseGradeService gradeService;
     
     // 메뉴
     @GetMapping("/profCourseAssignment")
@@ -92,6 +96,20 @@ public class ProfAssignmentController {
         model.addAttribute("courseNo", courseNo);
 
         return "profAssignment/profCourseAssignmentDetail";
+    }
+    
+    // 점수 저장
+    @PostMapping("/profAssignmentScore")
+    public String updateAssignmentScore(@RequestParam("assignmentSubmissionNo") int submissionNo,
+							            @RequestParam("assignmentNo") int assignmentNo,
+							            @RequestParam("courseNo") int courseNo,
+							            @RequestParam("assignmentScore") Integer score) { 
+
+    	assignmentService.updateSubmissionScore(submissionNo, score);
+    	
+    	gradeService.recalculateAndSaveFinalGrade(courseNo, submissionNo);
+
+        return "redirect:/profCourseAssignmentDetail?assignmentNo=" + assignmentNo + "&courseNo=" + courseNo;
     }
 
     // 등록 폼

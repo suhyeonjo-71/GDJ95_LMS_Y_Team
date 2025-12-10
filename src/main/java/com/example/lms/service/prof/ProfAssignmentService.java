@@ -45,6 +45,14 @@ public class ProfAssignmentService {
 		return assignmentMapper.selectCourseSubmissionList(assignmentNo, courseNo);
 	}
 	
+	// 점수 저장
+	public void updateSubmissionScore(int submissionNo, Integer score) {
+		assignmentMapper.updateSubmissionScore(submissionNo, score);
+    }
+	
+	// 과제 제출 번호 + 사용자번호
+	
+	
 	// 등록
 	public int addAssignment(AssignmentDTO a) {
 		

@@ -30,10 +30,14 @@ SELECT
             ), 100.0) AS attendanceRate,
 
             /* 과제 점수(NULL일 경우 0.0으로 대체) */
-            COALESCE((SELECT grade_assignment_score 
-             FROM tb_grade 
-             WHERE course_no = e.course_no
-               AND student_user_no = e.student_user_no), 0.0) AS assignmentScore,
+            COALESCE(
+            (SELECT AVG(tbs.assignment_score) 
+             FROM tb_assignment_submission tbs 
+             JOIN tb_assignment tba ON tbs.assignment_no = tba.assignment_no
+             WHERE tba.course_no = e.course_no 
+             AND tbs.writer_user_no = e.student_user_no
+             AND tbs.assignment_score IS NOT NULL 
+            ), 0.0) AS assignmentScore,
 
             /* 시험 점수 (NULL일 경우 0.0으로 대체) */
             COALESCE((SELECT grade_score 

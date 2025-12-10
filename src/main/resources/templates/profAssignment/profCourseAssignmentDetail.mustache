@@ -112,12 +112,18 @@
                         <th class="py-2 px-3 text-left">내용</th>
                         <th class="py-2 px-3 text-center">제출 여부</th>
                         <th class="py-2 px-3 text-center">제출일</th>
+                        <th class="py-2 px-3 text-center">점수</th>
+                        <th class="py-2 px-3 text-center">저장</th>
                     </tr>
                 </thead>
 
                 <tbody>
 				    {{#submissionList}}
 				    <tr class="border-b">
+				    <form action="/profAssignmentScore" method="POST">
+			            <input type="hidden" name="assignmentSubmissionNo" value="{{assignmentSubmissionNo}}">
+			            <input type="hidden" name="assignmentNo" value="{{assignment.assignmentNo}}">
+			            <input type="hidden" name="courseNo" value="{{assignment.courseNo}}">
 				
 				        <td class="py-2 px-3">{{writerName}}</td>
 				        <td class="py-2 px-3">{{writerId}}</td>
@@ -152,7 +158,27 @@
 				            {{#isSubmitted}}{{createdate}}{{/isSubmitted}}
 				            {{#isNotSubmitted}}-{{/isNotSubmitted}}
 				        </td>
-				
+				        
+				        <td class="py-2 px-3 text-center">
+			                {{#isSubmitted}}
+			                <input type="text" name="assignmentScore"
+			                       value="{{#assignmentScore}}{{assignmentScore}}{{/assignmentScore}}" 
+			                       min="0" max="100" 
+			                       class="w-20 px-2 py-1 border border-gray-300 rounded-md text-center text-sm focus:ring-blue-500 focus:border-blue-500" 
+			                       {{^assignmentSubmissionFileUrl}}readonly{{/assignmentSubmissionFileUrl}}> 
+			                {{/isSubmitted}}
+			            </td>
+			
+			            <td class="py-2 px-3 text-center">
+			                {{#isSubmitted}}
+			                <button type="submit" 
+			                        class="px-3 py-1 bg-green- 500 text-white bg-green-500 rounded-md text-xs font-medium hover:bg-green-600 transition shadow-sm">
+			                    저장
+			                </button>
+			                {{/isSubmitted}}
+			            </td>
+			        </form>
+			        
 				    </tr>
 				    {{/submissionList}}
 				

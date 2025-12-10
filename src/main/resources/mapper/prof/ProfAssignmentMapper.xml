@@ -80,6 +80,23 @@
 	    WHERE e.course_no = #{courseNo}
 	    ORDER BY st.user_name ASC
 	</select>
+	
+	<!-- 점수 저장 -->
+    <update id="updateSubmissionScore">
+        UPDATE tb_assignment_submission
+        SET 
+            assignment_score = #{score},
+            updatedate = NOW()
+        WHERE 
+            assignment_submission_no = #{submissionNo}
+    </update>
+    
+    <!-- 과제 제출 번호 + 사용자번호 -->
+    <select id="selectWriterUserNoBySubmissionNo" resultType="int">
+        SELECT writer_user_no
+        FROM tb_assignment_submission
+        WHERE assignment_submission_no = #{submissionNo}
+    </select>
     
     <!-- 등록 -->
     <insert id="insertAssignment" parameterType="com.example.lms.dto.AssignmentDTO"
