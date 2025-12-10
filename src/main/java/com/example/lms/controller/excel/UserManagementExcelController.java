@@ -122,6 +122,15 @@ public class UserManagementExcelController {
             
             // 2. 저장된 File 객체를 사용하여 파싱
             List<SysUserExcelDTO> sysUserList = userManagementExcelService.parseExcelToSysUserExcelDTO(dest);
+            
+            // 행 수 제한 추가
+            if (sysUserList.size() > 1000) {
+                
+            	return ResponseEntity.ok(Map.of(
+                    "status", "fail", 
+                    "message", "엑셀 파일의 행 수가 1000개를 초과합니다. 최대 1000행까지만 업로드 가능합니다."
+                ));
+            }
 
             if (sysUserList.isEmpty()) {
             	

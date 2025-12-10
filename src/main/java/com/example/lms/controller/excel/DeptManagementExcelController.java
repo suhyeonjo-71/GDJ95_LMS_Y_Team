@@ -116,6 +116,15 @@ public class DeptManagementExcelController {
             
             // 2. 저장된 File 객체를 사용하여 파싱
             List<DeptDTO> deptList =  deptManagementExcelService.parseExcelToDeptDTO(dest);
+            
+            // 행 수 제한 추가
+            if (deptList.size() > 1000) {
+                
+            	return ResponseEntity.ok(Map.of(
+                    "status", "fail", 
+                    "message", "엑셀 파일의 행 수가 1000개를 초과합니다. 최대 1000행까지만 업로드 가능합니다."
+                ));
+            }
 
             if (deptList.isEmpty()) {
                 // 유효한 데이터가 없을 경우 저장된 파일 삭제 고려 (선택 사항)
