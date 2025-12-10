@@ -44,7 +44,10 @@ public class LoginUserFilter extends HttpFilter implements Filter {
 
 		// 3. 필터링에서 제외할 경로(Exclude Path) 설정: 로그인, 정적 리소스 등
 		if (path.startsWith("/login") || 
-		    path.startsWith("/resources/") || 
+		    path.startsWith("/resetUserPasswordForm") ||
+		    path.startsWith("/loginForm") ||
+		    path.startsWith("/resetUserPassword") ||
+			path.startsWith("/resources/") || 
 		    path.equals("/") || 
 		    path.startsWith("/error") || // 오류 페이지 제외
 		    path.startsWith("/api/public/")) { 
