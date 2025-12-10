@@ -28,23 +28,9 @@ public class ProfCourseStudController {
 		int rowPerPage = 10;
 	    int startRow = (currentPage - 1) * rowPerPage;
 	    
-	    List<ProfCourseStudDTO> list = profCourseStudService.getStudentListByProf(courseNo, startRow, rowPerPage);
+	    List<ProfCourseStudDTO> list = profCourseStudService.getCourseStudentList(courseNo, startRow, rowPerPage);
 	    
-	    int index = 0;
-	    for (Object o : list) {
-	        if (o == null) {
-	            System.out.println(">>> [" + index + "] = NULL");
-	        } else {
-	            System.out.println(">>> [" + index + "] = " + o.getClass());
-	        }
-	        index++;
-	    }
-
-	    System.out.println("list size = " + list.size());
-	    System.out.println(list);
-
-	    
-	    int totalRow = profCourseStudService.getStudentCountByProf(courseNo);
+	    int totalRow = profCourseStudService.getCourseStudentCount(courseNo);
 	    
 	    int lastPage = (totalRow % rowPerPage == 0) ? (totalRow / rowPerPage) : (totalRow / rowPerPage) + 1;
 	    int startPage = ((currentPage - 1) / 10 * 10) + 1;
@@ -56,16 +42,26 @@ public class ProfCourseStudController {
 	        pages.add(i);
 	    }
 	    
+	    boolean showPrev = currentPage > 1;
+	    boolean showNext = currentPage < lastPage;
+	    boolean showPagination = lastPage > 1; // 페이지가 1개면 전체 숨김
+	    
 	    model.addAttribute("courseNo", courseNo);
-	    model.addAttribute("prePage", currentPage > 1 ? currentPage - 1 : 1);
-	    model.addAttribute("nextPage", currentPage < lastPage ? currentPage + 1 : lastPage);
 
 	    model.addAttribute("list", list);
 	    model.addAttribute("currentPage", currentPage);
 	    model.addAttribute("startPage", startPage);
 	    model.addAttribute("endPage", endPage);
+	    model.addAttribute("lastPage", lastPage);
 	    model.addAttribute("pages", pages); 
 
+	    model.addAttribute("prePage", currentPage > 1 ? currentPage - 1 : 1);
+	    model.addAttribute("nextPage", currentPage < lastPage ? currentPage + 1 : lastPage);
+	    
+	    model.addAttribute("showPrev", showPrev);
+	    model.addAttribute("showNext", showNext);
+	    model.addAttribute("showPagination", showPagination);
+	      
 	    return "profCourseStud/profCourseStudList";
 	}
 

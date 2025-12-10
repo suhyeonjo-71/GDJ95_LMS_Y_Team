@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>과제 관리</title>
-    
+    <title>문의 관리</title>
+
     <link rel="stylesheet" as="style" crossorigin
         href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,44 +23,39 @@
 
         <div class="flex justify-between items-center">
             <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                <i class="fa-solid fa-file-pen text-blue-600"></i> 과제 관리
+                <i class="fa-solid fa-circle-question text-blue-600"></i> 문의 관리
             </h2>
         </div>
 
-        <!-- 카드 목록 -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            {{#courseAssignmentSummaryList}}
+            {{#courseQnASummaryList}}
             <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg border border-gray-200 transition">
-
+                
                 <div class="flex justify-between items-start mb-4">
                     <h3 class="text-lg font-semibold text-gray-900">{{courseName}}</h3>
-
+                    <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                        문의 {{questionCount}}개
+                    </span>
                 </div>
 
                 <div class="flex justify-between items-center">
-                    <a href="/profCourseAssignmentList?courseNo={{courseNo}}"
+                    <a href="/profCourseQnAList?courseNo={{courseNo}}"
                        class="text-blue-600 hover:text-blue-800 font-medium text-sm">
-                        <i class="fa-solid fa-list mr-1"></i> 과제 목록
-                    </a>
-
-                    <a href="/addAssignment?courseNo={{courseNo}}"
-                       class="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
-                        <i class="fa-solid fa-plus mr-1"></i> 새 과제
+                        <i class="fa-solid fa-list mr-1"></i> 문의 목록
                     </a>
                 </div>
 
             </div>
-            {{/courseAssignmentSummaryList}}
+            {{/courseQnASummaryList}}
 
         </div>
 
-        <!-- 과제 없을 시 -->
-        {{^courseAssignmentSummaryList}}
+        {{^courseQnASummaryList}}
         <div class="text-center text-gray-500 py-20">
             등록된 강의가 없습니다.
         </div>
-        {{/courseAssignmentSummaryList}}
+        {{/courseQnASummaryList}}
 
     </main>
 

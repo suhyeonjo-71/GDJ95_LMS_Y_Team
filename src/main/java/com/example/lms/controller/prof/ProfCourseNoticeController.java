@@ -45,7 +45,7 @@ public class ProfCourseNoticeController {
 
 	
 	// 공지사항 리스트
-	@GetMapping("/courseNoticeList")
+	@GetMapping("/profCourseNoticeList")
 	public String courseNoticeList(Model model, 
 									@RequestParam("courseNo") int courseNo, 
 									@RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
@@ -56,7 +56,6 @@ public class ProfCourseNoticeController {
 		List<CourseNoticeDTO> list = courseNoticeService.getCourseNoticeListByPage(courseNo, startRow, rowPerPage);
 		
 		int totalRow = courseNoticeService.getCourseNoticeCount(courseNo);
-		
 		int lastPage = (totalRow % rowPerPage == 0) ? (totalRow / rowPerPage) : (totalRow / rowPerPage) +1;
 		
 		int startPage = ((currentPage - 1) / 10 * 10) + 1;
@@ -64,34 +63,36 @@ public class ProfCourseNoticeController {
 	    if (endPage > lastPage) endPage = lastPage;
 	    
 	    List<Integer> pages = new ArrayList<>();
-	    for(int i = startPage; i <= endPage; i++) {
-	        pages.add(i);
-	    }
+	    for (int i = startPage; i <= endPage; i++) pages.add(i);
 	    
 	    model.addAttribute("courseNo", courseNo);
+	    model.addAttribute("list", list);
+	    
+	    model.addAttribute("currentPage", currentPage);
+	    model.addAttribute("startPage", startPage);
+	    model.addAttribute("lastPage", lastPage);
+	    model.addAttribute("endPage", endPage);
+	    model.addAttribute("pages", pages);
 	    
 	    model.addAttribute("prePage", currentPage > 1 ? currentPage - 1 : 1);
 	    model.addAttribute("nextPage", currentPage < lastPage ? currentPage + 1 : lastPage);
 	    
-	    model.addAttribute("list", list);
-	    model.addAttribute("currentPage", currentPage);
-	    model.addAttribute("startPage", startPage);
-	    model.addAttribute("endPage", endPage);
-	    model.addAttribute("pages", pages);
+	    model.addAttribute("showPrev", currentPage > 1);
+	    model.addAttribute("showNext", currentPage < lastPage);
+	    model.addAttribute("showPagination", lastPage > 1);
 	    
-		return "profCourseNotice/courseNoticeList";
+		return "profCourseNotice/profCourseNoticeList";
 	}
 	
 	
 	// 상세보기 + 조회수
-	@GetMapping("/courseNoticeDetail")
-	public String courseNoticeDetai(Model model, 
-									@RequestParam("courseNoticeNo") int courseNoticeNo) {
+	@GetMapping("/profCourseNoticeDetail")
+	public String courseNoticeDetai(Model model, @RequestParam("courseNoticeNo") int courseNoticeNo) {
 		
 		CourseNoticeDTO courseNoticeDTO = courseNoticeService.getCourseNoticeDetail(courseNoticeNo);
 		model.addAttribute("courseNotice", courseNoticeDTO);
 		
-		return "profCourseNotice/courseNoticeDetail";
+		return "profCourseNotice/profCourseNoticeDetail";
 	}
 	
 	// 등록
@@ -110,7 +111,7 @@ public class ProfCourseNoticeController {
 		
 		courseNoticeService.addCourseNotice(courseNotice);
 		
-		return "redirect:/courseNoticeList?courseNo=" + courseNotice.getCourseNo();
+		return "redirect:/profCourseNoticeList?courseNo=" + courseNotice.getCourseNo();
 	}
 	
 	
@@ -159,7 +160,7 @@ public class ProfCourseNoticeController {
 		courseNotice.setWriterUserNo(loginUser.getUserNo());
 		courseNoticeService.modifyCourseNotice(courseNotice);
 		
-		 return "redirect:/courseNoticeDetail?courseNoticeNo=" + courseNotice.getCourseNoticeNo();
+		 return "redirect:/profCourseNoticeDetail?courseNoticeNo=" + courseNotice.getCourseNoticeNo();
 	}
 	
 	// 삭제
@@ -176,6 +177,6 @@ public class ProfCourseNoticeController {
 		
 		courseNoticeService.removeCourseNotice(courseNoticeNo);
 		
-		return "redirect:/courseNoticeList?courseNo=" + courseNo;
+		return "redirect:/profCourseNoticeList?courseNo=" + courseNo;
 	}
 }

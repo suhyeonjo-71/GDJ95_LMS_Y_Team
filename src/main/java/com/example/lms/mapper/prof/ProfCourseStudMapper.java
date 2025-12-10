@@ -11,11 +11,9 @@ import com.example.lms.dto.ProfCourseStudDTO;
 public interface ProfCourseStudMapper {
 	
 	// 강의별 수강생 리스트
-	List<ProfCourseStudDTO> selectStudentListByProf(@Param("courseNo") int courseNo,
+	List<ProfCourseStudDTO> selectCourseStudentList(@Param("courseNo") int courseNo,
 											        @Param("startRow") int startRow,
 											        @Param("rowPerPage") int rowPerPage);
 	
-	int selectStudentCountByProf(@Param("courseNo") int courseNo);
-	
-	double selectAttendanceRate(@Param("courseNo") int courseNo, @Param("studentUserNo") int studentUserNo);
+	int selectCourseStudentCount(@Param("courseNo") int courseNo);
 }

@@ -13,7 +13,7 @@ public interface ProfCourseNoticeMapper {
 	List<CourseNoticeDTO> selectCourseNoticeSummary(int professorUserNo);
 	
 	// 공지사항 리스트
-	List<CourseNoticeDTO> selectCourseNoticeListByPage(int courseNo, int startRow, int rowPerPage);
+	List<CourseNoticeDTO> selectCourseNoticeList(int courseNo, int startRow, int rowPerPage);
 	int selectCourseNoticeCount(int courseNo); // 페이징
 	int updateCourseNoticeViewCount(int courseNoticeNo); // 조회수
 	

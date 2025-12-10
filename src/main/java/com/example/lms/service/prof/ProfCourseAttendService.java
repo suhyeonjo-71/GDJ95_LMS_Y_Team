@@ -18,7 +18,7 @@ public class ProfCourseAttendService {
     @Autowired
     ProfCourseAttendMapper mapper;
 
-    // 1) 주차 리스트 — 1~15주 자동 생성
+    // 주차 리스트 — 1~15주 자동 생성
     public List<Integer> getWeeks(int courseNo) {
 
     	List<Integer> weeks = new ArrayList<>();
@@ -28,12 +28,12 @@ public class ProfCourseAttendService {
         return weeks;
     }
 
-    // 2) 특정 주차 출석 조회
+    // 특정 주차 출석 조회
     public List<ProfCourseAttendDTO> getCourseAttendList(int courseNo, int weekNo) {
 
         List<ProfCourseAttendDTO> list = mapper.selectCourseAttendList(courseNo, weekNo);
 
-        // Mustache에서 라디오 체크 자동 세팅
+        // mustache에서 라디오 체크 자동 세팅
         for (ProfCourseAttendDTO dto : list) {
 
             Integer status = dto.getAttendanceStatus();
@@ -53,7 +53,7 @@ public class ProfCourseAttendService {
         return list;
     }
 
-    // 3) 출석 저장
+    // 출석 저장
     public void saveCourseAttend(List<AttendanceDTO> list) {
         for (AttendanceDTO a : list) {
             mapper.upsertCourseAttend(a);

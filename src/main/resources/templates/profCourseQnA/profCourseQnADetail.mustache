@@ -11,7 +11,82 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { font-family: Pretendard, sans-serif; }
+        /* 폰트 및 배경 설정 */
+        body { 
+            font-family: Pretendard, sans-serif;
+            background: #F8F9FA;
+        }
+        
+        /* 섹션 박스 (전체 내용을 감싸는 단일 컨테이너) */
+        .section-card {
+            background: white;
+            border: 1px solid #D1D5DB;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+        }
+
+        /* 질문 정보 테이블 스타일 */
+        .question-info-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            font-size: 15px;
+        }
+        .question-info-table > div {
+            display: grid;
+            grid-template-columns: 120px 1fr; 
+        }
+        .question-info-table .label {
+            padding: 1rem 1.5rem;
+            background: #F8F9FA; 
+            font-weight: 700;
+            color: #1F2937;
+            border-right: 1px solid #E5E7EB;
+        }
+        .question-info-table .content {
+            padding: 1rem 1.5rem;
+            color: #374151;
+        }
+        
+        /* 답변 폼 textarea 포커스 스타일 */
+        textarea:focus {
+             outline: none;
+             border-color: #3B82F6 !important;
+             box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        /* 버튼 기본 스타일 (크기 축소) */
+        .btn-base {
+            padding: 0.4rem 1rem; 
+            border-radius: 5px; 
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 13px; 
+            line-height: 1.5; 
+        }
+        
+        /* 버튼 색상 */
+        .btn-list {
+            background-color: #4B5563; /* Dark Gray */
+        }
+        .btn-list:hover {
+            background-color: #374151;
+        }
+        .btn-action {
+            background-color: #1D4ED8; /* Blue-700 */
+        }
+        .btn-action:hover {
+            background-color: #1E3A8A; /* Blue-800 */
+        }
+        .btn-delete {
+            background-color: #DC2626; /* Red-600 */
+        }
+        .btn-delete:hover {
+            background-color: #B91C1C;
+        }
+        
+        /* 답변 박스 스타일 제거 CSS 정리 */
     </style>
 </head>
 
@@ -19,98 +94,107 @@
 
     {{> profLayout/profHeader }}
 
-    <main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+    <main class="max-w-7xl mx-auto px-4 py-8"> 
 
-        <!-- 질문 영역 -->
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-6">
+        <div class="section-card space-y-8">
 
-            <div class="flex justify-between items-center pb-4 border-b border-gray-200">
-                <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-                    <i class="fa-regular fa-circle-question text-blue-600"></i> 문의 상세
+            <div class="flex justify-between items-center pb-4 border-b border-gray-300">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-regular fa-circle-question text-blue-600 text-2xl"></i> 문의 상세
                 </h2>
             </div>
 
-            <div class="border border-gray-200 rounded-lg divide-y">
-                <div class="p-4 bg-gray-50 font-medium text-gray-700">제목</div>
-                <div class="p-4">{{question.courseQuestionTitle}}</div>
+            <div class="border border-gray-300 rounded-lg question-info-table">
+                
+                <div class="border-b">
+                    <div class="label">제목</div>
+                    <div class="content">{{question.courseQuestionTitle}}</div>
+                </div>
 
-                <div class="p-4 bg-gray-50 font-medium text-gray-700">작성자</div>
-                <div class="p-4">{{question.writerName}}</div>
+                <div class="border-b">
+                    <div class="label">작성자</div>
+                    <div class="content">{{question.writerName}}</div>
+                </div>
 
-                <div class="p-4 bg-gray-50 font-medium text-gray-700">내용</div>
-                <div class="p-6 whitespace-pre-line leading-relaxed">
+                <div class="p-4 bg-gray-50 font-medium text-gray-700 label" 
+                     style="grid-column: 1 / -1; border-right: none; border-bottom: 1px solid #E5E7EB;">문의 내용</div>
+                
+                <div class="p-6 whitespace-pre-line leading-relaxed text-gray-700" 
+                     style="grid-column: 1 / -1; min-height: 200px;">
                     {{question.courseQuestionContent}}
                 </div>
             </div>
 
-            <a href="/profCourseQnAList?courseNo={{courseNo}}"
-               class="inline-block px-4 py-2 bg-gray-500 text-white rounded-lg text-sm hover:bg-gray-600 transition">
-                <i class="fa-solid fa-list mr-1"></i> 목록으로
-            </a>
-        </div>
+            <div class="space-y-6 pt-4 border-t border-gray-200">
+                
+                <h3 class="text-xl font-bold flex items-center gap-2 pb-3 ">
+                    <i class="fa-solid fa-comments text-blue-600"></i> 답변 관리
+                </h3>
+
+                {{#answers}}
+                <div class="space-y-2 pt-2"> 
+                    
+                    <form action="/profCourseAnswerUpdate" method="post" class="space-y-2">
+                        <input type="hidden" name="answerNo" value="{{answerNo}}">
+                        <input type="hidden" name="courseQuestionNo" value="{{courseQuestionNo}}">
+                        <input type="hidden" name="courseNo" value="{{courseNo}}">
+
+                        <textarea name="answerContent" 
+                                class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500" 
+                                rows="4" required>{{answerContent}}</textarea>
+
+                        <div class="flex justify-end space-x-2">
+                            <button type="submit"
+                                class="text-white btn-base btn-action hover:bg-blue-800">
+                                <i class="fa-solid fa-pen-to-square mr-1"></i> 수정
+                            </button>
+
+                            <a href="/profCourseAnswerDelete?answerNo={{answerNo}}&courseQuestionNo={{courseQuestionNo}}&courseNo={{courseNo}}"
+                            onclick="return confirm('삭제할까요?')"
+                            class="text-white btn-base btn-delete hover:bg-red-700">
+                                <i class="fa-solid fa-trash mr-1"></i> 삭제
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+                {{/answers}}
+
+                {{^answers}}
+                <div class="text-gray-500 text-center py-8 bg-gray-50 rounded-xl border border-gray-200">
+                    <i class="fa-regular fa-bell-slash text-3xl mb-3 text-red-500"></i>
+                    <p>아직 등록된 답변이 없습니다. 새 답변을 작성해주세요.</p>
+                </div>
+                {{/answers}}
 
 
-        <!-- 답변 영역 -->
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-6">
+                <form action="/profCourseAnswer" method="post" class="pt-4 border-t space-y-3">
 
-            <h3 class="text-lg font-semibold flex items-center gap-2">
-                <i class="fa-solid fa-comments text-green-600"></i> 답변
-            </h3>
+                    <h4 class="text-lg font-semibold text-gray-800">새 답변 등록</h4>
 
-            {{#answers}}
-            <div class="border border-gray-200 rounded-lg p-4 space-y-2 bg-gray-50">
-
-                <div class="text-sm whitespace-pre-line">{{answerContent}}</div>
-
-                <form action="/profCourseAnswerUpdate" method="post" class="space-y-2 pt-2 border-t">
-                    <input type="hidden" name="answerNo" value="{{answerNo}}">
                     <input type="hidden" name="courseQuestionNo" value="{{courseQuestionNo}}">
                     <input type="hidden" name="courseNo" value="{{courseNo}}">
 
                     <textarea name="answerContent" 
-                              class="w-full border border-gray-300 rounded-lg p-2 text-sm">{{answerContent}}</textarea>
+                          class="w-full h-32 border border-gray-300 rounded-lg p-4 text-base focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                          placeholder="답변 내용을 입력하세요" required></textarea>
 
-                    <div class="flex justify-end space-x-2">
+                    <div class="flex justify-end">
                         <button type="submit"
-                            class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">
-                            <i class="fa-solid fa-pen-to-square mr-1"></i> 수정
+                            class="text-white btn-base btn-action hover:bg-blue-800">
+                            <i class="fa-solid fa-paper-plane mr-1"></i> 답변 등록
                         </button>
-
-                        <a href="/profCourseAnswerDelete?answerNo={{answerNo}}&courseQuestionNo={{courseQuestionNo}}&courseNo={{courseNo}}"
-                           onclick="return confirm('삭제할까요?')"
-                           class="px-3 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700">
-                            <i class="fa-solid fa-trash mr-1"></i> 삭제
-                        </a>
                     </div>
                 </form>
 
             </div>
-            {{/answers}}
-
-            {{^answers}}
-            <div class="text-gray-500 text-center py-6 bg-gray-50 rounded-lg border border-gray-200">
-                아직 답변이 없습니다.
+            
+            <div class="pt-4 border-t border-gray-200 flex justify-end">
+                <a href="/profCourseQnAList?courseNo={{courseNo}}"
+                   class="inline-block text-white btn-base btn-list hover:bg-gray-700">
+                    <i class="fa-solid fa-list mr-1"></i> 목록으로
+                </a>
             </div>
-            {{/answers}}
-
-
-            <!-- 새 답변 작성 -->
-            <form action="/profCourseAnswer" method="post" class="pt-6 border-t space-y-3">
-
-                <input type="hidden" name="courseQuestionNo" value="{{courseQuestionNo}}">
-                <input type="hidden" name="courseNo" value="{{courseNo}}">
-
-                <textarea name="answerContent" 
-                          class="w-full h-24 border border-gray-300 rounded-lg p-3 text-sm"
-                          placeholder="답변 내용을 입력하세요" required></textarea>
-
-                <div class="flex justify-end">
-                    <button type="submit"
-                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                        <i class="fa-solid fa-paper-plane mr-1"></i> 답변 등록
-                    </button>
-                </div>
-            </form>
 
         </div>
     </main>

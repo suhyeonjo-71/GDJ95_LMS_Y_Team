@@ -224,24 +224,32 @@
 			        
 			        {{#useProfessor}}
 			        <!-- 교수 기능 사용할 헤더 메뉴 -->
+			        <a href="/courseList"
+                   class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
+                    <i class="fa-solid fa-chalkboard-user"></i> 강의관리
+                </a>
+
+                <a href="/profCourseNotice"
+                   class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
+                    <i class="fa-solid fa-bullhorn"></i> 공지관리
+                </a>
+
+                <a href="/profCourseAssignment"
+                   class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
+                    <i class="fa-solid fa-file-pen"></i> 과제관리
+                </a>
+
+                <a href="/profCourseQnAList"
+                   class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
+                    <i class="fa-solid fa-circle-question"></i> 문의관리
+                </a>
+
+                <a href="/profSetting"
+                   class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
+                    <i class="fa-solid fa-gear"></i> 설정
+                </a>
 			        {{/useProfessor}}
-                    <a href="/courseListForEnrollment" class="flex items-center gap-2 py-4 text-gray-600 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition">
-                        <i class="fa-solid fa-book-open"></i> 수강신청
-                    </a>
-                    <a href="#" class="flex items-center gap-2 py-4 text-gray-600 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition">
-                        <i class="fa-solid fa-chart-bar"></i> 성적조회
-                    </a>
-                    <a href="#" class="flex items-center gap-2 py-4 text-gray-600 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition">
-                        <i class="fa-regular fa-calendar-check"></i> 학사일정
-                    </a>
-                    <a id="certificateLink"
-			           href="/main/certificateOfGraduation"
-			           class="flex items-center gap-2 py-4 text-gray-600 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition cursor-pointer">
-			            <i class="fa-solid fa-file-lines"></i> 졸업증명서 발급 (팝업)
-			        </a>
-                    <a href="#" class="flex items-center gap-2 py-4 text-gray-600 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition">
-                        <i class="fa-solid fa-gear"></i> 설정
-                    </a>
+                    
                 </nav>
             </div>
         </div>

@@ -26,64 +26,72 @@ public class ProfAssignmentController {
     
     // 메뉴
     @GetMapping("/profCourseAssignment")
-    public String profAssignmentList(Model model, @SessionAttribute("loginUser") SysUserDTO user) {
+    public String profCourseAssignment(Model model,
+    								 @SessionAttribute("loginUser") SysUserDTO user) {
 
         int professorUserNo = user.getUserNo();
         List<ProfCourseAssignmentDTO> list = assignmentService.getCourseAssignmentSummary(professorUserNo);
 
         model.addAttribute("courseAssignmentSummaryList", list);
 
-        return "profAssignment/profCourseAssignment"; // 카드형 템플릿
+        return "profAssignment/profCourseAssignment"; 
     }
 
     // 리스트
-    @GetMapping("/assignmentListByProf")
-    public String getAssignmentListByProf(
-            Model model,
-            @RequestParam("courseNo") int courseNo,
-            @RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
+    @GetMapping("/profCourseAssignmentList")
+    public String assignmentList(Model model,
+								          @RequestParam("courseNo") int courseNo,
+								          @RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
 
         int rowPerPage = 10;
         int startRow = (currentPage - 1) * rowPerPage;
 
-        List<AssignmentDTO> list = assignmentService.getAssignmentListByProf(courseNo, startRow, rowPerPage);
+        List<AssignmentDTO> list = assignmentService.getCourseAssignmnetList(courseNo, startRow, rowPerPage);
 
-        int totalRow = assignmentService.getAssignmentCount(courseNo);
+        int totalRow = assignmentService.getCourseAssignmentCount(courseNo);
         int lastPage = (totalRow % rowPerPage == 0) ? (totalRow / rowPerPage) : (totalRow / rowPerPage) + 1;
 
         int startPage = ((currentPage - 1) / 10 * 10) + 1;
-        int endPage = Math.min(startPage + 9, lastPage);
+        int endPage = startPage + 9;
+        if (endPage > lastPage) endPage = lastPage;
 
         List<Integer> pages = new ArrayList<>();
         for (int i = startPage; i <= endPage; i++) pages.add(i);
 
         model.addAttribute("list", list);
         model.addAttribute("courseNo", courseNo);
-        model.addAttribute("prePage", currentPage > 1 ? currentPage - 1 : 1);
-        model.addAttribute("nextPage", currentPage < lastPage ? currentPage + 1 : lastPage);
+
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
         model.addAttribute("pages", pages);
+        
+        model.addAttribute("prePage", currentPage - 1);
+        model.addAttribute("nextPage", currentPage + 1);
 
-        return "profAssignment/assignmentListByProf";
+        model.addAttribute("showPrev", currentPage > 1);
+	    model.addAttribute("showNext", currentPage < lastPage);
+	    model.addAttribute("showPagination", lastPage > 1);
+
+        return "profAssignment/profCourseAssignmentList";
     }
 
     // 상세보기
-    @GetMapping("/assignmentDetail")
+    @GetMapping("/profCourseAssignmentDetail")
     public String assignmentDetail(
             Model model,
             @RequestParam("assignmentNo") int assignmentNo,
             @RequestParam("courseNo") int courseNo) {
 
-        AssignmentDTO assignmentDTO = assignmentService.getAssignmentDetail(assignmentNo);
-        List<ProfCourseAssignmentDTO> submissionList = assignmentService.getSubmissionList(assignmentNo, courseNo);
+        AssignmentDTO assignmentDTO = assignmentService.getCourseAssignmentDetail(assignmentNo);
+        List<ProfCourseAssignmentDTO> submissionList = assignmentService.getCourseSubmissionList(assignmentNo, courseNo);
         
         model.addAttribute("assignment", assignmentDTO);
         model.addAttribute("submissionList", submissionList);
         model.addAttribute("courseNo", courseNo);
 
-        return "profAssignment/assignmentDetail";
+        return "profAssignment/profCourseAssignmentDetail";
     }
 
     // 등록 폼
@@ -99,14 +107,13 @@ public class ProfAssignmentController {
 
         return "profAssignment/addAssignment";
     }
-
     // 등록 처리
     @PostMapping("/addAssignment")
     public String addAssignment(AssignmentDTO assignment, HttpSession session) {
 
         assignmentService.addAssignment(assignment);
 
-        return "redirect:/assignmentListByProf?courseNo=" + assignment.getCourseNo();
+        return "redirect:/profCourseAssignmentList?courseNo=" + assignment.getCourseNo();
     }
 
     // 수정 폼
@@ -115,7 +122,7 @@ public class ProfAssignmentController {
     									HttpSession session,
     									@RequestParam("assignmentNo") int assignmentNo) {
 
-        AssignmentDTO assignment = assignmentService.getAssignmentDetail(assignmentNo);
+        AssignmentDTO assignment = assignmentService.getCourseAssignmentDetail(assignmentNo);
         model.addAttribute("assignment", assignment);
         
         model.addAttribute("assignmentStatus1", assignment.getAssignmentStatus() == 1);
@@ -124,14 +131,13 @@ public class ProfAssignmentController {
 
         return "profAssignment/modifyAssignment";
     }
-
     // 수정 처리
     @PostMapping("/modifyAssignment")
     public String modifyAssignment(AssignmentDTO assignment) {
 
         assignmentService.modifyAssignment(assignment);
 
-        return "redirect:/assignmentDetail?assignmentNo=" 
+        return "redirect:/profCourseAssignmentDetail?assignmentNo=" 
                 + assignment.getAssignmentNo()
                 + "&courseNo=" + assignment.getCourseNo();
     }
@@ -140,12 +146,12 @@ public class ProfAssignmentController {
     @GetMapping("/removeAssignment")
     public String removeAssignment(@RequestParam int assignmentNo) {
 
-        AssignmentDTO assignment = assignmentService.getAssignmentDetail(assignmentNo);
+        AssignmentDTO assignment = assignmentService.getCourseAssignmentDetail(assignmentNo);
         int courseNo = assignment.getCourseNo();
 
         assignmentService.removeAssignment(assignmentNo);
 
-        return "redirect:/assignmentListByProf?courseNo=" + courseNo;
+        return "redirect:/profCourseAssignmentList?courseNo=" + courseNo;
     }
     
 }

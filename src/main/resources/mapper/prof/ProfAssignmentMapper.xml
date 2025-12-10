@@ -21,7 +21,7 @@
     </select>
 
     <!-- 강의별 과제 리스트 -->
-    <select id="selectAssignmentListByProf" resultType="com.example.lms.dto.AssignmentDTO">
+    <select id="selectCourseAssignmentList" resultType="com.example.lms.dto.AssignmentDTO">
         select 
             assignment_no assignmentNo,
             course_no courseNo,
@@ -34,12 +34,12 @@
         limit #{startRow}, #{rowPerPage}
     </select>
     
-    <select id="selectAssignmentCount" resultType="int">
+    <select id="selectCourseAssignmentCount" resultType="int">
         select count(*) from tb_assignment where course_no = #{courseNo}
     </select>
     
     <!-- 상세보기 -->
-    <select id="selectAssignmentDetail" resultType="com.example.lms.dto.AssignmentDTO">
+    <select id="selectCourseAssignmentDetail" resultType="com.example.lms.dto.AssignmentDTO">
         select 
             assignment_no assignmentNo,
             course_no courseNo,
@@ -54,7 +54,7 @@
     </select>
     
     <!-- 학생 과제 제출 리스트 -->
-    <select id="selectSubmissionList" resultType="com.example.lms.dto.ProfCourseAssignmentDTO">
+    <select id="selectCourseSubmissionList" resultType="com.example.lms.dto.ProfCourseAssignmentDTO">
 	    SELECT
 	        st.user_no AS writerUserNo,
 	        st.user_name AS writerName,

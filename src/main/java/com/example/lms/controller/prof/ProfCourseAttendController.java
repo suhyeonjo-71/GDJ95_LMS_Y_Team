@@ -22,18 +22,18 @@ public class ProfCourseAttendController {
     @Autowired
     ProfCourseAttendService service;
 
-    // 1) 주차 리스트 화면
-    @GetMapping("/courseAttendWeekList")
+    // 주차 리스트 화면
+    @GetMapping("/profCourseAttendWeekList")
     public String attendWeekList(@RequestParam int courseNo, Model model) {
 
         model.addAttribute("courseNo", courseNo);
         model.addAttribute("weekList", service.getWeeks(courseNo));
 
-        return "profCourseAttend/courseAttendWeekList";
+        return "profCourseAttend/profCourseAttendWeekList";
     }
 
-    // 2) 특정 주차 화면
-    @GetMapping("/courseAttendList")
+    // 특정 주차 화면
+    @GetMapping("/profCourseAttendList")
     public String attendDetail(@RequestParam int courseNo,
                                @RequestParam int weekNo,
                                Model model) {
@@ -42,10 +42,10 @@ public class ProfCourseAttendController {
         model.addAttribute("weekNo", weekNo);
         model.addAttribute("list", service.getCourseAttendList(courseNo, weekNo));
 
-        return "profCourseAttend/courseAttendList";
+        return "profCourseAttend/profCourseAttendList";
     }
 
-    // 3) 저장
+    // 저장
     @PostMapping("/saveCourseAttendList")
     public String saveAttendance(
             @RequestParam Map<String, String> params,
@@ -74,6 +74,6 @@ public class ProfCourseAttendController {
 
         service.saveCourseAttend(list);
 
-        return "redirect:/courseAttendList?courseNo=" + courseNo + "&weekNo=" + weekNo;
+        return "redirect:/profCourseAttendList?courseNo=" + courseNo + "&weekNo=" + weekNo;
     }
 }

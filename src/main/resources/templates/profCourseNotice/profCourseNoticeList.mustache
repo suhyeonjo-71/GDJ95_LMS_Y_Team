@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강의 공지사항</title>
+
+    <link rel="stylesheet" as="style" crossorigin 
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        
+    <style>
+        body {
+            font-family: Pretendard, sans-serif;
+            background:#F5F7FA;
+        }
+
+        /* 등록 버튼 */
+        .btn-primary { background-color: #2563EB; }
+        .btn-primary:hover { background-color: #1D4ED8; }
+
+        /* 테이블 hover */
+        .divide-y tbody tr {
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+            cursor: pointer !important;
+        }
+        .divide-y tbody tr:hover {
+            background-color: #F9FAFB !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        /* 페이징 공통 */
+        .pagination-area a {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin: 0 2px;
+            transition: background-color .2s;
+        }
+
+        /* 숫자 평상시 */
+        .pagination-area .page-btn {
+            background: white;
+            border: 1px solid #DFE3E8;
+        }
+
+        /* 숫자 hover */
+        .pagination-area .page-btn:hover {
+            background: #2563EB;
+            color: white;
+        }
+
+        /* 현재 페이지 */
+        .pagination-area .active-page {
+            background: #2563EB !important;
+            color: white !important;
+            font-weight: 600;
+        }
+
+        /* 처음 / 이전 / 다음 / 끝 버튼 */
+        .pagination-area .nav-btn {
+            background: #E8F0FE;
+        }
+        .pagination-area .nav-btn:hover {
+            background: #2563EB;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+
+    {{> profLayout/profHeader }}
+
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
+
+        <!-- 제목 + 등록 버튼 -->
+        <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <i class="fa-solid fa-bullhorn text-blue-600"></i> 강의 공지사항
+            </h2>
+
+            <a href="/addCourseNotice?courseNo={{courseNo}}"
+               class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium 
+                      hover:bg-blue-700 transition shadow-md">
+                <i class="fa-solid fa-plus mr-2"></i> 등록
+            </a>
+        </div>
+
+
+        <!-- 테이블 박스 -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">제목</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">조회수</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">작성날짜</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {{#list}}
+                        <tr onclick="location.href='/profCourseNoticeDetail?courseNoticeNo={{courseNoticeNo}}'">
+                            <td class="px-6 py-4 text-sm text-gray-700 font-medium">{{courseNoticeNo}}</td>
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                                <span class="text-indigo-600 font-medium">{{courseNoticeTitle}}</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700 font-medium">{{courseNoticeViewCount}}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700 font-medium">{{createdate}}</td>
+                        </tr>
+                        {{/list}}
+
+                        {{^list}}
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 text-center text-sm text-gray-500">
+                                등록된 공지사항이 없습니다.
+                            </td>
+                        </tr>
+                        {{/list}}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <!-- 페이징: 테이블 박스 내부 -->
+            <div class="flex items-center justify-between mt-6">
+
+			    <!-- 페이징 (가운데 정렬) -->
+			    <div class="flex justify-center pagination-area flex-grow">
+			
+			        {{#showPagination}}
+			        {{#showPrev}}
+			        <a href="/profCourseNoticeList?courseNo={{courseNo}}&currentPage=1" class="nav-btn">처음</a>
+			        <a href="/profCourseNoticeList?courseNo={{courseNo}}&currentPage={{prePage}}" class="nav-btn">이전</a>
+			        {{/showPrev}}
+			        {{/showPagination}}
+			
+			        {{#pages}}
+			        <a href="/profCourseNoticeList?courseNo={{courseNo}}&currentPage={{.}}"
+			           class="page-btn {{#isCurrentPage}}active-page{{/isCurrentPage}}">
+			            {{.}}
+			        </a>
+			        {{/pages}}
+			
+			        {{#showPagination}}
+			        {{#showNext}}
+			        <a href="/profCourseNoticeList?courseNo={{courseNo}}&currentPage={{nextPage}}" class="nav-btn">다음</a>
+			        <a href="/profCourseNoticeList?courseNo={{courseNo}}&currentPage={{lastPage}}" class="nav-btn">끝</a>
+			        {{/showNext}}
+			        {{/showPagination}}
+				
+				</div>
+            </div>
+
+        </div> 
+        
+        <div class="flex justify-end ml-4">
+        <a href="/courseDashboard?courseNo={{courseNo}}"
+            class="px-4 py-2 bg-gray-400 text-white rounded-lg text-sm font-medium 
+                    hover:bg-gray-500 transition shadow-md">
+            <i class="fa-solid fa-list mr-1"></i> 목록으로
+        </a>
+    </div>
+    </main>
+    
+    {{> profLayout/profFooter }}
+
+</body>
+</html>

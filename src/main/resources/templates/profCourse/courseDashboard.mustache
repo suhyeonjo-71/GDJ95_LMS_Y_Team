@@ -88,12 +88,12 @@
             <!-- 오른쪽 카드 메뉴 -->
             <section class="flex-1 grid grid-cols-2 gap-5">
 
-                <a href="/courseNoticeList?courseNo={{course.courseNo}}" class="menu-card">
+                <a href="/profCourseNoticeList?courseNo={{course.courseNo}}" class="menu-card">
                     <i class="fa-solid fa-thumbtack text-xl mb-2 text-gray-600"></i>
                     <div class="font-medium">공지사항</div>
                 </a>
 
-                <a href="/assignmentListByProf?courseNo={{course.courseNo}}" class="menu-card">
+                <a href="/profCourseAssignmentList?courseNo={{course.courseNo}}" class="menu-card">
                     <i class="fa-solid fa-clipboard-check text-xl mb-2 text-gray-600"></i>
                     <div class="font-medium">과제 관리</div>
                 </a>
@@ -108,7 +108,7 @@
                     <div class="font-medium">수강생</div>
                 </a>
 
-                <a href="/courseAttendWeekList?courseNo={{course.courseNo}}" class="menu-card">
+                <a href="/profCourseAttendWeekList?courseNo={{course.courseNo}}" class="menu-card">
                     <i class="fa-solid fa-calendar-check text-xl mb-2 text-gray-600"></i>
                     <div class="font-medium">출석 관리</div>
                 </a>

@@ -3,7 +3,7 @@
 <mapper namespace="com.example.lms.mapper.prof.ProfCourseMapper">
 	
 	<!-- 교수별 강의 리스트 -->
-	<select id="selectCourseListByProf" resultType="com.example.lms.dto.ProfCourseDTO">
+	<select id="selectFilteredCourseList" resultType="com.example.lms.dto.ProfCourseDTO">
 		SELECT
 	        c.course_no        AS courseNo,
 	        c.course_name      AS courseName,
@@ -11,6 +11,8 @@
 	        c.course_semester  AS courseSemester,
 	        c.course_capacity  AS courseCapacity,
 	        c.course_status    AS courseStatus,
+	        (c.course_status = 1) AS isOpened,
+	        (c.course_status = 0) AS isClosed,
 	        t.course_time_yoil  AS courseTimeYoil,
 	        t.course_time_start AS courseTimeStart,
 	        t.course_time_end   AS courseTimeEnd
@@ -19,12 +21,34 @@
 	    LEFT JOIN tb_course_time t
 	        ON c.course_no = t.course_no
 	    WHERE c.professor_user_no = #{professorUserNo}
-	    ORDER BY c.course_year DESC,
+		    <if test="year != null">AND c.course_year = #{year}</if>
+		    <if test="semester != null and semester != ''">AND c.course_semester = #{semester}</if>
+		    <if test="status != null and status != ''">AND c.course_status = #{status}</if>
+		ORDER BY c.course_year DESC,
 	             c.course_semester DESC,
 	             t.course_time_yoil,
 	             t.course_time_start
+		LIMIT #{startRow}, #{rowPerPage}
 	</select>
 	
+	<!-- 리스트 페이징 -->
+	<select id="selectFilteredCourseCount" resultType="int">
+		SELECT COUNT(DISTINCT c.course_no)
+		FROM tb_course c
+		WHERE c.professor_user_no = #{professorUserNo}
+		    <if test="year != null">AND c.course_year = #{year}</if>
+		    <if test="semester != null and semester != ''">AND c.course_semester = #{semester}</if>
+		    <if test="status != null and status != ''">AND c.course_status = #{status}</if>
+	</select>
+	
+	<!-- 필터 년도 -->
+	<select id="selectDistinctYearsByProfessor" resultType="int">
+	    SELECT DISTINCT course_year
+	    FROM tb_course
+	    WHERE professor_user_no = #{professorUserNo}
+	    ORDER BY course_year DESC
+	</select>
+
 	<!-- 등록 -->
 	<insert id="insertCourse" parameterType="com.example.lms.dto.ProfCourseDTO"
 	        useGeneratedKeys="true" keyColumn="course_no" keyProperty="courseNo">

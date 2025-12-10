@@ -9,37 +9,89 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
     <style>
-        body { font-family: 'Pretendard', sans-serif; }
+        body { 
+            font-family: 'Pretendard', sans-serif; 
+            background:#F5F7FA;
+        }
+
+        /* 등록 버튼 (courseNoticeList 스타일 적용) */
+        .btn-primary { background-color: #2563EB; }
+        .btn-primary:hover { background-color: #1D4ED8; }
+
+        /* 테이블 hover (courseNoticeList 스타일 적용) */
+        .divide-y tbody tr {
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+            cursor: default; /* 성적 목록은 클릭 이벤트가 없으므로 default */
+        }
+        .divide-y tbody tr:hover {
+            background-color: #F9FAFB !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+        }
+        
+        /* 페이징 공통 (courseNoticeList 스타일 적용 - 성적 관리에는 없으나 추후 사용 대비) */
+        .pagination-area a {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin: 0 2px;
+            transition: background-color .2s;
+        }
+
+        /* 숫자 평상시 */
+        .pagination-area .page-btn {
+            background: white;
+            border: 1px solid #DFE3E8;
+        }
+
+        /* 숫자 hover */
+        .pagination-area .page-btn:hover {
+            background: #2563EB;
+            color: white;
+        }
+
+        /* 현재 페이지 */
+        .pagination-area .active-page {
+            background: #2563EB !important;
+            color: white !important;
+            font-weight: 600;
+        }
+
+        /* 처음 / 이전 / 다음 / 끝 버튼 */
+        .pagination-area .nav-btn {
+            background: #E8F0FE;
+        }
+        .pagination-area .nav-btn:hover {
+            background: #2563EB;
+            color: white;
+        }
     </style>
 </head>
 
-<body class="bg-gray-100 text-gray-800">
+<body class=" text-gray-800">
 
 	{{> profLayout/profHeader }}
 	
-	<main class="max-w-7xl mx-auto px-4 py-8">
+	<main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
 	
-	    <!-- 강의 정보 -->
-	    <div class="bg-white p-6 rounded-xl shadow-sm border mb-6">
-	        <h2 class="text-2xl font-bold mb-2">성적 관리</h2>
-	        <p class="text-gray-600">강의번호: {{courseNo}}</p>
-	    </div>
+	        <h2 class="text-xl font-bold mb-2 flex items-center gap-2"> <i class="fa-solid fa-chart-bar text-blue-600"></i>
+			    성적 관리
+			</h2>
 	
-	    <!-- 리스트 테이블 -->
-	    <div class="bg-white p-6 rounded-xl shadow-sm border">
+	    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
 	
 	        <table class="min-w-full divide-y divide-gray-200">
+	    
 	            <thead class="bg-gray-50">
-	            <tr>
-	                <th class="px-4 py-3 text-left text-xs font-bold text-gray-600">이름</th>
-	                <th class="px-4 py-3 text-left text-xs font-bold text-gray-600">학번</th>
-	                <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">출석률</th>
-	                <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">과제점수</th>
-	                <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">시험점수</th>
-	                <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">최종점수</th>
-	                <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">등급</th>
-	                <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">관리</th>
-	            </tr>
+	                <tr>
+	                    <th class="px-4 py-3 text-left text-xs font-bold text-gray-600">이름</th>
+	                    <th class="px-4 py-3 text-left text-xs font-bold text-gray-600">학번</th>
+	                    <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">출석률</th>
+	                    <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">과제점수</th>
+	                    <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">시험점수</th>
+	                    <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">최종점수</th>
+	                    <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">등급</th>
+	                    <th class="px-4 py-3 text-center text-xs font-bold text-gray-600">관리</th>
+	                </tr>
 	            </thead>
 	
 	            <tbody class="divide-y divide-gray-200">
@@ -54,7 +106,7 @@
    						{{^assignmentScore}}-{{/assignmentScore}}
 	                </td>
 	                <td class="px-4 py-3 text-center text-sm">
-	               	 	{{#examScore}}{{examScore}}{{/examScore}}
+	        	 	    {{#examScore}}{{examScore}}{{/examScore}}
     					{{^examScore}}-{{/examScore}}
 	                </td>
 	                <td class="px-4 py-3 text-center text-sm font-bold">
@@ -68,7 +120,7 @@
 	
 	                <td class="px-4 py-3 text-center">
 	                    <a href="/profCourseGradeForm?courseNo={{courseNo}}&studentUserNo={{studentUserNo}}"
-	                       class="px-3 py-1 bg-indigo-600 text-white rounded text-xs hover:bg-indigo-700">
+	                       class="px-3 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700">
 	                        성적입력
 	                    </a>
 	                </td>
@@ -85,7 +137,43 @@
 	
 	            </tbody>
 	        </table>
-	    </div>
+            
+            </div>
+            
+            <div class="flex items-center justify-between mt-6">
+                <div class="flex justify-center pagination-area flex-grow">
+
+                    {{#showPagination}}
+                    {{#showPrev}}
+                    <a href="/profCourseGradeList?courseNo={{courseNo}}&currentPage=1" class="nav-btn">처음</a>
+                    <a href="/profCourseGradeList?courseNo={{courseNo}}&currentPage={{prePage}}" class="nav-btn">이전</a>
+                    {{/showPrev}}
+                    {{/showPagination}}
+
+                    {{#pages}}
+                        <a href="/profCourseGradeList?courseNo={{courseNo}}&currentPage={{.}}"
+                           class="page-btn {{#isCurrentPage}}active-page{{/isCurrentPage}}">
+                            {{.}}
+                        </a>
+                    {{/pages}}
+
+                    {{#showPagination}}
+                    {{#showNext}}
+                    <a href="/profCourseGradeList?courseNo={{courseNo}}&currentPage={{nextPage}}" class="nav-btn">다음</a>
+                    <a href="/profCourseGradeList?courseNo={{courseNo}}&currentPage={{lastPage}}" class="nav-btn">끝</a>
+                    {{/showNext}}
+                    {{/showPagination}}
+
+                </div>
+            </div>
+        
+	        <div class="flex justify-end ml-4">
+				<a href="/courseDashboard?courseNo={{courseNo}}"
+	               class="px-4 py-2 bg-gray-400 text-white rounded-lg text-sm font-medium 
+	                      hover:bg-gray-500 transition shadow-md">
+	                <i class="fa-solid fa-list mr-1"></i> 목록으로
+	            </a>
+			</div>
 	</main>
 	
 	{{> profLayout/profFooter }}

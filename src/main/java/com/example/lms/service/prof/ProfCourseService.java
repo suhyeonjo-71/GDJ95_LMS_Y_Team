@@ -19,8 +19,18 @@ public class ProfCourseService {
 	private ProfCourseMapper courseMapper;
 	
 	// 교수별 강의 리스트
-	public List<ProfCourseDTO> getCourseListByProfessor(int professorUserNo) {
-		return courseMapper.selectCourseListByProf(professorUserNo);
+	public List<ProfCourseDTO> getFilteredCourseList(int professorUserNo, Integer year, String semester, String status, int startRow, int rowPerPage) {
+        return courseMapper.selectFilteredCourseList(professorUserNo, year, semester, status, startRow, rowPerPage);
+    }
+
+	// 리스트 페이징
+    public int getFilteredCourseCount(int professorUserNo, Integer year, String semester, String status) {
+        return courseMapper.selectFilteredCourseCount(professorUserNo, year, semester, status);
+    }
+    
+    // 필터 년도 저장
+    public List<Integer> getDistinctYears(int professorUserNo) {
+		return courseMapper.selectDistinctYearsByProfessor(professorUserNo);
 	}
 	
 	// 강의 + 강의 시간 등록
@@ -164,5 +174,4 @@ public class ProfCourseService {
         t.setEnd9(end == 9);
         t.setEnd10(end == 10);
     }
-
 }

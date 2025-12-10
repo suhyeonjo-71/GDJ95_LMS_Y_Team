@@ -2,25 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.lms.mapper.prof.ProfCourseQnAMapper">
 
-	<select id="selectQuestionList" resultType="map">
+	<!-- 메뉴 -->
+	<select id="selectCourseQnASummary" resultType="map">
 	    SELECT 
+	        c.course_no AS courseNo,
+	        c.course_name AS courseName,
+	        COUNT(q.course_question_no) AS questionCount
+	    FROM tb_course c
+	    LEFT JOIN tb_course_question q ON c.course_no = q.course_no
+	    WHERE c.professor_user_no = #{professorUserNo}
+	    GROUP BY c.course_no, c.course_name
+	    ORDER BY c.course_no DESC
+	</select>
+
+	<!-- 문의사항 리스트 -->
+	<select id="selectQuestionList" resultType="map">
+	     SELECT 
 	        q.course_question_no AS courseQuestionNo,
 	        q.course_no AS courseNo,
 	        q.course_question_title AS courseQuestionTitle,
-	        q.course_question_content AS courseQuestionContent,
 	        q.course_question_status AS courseQuestionStatus,
 	        q.createdate AS createdate,
 	        u.user_name AS writerName,
-	        CASE
-				WHEN q.course_question_status = 1 THEN 1 
-	        	WHEN q.course_question_status = 0 THEN null
-	        END AS answered
+	        
+	        (SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END 
+		     FROM tb_course_question_answer qa
+		     WHERE qa.course_question_no = q.course_question_no
+		    ) AS answered
+		    
 	    FROM tb_course_question q
 	    LEFT JOIN tb_sysuser u ON q.writer_user_no = u.user_no
 	    WHERE q.course_no = #{courseNo}
 	    ORDER BY q.createdate DESC
+	    LIMIT #{startRow}, #{rowPerPage}
 	</select>
-
+	
+	<select id="selectQuestionCount" resultType="int">
+	    SELECT COUNT(*) FROM tb_course_question WHERE course_no = #{courseNo}
+	</select>
 
 	<select id="selectQuestionDetail" resultType="map">
 	    SELECT 
