@@ -11,9 +11,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
-        /* ============================================
-           RESET + GLOBAL
-        ============================================ */
+        /* Reset */
         * {
             margin: 0;
             padding: 0;
@@ -26,9 +24,7 @@
             line-height: 1.6;
         }
 
-        /* ============================================
-           MAIN CARD — 전체 박스를 하나로 감싸기
-        ============================================ */
+        /* Main Card */
         .main-card {
             background-color: #FFFFFF;
             border-radius: 16px;
@@ -37,9 +33,7 @@
             box-shadow: 0 4px 22px rgba(30, 64, 175, 0.12);
         }
 
-        /* ============================================
-           COURSE CARD
-        ============================================ */
+        /* Course Card */
         .course-card {
             background-color: #FFFFFF;
             border-radius: 14px;
@@ -54,7 +48,7 @@
             box-shadow: 0 6px 22px rgba(37, 99, 235, 0.20);
         }
 
-        /* 상태 뱃지 */
+        /* Status Badge */
         .status-badge {
             background: #ECFDF5;
             color: #047857;
@@ -64,7 +58,7 @@
             font-weight: 600;
         }
 
-        /* 시간 chip */
+        /* Time Chip */
         .class-time-chip {
             background: #EEF6FF;
             color: #1D4ED8;
@@ -77,7 +71,7 @@
             gap: 6px;
         }
 
-        /* empty box */
+        /* Empty Box */
         .empty-box {
             background: white;
             border-radius: 14px;
@@ -112,7 +106,7 @@
 
 <main class="max-w-6xl mx-auto px-4 py-10">
 
-    <!-- ⭐⭐⭐ 전체를 감싸는 메인 카드 ⭐⭐⭐ -->
+    <!-- 메인 카드 -->
     <div class="main-card">
 
         <!-- 제목 영역 -->
@@ -128,10 +122,11 @@
             </div>
         </div>
 
-        <!-- 수강과목 카드 리스트 -->
+        <!-- 과목 카드 리스트 -->
         <section class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
             {{#courseList}}
+            <!-- 수강중 강의 카드 -->
             <article class="course-card"
                      onclick="location.href='/studentCourseHome?courseNo={{courseNo}}'">
 
@@ -174,6 +169,7 @@
             {{/courseList}}
 
             {{^courseList}}
+            <!-- 수강중인 과목이 없을 때 -->
             <div class="col-span-1 md:col-span-2">
                 <div class="empty-box">
                     <i class="fa-regular fa-circle-question text-4xl text-gray-400 mb-3"></i>
@@ -193,7 +189,7 @@
         </section>
 
     </div>
-    <!-- ⭐⭐⭐ 메인 카드 끝 ⭐⭐⭐ -->
+    <!-- 메인 카드 끝 -->
 
 </main>
 

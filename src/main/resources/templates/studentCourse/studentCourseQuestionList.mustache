@@ -11,7 +11,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <style>
-/* ============================================ */
+/* Global */
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
     font-family:'Pretendard', sans-serif;
@@ -19,7 +19,7 @@ body {
     color:#333;
 }
 
-/* 카드 */
+/* Card */
 .card {
     background-color:#fff;
     border-radius:12px;
@@ -28,14 +28,13 @@ body {
     box-shadow:0 4px 20px rgba(30,64,175,0.12);
 }
 
-/* 테이블 */
+/* Table */
 .table-wrap {
     border-radius:10px;
     overflow:hidden;
     border:1px solid #E5E7EB;
 }
 table { width:100%; border-collapse:collapse; }
-
 thead th {
     background-color:#EFF6FF;
     color:#1E3A8A;
@@ -53,7 +52,7 @@ tbody tr:hover {
     background-color:rgba(37,99,235,0.08);
 }
 
-/* 상태 배지 */
+/* Badge */
 .badge {
     padding:3px 8px;
     border-radius:6px;
@@ -63,7 +62,7 @@ tbody tr:hover {
 .badge-green { background:#E8FEEB; color:#1A7F37; }
 .badge-red   { background:#FEECEC; color:#D11A2A; }
 
-/* 페이징 */
+/* Pagination */
 .pagination-area a {
     padding:8px 12px;
     border-radius:6px;
@@ -86,14 +85,14 @@ tbody tr:hover {
 .nav-btn { background-color:#E5EFFE; }
 .nav-btn:hover { background-color:#2563EB; color:white; }
 
-/* 제목 */
+/* Title */
 .page-title {
     font-size:22px;
     font-weight:800;
     color:#1E3A8A;
 }
 
-/* 모달 애니메이션 */
+/* Modal */
 @keyframes fadeIn {
     from { opacity:0; transform:translateY(10px); }
     to   { opacity:1; transform:translateY(0); }
@@ -107,9 +106,10 @@ tbody tr:hover {
 
 <body>
 
+<!-- Header -->
 {{> studentLayout/studentCoursePageHeader }}
 
-<!-- 서브 네비 -->
+<!-- SubNav -->
 <div class="mt-8 w-full">
     <div class="max-w-6xl mx-auto px-4">
         {{> studentLayout/_studentCourseSubNav }}
@@ -118,9 +118,10 @@ tbody tr:hover {
 
 <main class="max-w-6xl mx-auto px-4 py-10">
 
-<!-- 카드 -->
+<!-- Card -->
 <div class="card">
 
+    <!-- Title + Button -->
     <div class="flex justify-between items-center mb-6">
         <h2 class="page-title flex items-center gap-3">
             <i class="fa-solid fa-circle-question text-blue-600 text-xl"></i>
@@ -133,7 +134,7 @@ tbody tr:hover {
         </a>
     </div>
 
-    <!-- 리스트 -->
+    <!-- Table -->
     <div class="table-wrap">
         <table>
             <thead>
@@ -150,37 +151,47 @@ tbody tr:hover {
 
             {{#questionList}}
             <tr 
-			    onclick="{{#canView}}location.href='/studentCourseQuestionDetail?courseQuestionNo={{courseQuestionNo}}'{{/canView}}
-			             {{^canView}}openPrivateModal(){{/canView}}"
-			    class="
-			        {{#canView}}hover:bg-blue-50 cursor-pointer{{/canView}}
-			        {{^canView}}bg-gray-50 cursor-not-allowed{{/canView}}
-			    "
-			>
-                <!-- 번호 -->
+                onclick="{{#canView}}location.href='/studentCourseQuestionDetail?courseQuestionNo={{courseQuestionNo}}'{{/canView}}
+                         {{^canView}}openPrivateModal(){{/canView}}"
+                class="
+                    {{#canView}}hover:bg-blue-50 cursor-pointer{{/canView}}
+                    {{^canView}}bg-gray-50 cursor-not-allowed{{/canView}}
+                "
+            >
                 <td>{{index}}</td>
 
-                <!-- 제목 -->
-                <td>
-                    {{#canView}}
-                        <span class="hover:text-blue-600 font-medium">{{courseQuestionTitle}}</span>
-                    {{/canView}}
-
-                    {{^canView}}
-                        <span class="text-gray-400">비밀글입니다.</span>
-                    {{/canView}}
-                </td>
+                <td class="flex items-center gap-1">
+				    {{#privatePostFlag}}
+				        <i class="fa-solid fa-lock text-gray-400"></i>
+				    {{/privatePostFlag}}
+				
+				    {{#canView}}
+				        <span class="hover:text-blue-600 font-medium">
+				            {{courseQuestionTitle}}
+				        </span>
+				    {{/canView}}
+				
+				    {{^canView}}
+				        <span class="text-gray-400">
+				            비밀글입니다.
+				        </span>
+				    {{/canView}}
+				</td>
 
                 <td>{{writerName}}</td>
                 <td class="text-sm text-gray-600">{{createdate}}</td>
 
                 <td>
                     {{#answered}}
-                        <span class="badge badge-green">답변완료</span>
+                        <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px]">
+				            답변완료
+				        </span>
                     {{/answered}}
 
                     {{^answered}}
-                        <span class="badge badge-red">미답변</span>
+                        <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[11px]">
+				            미답변
+				        </span>
                     {{/answered}}
                 </td>
 
@@ -197,7 +208,7 @@ tbody tr:hover {
         </table>
     </div>
 
-    <!-- 페이징 -->
+    <!-- Pagination -->
     <div class="flex justify-center mt-8 pagination-area">
         {{#hasPrev}}
         <a class="nav-btn" href="?courseNo={{courseNo}}&currentPage=1">« 처음</a>
@@ -221,10 +232,7 @@ tbody tr:hover {
 
 </main>
 
-
-<!-- ====================================================== -->
-<!-- 🔒 비밀글 모달 -->
-<!-- ====================================================== -->
+<!-- Private Modal -->
 <div id="privateModal"
      class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 
@@ -249,11 +257,9 @@ tbody tr:hover {
 function openPrivateModal() {
     document.getElementById("privateModal").classList.remove("hidden");
 }
-
 function closePrivateModal() {
     document.getElementById("privateModal").classList.add("hidden");
 }
-
 document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closePrivateModal();
 });

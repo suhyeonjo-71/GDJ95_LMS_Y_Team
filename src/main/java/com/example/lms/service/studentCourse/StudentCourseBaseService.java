@@ -16,16 +16,12 @@ public class StudentCourseBaseService {
 
     private final StudentCourseMapper mapper;
 
-    // ----------------------------
-    // 내 수강과목 목록 조회
-    // ----------------------------
+    // 내 수강 과목 목록 조회
     public List<StudentCourseDTO> getMyCourseList(int studentUserNo) {
         return mapper.selectMyCourseList(studentUserNo);
     }
 
-    // ----------------------------
     // 학생 시간표 조회
-    // ----------------------------
     public List<StudentTimetableDTO> getStudentTimetable(int studentUserNo) {
         return mapper.selectStudentTimetable(studentUserNo);
     }

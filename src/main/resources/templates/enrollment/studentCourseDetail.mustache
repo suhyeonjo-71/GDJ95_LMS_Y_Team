@@ -10,10 +10,9 @@
     <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <!-- ============================
-         BLUE MODERN LMS CSS
-    ============================ -->
+    <!-- Style -->
     <style>
+        /* Reset */
         * {
             margin: 0;
             padding: 0;
@@ -26,7 +25,7 @@
             line-height: 1.6;
         }
 
-        /* CARD */
+        /* Card */
         .card {
             background-color: #FFFFFF;
             border-radius: 12px;
@@ -40,7 +39,7 @@
             transform: translateY(-5px);
         }
 
-        /* BUTTON */
+        /* Button */
         .btn-primary {
             background-color: #2563EB;
             color: white;
@@ -66,13 +65,13 @@
             border-radius: 10px;
             color: #374151;
             font-size: 14px;
-            transition: 0.2s ease;
+            transition: 0.2s;
         }
         .btn-outline:hover {
             background: #F3F4F6;
         }
 
-        /* DANGER BUTTON */
+        /* Danger Button */
         .btn-danger {
             background-color: #EF4444;
             color: white;
@@ -84,7 +83,7 @@
             background-color: #DC2626;
         }
 
-        /* ALERT */
+        /* Alert */
         .alert-blue {
             background-color: #DBEAFE;
             color: #1E40AF;
@@ -94,7 +93,7 @@
             margin-top: 15px;
         }
 
-        /* TABLE */
+        /* Table */
         .table-wrap {
             border-radius: 10px;
             overflow: hidden;
@@ -121,7 +120,7 @@
             background-color: rgba(37, 99, 235, 0.10);
         }
 
-        /* SECTION TITLE */
+        /* Section Title */
         .section-title {
             font-size: 20px;
             font-weight: 700;
@@ -129,6 +128,7 @@
             margin-bottom: 10px;
         }
 
+        /* Description Box */
         .desc-box {
             background: #F8FAFC;
             border: 1px solid #E2E8F0;
@@ -148,15 +148,14 @@
 
     <div class="card">
 
-        <!-- 제목 -->
+        <!-- Title -->
         <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
             <i class="fa-solid fa-book text-blue-600"></i>
             {{detail.courseName}}
         </h2>
 
-        <!-- 기본 정보 -->
+        <!-- Info -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm leading-6">
-
             <div class="space-y-2">
                 <p><span class="font-semibold text-gray-700">교수명:</span> {{detail.professorName}}</p>
                 <p><span class="font-semibold text-gray-700">학과:</span> {{detail.deptName}}</p>
@@ -169,12 +168,11 @@
                 <p><span class="font-semibold text-gray-700">학기:</span> {{detail.courseSemester}} 학기</p>
                 <p><span class="font-semibold text-gray-700">강의실:</span> {{detail.courseClassroom}}</p>
             </div>
-
         </div>
 
         <hr class="my-8 border-gray-300">
 
-        <!-- 강의 설명 -->
+        <!-- Description -->
         <div class="mb-10">
             <h3 class="section-title">강의 설명</h3>
             <div class="desc-box">
@@ -182,7 +180,7 @@
             </div>
         </div>
 
-        <!-- 시간표 -->
+        <!-- Timetable -->
         <div>
             <h3 class="section-title">강의 시간표</h3>
             <div class="table-wrap">
@@ -214,7 +212,7 @@
             </div>
         </div>
 
-        <!-- 뒤로가기 -->
+        <!-- Back -->
         <div class="mt-10 flex justify-end">
             <button onclick="history.back()" class="btn-outline flex items-center gap-2 shadow-sm">
                 <i class="fa-solid fa-arrow-left text-gray-500"></i>

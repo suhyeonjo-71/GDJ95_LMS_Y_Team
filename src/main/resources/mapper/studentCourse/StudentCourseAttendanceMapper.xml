@@ -5,28 +5,28 @@
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseAttendanceMapper">
 
-    <!-- =========================
-         회차별 출석 상세 조회
-         ========================= -->
-    <select id="selectAttendanceDetailList" resultType="com.example.lms.dto.StudentAttendanceDTO">
-        SELECT 
-		      week_no AS weekNo,
-		      attendance_status AS attendanceStatus
-		FROM tb_attendance
-		WHERE course_no = #{courseNo}
-		  AND student_user_no = #{studentUserNo}
-		ORDER BY week_no
+    <select id="selectAttendanceDetailList"
+            resultType="com.example.lms.dto.StudentAttendanceDTO">
+        SELECT
+              week_no AS weekNo
+            , attendance_status AS attendanceStatus
+        FROM tb_attendance
+        WHERE course_no = #{courseNo}
+          AND student_user_no = #{studentUserNo}
+        ORDER BY week_no
     </select>
 
-    <!-- =========================
-         출석 요약 (출석/지각/결석/출석률)
-         ========================= -->
-    <select id="selectAttendanceSummary" resultType="com.example.lms.dto.AttendanceSummaryDTO">
-        SELECT 
-              SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END) AS attendanceCount,
-              SUM(CASE WHEN attendance_status = 1 THEN 1 ELSE 0 END) AS lateCount,
-              SUM(CASE WHEN attendance_status = 2 THEN 1 ELSE 0 END) AS absentCount,
-              ROUND(SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS attendanceRate
+    <select id="selectAttendanceSummary"
+            resultType="com.example.lms.dto.AttendanceSummaryDTO">
+        SELECT
+              SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END) AS attendanceCount
+            , SUM(CASE WHEN attendance_status = 1 THEN 1 ELSE 0 END) AS lateCount
+            , SUM(CASE WHEN attendance_status = 2 THEN 1 ELSE 0 END) AS absentCount
+            , ROUND(
+                  SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END)
+                  / COUNT(*) * 100
+                  , 2
+              ) AS attendanceRate
         FROM tb_attendance
         WHERE course_no = #{courseNo}
           AND student_user_no = #{studentUserNo}

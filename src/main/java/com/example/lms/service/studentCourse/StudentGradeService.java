@@ -13,9 +13,7 @@ public class StudentGradeService {
 
     private final StudentGradeMapper mapper;
 
-    // ----------------------------
     // 학생 성적 조회
-    // ----------------------------
     public StudentGradeDTO getStudentGrade(int courseNo, int studentUserNo) {
         return mapper.selectStudentGrade(courseNo, studentUserNo);
     }

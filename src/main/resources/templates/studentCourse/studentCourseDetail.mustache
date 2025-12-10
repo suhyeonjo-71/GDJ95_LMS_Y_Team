@@ -23,23 +23,22 @@
             background-color: #F5F7FA;
         }
 
-        /* 공통 카드 스타일 */
+        /* 카드 공통 스타일 */
         .info-card {
             background: white;
-            border: 1px solid #E5E7EB; /* border-gray-200 */
-            border-radius: 1rem;        /* rounded-xl */
+            border: 1px solid #E5E7EB;
+            border-radius: 1rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.03);
         }
 
-        /* 세부 텍스트 스타일 통일 */
         .section-title {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #1f2937; /* text-gray-800 */
+            color: #1f2937;
         }
 
         .section-icon {
-            color: #2563eb; /* blue-600 */
+            color: #2563eb;
         }
     </style>
 </head>
@@ -50,9 +49,7 @@
 
     <main class="max-w-5xl mx-auto px-4 py-10">
 
-        <!-- ============================ -->
-        <!-- 강의 기본 정보 카드 -->
-        <!-- ============================ -->
+        <!-- 강의 기본 정보 -->
         <section class="info-card p-8 mb-10">
             
             <p class="text-xs font-semibold text-blue-600 mb-1 flex items-center gap-1">
@@ -104,9 +101,7 @@
 
         </section>
 
-        <!-- ============================ -->
         <!-- 수업 시간 -->
-        <!-- ============================ -->
         <section class="info-card p-8 mb-10">
 
             <h2 class="section-title mb-3 flex items-center gap-2">
@@ -114,6 +109,7 @@
                 수업 시간
             </h2>
 
+            <!-- 수업 시간 목록 -->
             {{#course.courseTimeList}}
             <p class="text-sm text-gray-700 flex items-center gap-2 mb-1">
                 <i class="fa-solid fa-clock text-gray-500"></i>
@@ -121,15 +117,14 @@
             </p>
             {{/course.courseTimeList}}
 
+            <!-- 시간 없음 -->
             {{^course.courseTimeList}}
             <p class="text-xs text-gray-400">등록된 수업 시간이 없습니다.</p>
             {{/course.courseTimeList}}
 
         </section>
 
-        <!-- ============================ -->
         <!-- 강의 소개 -->
-        <!-- ============================ -->
         <section class="info-card p-8 mb-10">
 
             <h2 class="section-title mb-3 flex items-center gap-2">

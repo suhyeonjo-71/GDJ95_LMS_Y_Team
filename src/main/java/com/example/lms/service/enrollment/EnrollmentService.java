@@ -36,12 +36,12 @@ public class EnrollmentService {
         return "수강신청이 완료되었습니다.";
     }
 
-    // 신청 내역 조회(페이징)
+    // 신청 내역 조회
     public List<EnrollmentListDTO> getEnrollmentList(int studentUserNo, int startRow, int rowPerPage) {
         return enrollmentMapper.selectEnrollmentListPaged(studentUserNo, startRow, rowPerPage);
     }
 
-    // 전체 row
+    // 신청 내역 총 개수
     public int getEnrollmentTotalCount(int studentUserNo) {
         return enrollmentMapper.countEnrollmentList(studentUserNo);
     }

@@ -5,39 +5,35 @@
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseNoticeMapper">
 
-    <!-- =========================
-         공지 목록 조회 (페이징)
-         ========================= -->
-    <select id="selectNoticeList" resultType="com.example.lms.dto.StudentCourseNoticeDTO">
-        SELECT course_notice_no AS courseNoticeNo,
-               course_notice_title AS courseNoticeTitle,
-               DATE_FORMAT(createdate, '%Y-%m-%d') AS createdate
+    <select id="selectNoticeList"
+            resultType="com.example.lms.dto.StudentCourseNoticeDTO">
+        SELECT
+              course_notice_no    AS courseNoticeNo
+            , course_notice_title AS courseNoticeTitle
+            , DATE_FORMAT(createdate, '%Y-%m-%d') AS createdate
         FROM tb_course_notice
         WHERE course_no = #{courseNo}
         ORDER BY createdate DESC
         LIMIT #{startRow}, #{rowPerPage}
     </select>
 
-    <!-- =========================
-         공지 상세 조회
-         ========================= -->
-    <select id="selectNoticeDetail" resultType="com.example.lms.dto.StudentCourseNoticeDTO">
-	    SELECT 
-	        n.course_notice_no AS courseNoticeNo,
-	        n.course_no AS courseNo,
-	        n.course_notice_title AS courseNoticeTitle,
-	        n.course_notice_content AS courseNoticeContent,
-	        u.user_name AS writerUserName,
-	        DATE_FORMAT(n.createdate, '%Y-%m-%d') AS createdate
-	    FROM tb_course_notice n
-	    LEFT JOIN tb_sysuser u ON n.writer_user_no = u.user_no
-	    WHERE n.course_notice_no = #{courseNoticeNo}
-	</select>
-    
-    <!-- =========================
-         공지 총 개수
-         ========================= -->
-    <select id="selectNoticeTotal" resultType="int">
+    <select id="selectNoticeDetail"
+            resultType="com.example.lms.dto.StudentCourseNoticeDTO">
+        SELECT
+              n.course_notice_no     AS courseNoticeNo
+            , n.course_no            AS courseNo
+            , n.course_notice_title  AS courseNoticeTitle
+            , n.course_notice_content AS courseNoticeContent
+            , u.user_name            AS writerUserName
+            , DATE_FORMAT(n.createdate, '%Y-%m-%d') AS createdate
+        FROM tb_course_notice n
+        LEFT JOIN tb_sysuser u
+            ON n.writer_user_no = u.user_no
+        WHERE n.course_notice_no = #{courseNoticeNo}
+    </select>
+
+    <select id="selectNoticeTotal"
+            resultType="int">
         SELECT COUNT(*)
         FROM tb_course_notice
         WHERE course_no = #{courseNo}

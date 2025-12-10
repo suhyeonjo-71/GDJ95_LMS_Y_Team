@@ -1,4 +1,4 @@
-a<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -11,9 +11,7 @@ a<!DOCTYPE html>
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <style>
-/* ============================================
-   GLOBAL RESET
-============================================ */
+/* Reset */
 * {
     margin: 0;
     padding: 0;
@@ -25,9 +23,7 @@ body {
     color: #333;
 }
 
-/* ============================================
-   CARD (수강신청 스타일 적용)
-============================================ */
+/* Card */
 .card {
     background-color: #fff;
     border-radius: 12px;
@@ -36,9 +32,7 @@ body {
     box-shadow: 0 4px 20px rgba(30, 64, 175, 0.12);
 }
 
-/* ============================================
-   TABLE (Blue Smart)
-============================================ */
+/* Table */
 .table-wrap {
     border-radius: 10px;
     overflow: hidden;
@@ -64,9 +58,7 @@ tbody tr:hover {
     background-color: rgba(37, 99, 235, 0.10);
 }
 
-/* ============================================
-   PAGINATION
-============================================ */
+/* Pagination */
 .pagination-area a {
     padding: 8px 12px;
     border-radius: 6px;
@@ -94,7 +86,7 @@ tbody tr:hover {
     color: white;
 }
 
-/* 제목 스타일 */
+/* Page Title */
 .page-title {
     font-size: 22px;
     font-weight: 800;
@@ -108,7 +100,7 @@ tbody tr:hover {
 
 {{> studentLayout/studentCoursePageHeader }}
 
-<!-- 서브 네비 (강의 홈과 폭 동일하게) -->
+<!-- 서브 네비 -->
 <div class="mt-8 w-full">
     <div class="max-w-6xl mx-auto px-4">
         {{> studentLayout/_studentCourseSubNav }}
@@ -117,10 +109,6 @@ tbody tr:hover {
 
 <main class="max-w-6xl mx-auto px-4 py-10">
 
-
-<!-- ============================= -->
-<!-- 📌 카드 (제목 + 리스트 + 페이징 통합) -->
-<!-- ============================= -->
 <div class="card">
 
     <!-- 제목 -->
@@ -129,8 +117,7 @@ tbody tr:hover {
         강의 공지사항 목록
     </h2>
 
-
-    <!-- 리스트 영역 -->
+    <!-- 리스트 -->
     <div class="table-wrap">
         <table>
             <thead>
@@ -165,10 +152,7 @@ tbody tr:hover {
         </table>
     </div>
 
-
-    <!-- ============================= -->
-    <!-- 📌 Pagination -->
-    <!-- ============================= -->
+    <!-- Pagination -->
     <div class="flex justify-center mt-8 pagination-area">
 
         {{#hasPrev}}
@@ -189,8 +173,7 @@ tbody tr:hover {
 
     </div>
 
-</div> <!-- card end -->
-
+</div>
 
 </main>
 

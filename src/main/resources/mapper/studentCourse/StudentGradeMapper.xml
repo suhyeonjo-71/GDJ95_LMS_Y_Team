@@ -5,20 +5,17 @@
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentGradeMapper">
 
-    <!-- =========================
-         학생 성적 조회
-         ========================= -->
-    <select id="selectStudentGrade" parameterType="map"
-	        resultType="com.example.lms.dto.StudentGradeDTO">
-	
-	    SELECT
-	        student_user_no AS studentUserNo,
-	        course_no AS courseNo,
-	        grade_value AS gradeValue,
-	        grade_score AS gradeScore
-	    FROM tb_grade
-	    WHERE course_no = #{courseNo}
-	      AND student_user_no = #{studentUserNo}
-	</select>
+    <select id="selectStudentGrade"
+            parameterType="map"
+            resultType="com.example.lms.dto.StudentGradeDTO">
+        SELECT
+              student_user_no AS studentUserNo
+            , course_no       AS courseNo
+            , grade_value     AS gradeValue
+            , grade_score     AS gradeScore
+        FROM tb_grade
+        WHERE course_no       = #{courseNo}
+          AND student_user_no = #{studentUserNo}
+    </select>
 
 </mapper>

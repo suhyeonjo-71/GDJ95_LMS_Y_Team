@@ -11,12 +11,13 @@
           href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
 
     <style>
-        body { 
-            font-family: 'Pretendard', sans-serif; 
+        /* Global */
+        body {
+            font-family: 'Pretendard', sans-serif;
             background-color: #F5F7FA;
         }
 
-        /* 목록과 동일한 스타일 */
+        /* Card */
         .card {
             background-color: #fff;
             border-radius: 12px;
@@ -26,6 +27,7 @@
             border: 1px solid #E5E7EB;
         }
 
+        /* Title */
         .page-title {
             font-size: 22px;
             font-weight: 800;
@@ -36,38 +38,35 @@
 
 <body class="text-gray-800">
 
-<!-- 공통 헤더 -->
+<!-- Header -->
 {{> studentLayout/studentCoursePageHeader }}
 
-<!-- 서브 네비 -->
+<!-- SubNav -->
 <div class="mt-8 w-full">
     <div class="max-w-6xl mx-auto px-4">
         {{> studentLayout/_studentCourseSubNav }}
     </div>
 </div>
 
-<!-- 🔥 목록 페이지와 똑같이 통일 -->
 <main class="max-w-6xl mx-auto px-4 py-10">
 
-    <!-- 전체 카드 (목록 스타일 동일 적용) -->
+    <!-- Question Card -->
     <div class="card">
 
-        <!-- 제목 + 상태 -->
+        <!-- Title + Status -->
         <div class="flex items-center justify-between mb-4">
             <h2 class="page-title flex items-center gap-2">
-
-                {{#question.privatePost}}
-                    <i class="fa-solid fa-lock text-gray-400 text-sm"></i>
-                {{/question.privatePost}}
-
-                {{#question.canView}}
-                    {{question.courseQuestionTitle}}
-                {{/question.canView}}
-
-                {{^question.canView}}
-                    비밀글입니다.
-                {{/question.canView}}
-            </h2>
+			    {{#question.privatePostFlag}}
+			        <i class="fa-solid fa-lock text-gray-400 text-sm"></i>
+			    {{/question.privatePostFlag}}
+			    {{#question.canView}}
+			        {{question.courseQuestionTitle}}
+			    {{/question.canView}}
+			
+			    {{^question.canView}}
+			        비밀글입니다.
+			    {{/question.canView}}
+			</h2>
 
             <div>
                 {{#question.answered}}
@@ -80,41 +79,36 @@
             </div>
         </div>
 
-        <!-- 작성자 / 날짜 -->
+        <!-- Meta -->
         <div class="text-xs text-gray-500 mb-6 flex items-center gap-4">
             <span><i class="fa-solid fa-user text-gray-400 mr-1"></i>{{question.writerName}}</span>
             <span><i class="fa-solid fa-clock text-gray-400 mr-1"></i>{{question.createdate}}</span>
         </div>
 
-        <!-- 수정/삭제 버튼 -->
+        <!-- Owner Buttons -->
         {{#isOwner}}
         <div class="flex justify-end gap-3 mb-6">
             <a href="/studentCourseQuestionEditForm?courseQuestionNo={{question.courseQuestionNo}}"
-               class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
-                수정
-            </a>
+               class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">수정</a>
 
             <button onclick="openDeleteModal()"
-                    class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600">
-                삭제
-            </button>
+                    class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600">삭제</button>
         </div>
         {{/isOwner}}
 
-        <!-- 내용 -->
+        <!-- Content -->
         <div class="text-gray-700 leading-relaxed text-sm whitespace-pre-line">
             {{#question.canView}}
-                {{question.courseQuestionContent}}
-            {{/question.canView}}
-
-            {{^question.canView}}
-                🔒 비밀글은 작성자와 담당 교수가 아니면 볼 수 없습니다.
-            {{/question.canView}}
+			    {{question.courseQuestionContent}}
+			{{/question.canView}}
+			{{^question.canView}}
+			    🔒 비밀글은 작성자와 담당 교수가 아니면 볼 수 없습니다.
+			{{/question.canView}}
         </div>
 
     </div>
 
-    <!-- 댓글 카드 -->
+    <!-- Answer Card -->
     <div class="card">
 
         <h3 class="text-lg font-semibold text-gray-800 mb-4">댓글</h3>
@@ -145,6 +139,7 @@
         </div>
         {{/question.answerList}}
 
+        <!-- Write Answer -->
         {{#isProfessor}}
         <form action="/addAnswer" method="post" class="mt-6">
             <input type="hidden" name="courseQuestionNo" value="{{question.courseQuestionNo}}">
@@ -169,7 +164,7 @@
 
 </main>
 
-<!-- 삭제 모달 -->
+<!-- Delete Modal -->
 <div id="deleteModal"
      class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 

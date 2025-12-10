@@ -13,7 +13,7 @@ public class CourseQuestionDTO {
     private int courseNo;
 
     // 작성자 정보
-    private int writerUserNo;
+    private Integer writerUserNo;
     private String writerName;
     private String writerRole; // STUDENT / PROFESSOR
 
@@ -55,4 +55,6 @@ public class CourseQuestionDTO {
     public boolean isPrivatePost() {
         return privatePost == 1;
     }
+
+    private Integer answerCount;
 }

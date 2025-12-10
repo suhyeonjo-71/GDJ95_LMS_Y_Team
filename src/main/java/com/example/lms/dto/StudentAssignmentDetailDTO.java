@@ -2,7 +2,12 @@ package com.example.lms.dto;
 
 import lombok.Data;
 import java.time.LocalDateTime;
-
+/**
+ * 2025. 11. 24.
+ * Author - yj
+ * STUDENT ASSIGNMENT DETAIL DTO
+ * 학생 과제 상세 조회 정보
+ */
 @Data
 public class StudentAssignmentDetailDTO {
 

@@ -46,7 +46,7 @@
 
 <main class="max-w-6xl mx-auto px-4 py-10">
 
-    <!-- 상단 카드 -->
+    <!-- 상단 정보 카드 -->
     <div class="card mb-8">
         <div class="flex items-center gap-2 mb-2 text-blue-600 text-xs font-semibold uppercase tracking-wide">
             <i class="fa-solid fa-clipboard-list"></i>
@@ -59,13 +59,14 @@
         </p>
     </div>
 
-    <!-- 리스트 카드 -->
+    <!-- 과제 목록 -->
     <div class="card">
 
         {{#assignmentList}}
         <ul class="divide-y divide-gray-200">
 
             {{#assignmentList}}
+            <!-- 과제 항목 -->
             <li class="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 
                 <!-- 제목 -->
@@ -100,6 +101,7 @@
         </ul>
         {{/assignmentList}}
 
+        <!-- 과제 없음 -->
         {{^assignmentList}}
         <div class="py-12 text-center text-gray-400 text-sm">
             <i class="fa-regular fa-clipboard text-xl mb-2"></i><br>

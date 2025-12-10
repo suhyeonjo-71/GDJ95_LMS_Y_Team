@@ -1,13 +1,12 @@
+package com.example.lms.dto;
+
+import java.util.List;
+import lombok.Data;
 /**
  * 2025. 12. 02.
  * Author - yj
  * 학생 강의 홈 화면 DTO (Dashboard) — 리팩토링 버전
  */
-package com.example.lms.dto;
-
-import java.util.List;
-import lombok.Data;
-
 @Data
 public class StudentCourseHomeDTO {
 
@@ -67,5 +66,5 @@ public class StudentCourseHomeDTO {
     // -----------------------------
     // 질문(Q&A) 최신 리스트 (3개든 5개든 자유)
     // -----------------------------
-    private List<StudentQuestionDTO> recentQuestions;
+    private List<StudentQuestionDTO> questionList;
 }

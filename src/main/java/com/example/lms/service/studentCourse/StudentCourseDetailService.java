@@ -16,7 +16,7 @@ public class StudentCourseDetailService {
 
     private final StudentCourseDetailMapper mapper;
 
-    // 강의 상세정보 + 시간 목록 + 현재 신청 인원까지 모두 전달
+    // 강의 상세정보 조회 (시간목록 + 현재 신청인원 포함)
     public StudentCourseDetailDTO getCourseDetail(int courseNo) {
 
         System.out.println("DEBUG >>> getCourseDetail() 호출됨");
@@ -27,12 +27,12 @@ public class StudentCourseDetailService {
 
         if (dto != null) {
 
-            // 강의 시간 목록
+            // 강의 시간 목록 조회
             List<CourseTimeDTO> timeList = mapper.selectCourseTimeList(courseNo);
             dto.setCourseTimeList(timeList);
             System.out.println("DEBUG >>> timeList 조회 = " + timeList);
 
-            // 현재 수강 인원
+            // 현재 수강 인원 조회
             int count = mapper.selectCurrentEnrollmentCount(courseNo);
             dto.setCurrentCount(count);
             System.out.println("DEBUG >>> currentCount = " + count);

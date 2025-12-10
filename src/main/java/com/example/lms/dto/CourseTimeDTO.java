@@ -1,7 +1,12 @@
 package com.example.lms.dto;
 
 import lombok.Data;
-
+/**
+ * 2025. 11. 24.
+ * Author - yj
+ * TB_COURSE_TIME TABLE DTO
+ * 강의 요일/교시 정보 관리 DTO
+ */
 @Data
 public class CourseTimeDTO {
 

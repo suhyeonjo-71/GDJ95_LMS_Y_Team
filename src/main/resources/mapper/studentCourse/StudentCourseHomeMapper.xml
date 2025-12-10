@@ -5,105 +5,119 @@
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseHomeMapper">
 
-    <!-- 강의 홈 정보 -->
-    <select id="selectCourseHome" parameterType="map" resultType="com.example.lms.dto.StudentCourseHomeDTO">
-        
-        SELECT 
-		    c.course_no AS courseNo,
-		    c.course_name AS courseName,
-		    c.course_score AS courseScore,
-		    c.course_classroom AS classroom,
-		    p.user_name AS professorName,
-		
-		    CASE ct.course_time_yoil
-		        WHEN 1 THEN '월'
-		        WHEN 2 THEN '화'
-		        WHEN 3 THEN '수'
-		        WHEN 4 THEN '목'
-		        WHEN 5 THEN '금'
-		        WHEN 6 THEN '토'
-		        WHEN 7 THEN '일'
-		        ELSE ''
-		    END AS yoilName,
-		
-		    ct.course_time_yoil AS courseTimeYoil,
-		    ct.course_time_start AS courseTimeStart,
-		    ct.course_time_end AS courseTimeEnd
-		FROM tb_course c
-		JOIN tb_sysuser p ON c.professor_user_no = p.user_no
-		LEFT JOIN tb_course_time ct ON c.course_no = ct.course_no
-		WHERE c.course_no = #{courseNo}
+    <select id="selectCourseHome"
+            parameterType="map"
+            resultType="com.example.lms.dto.StudentCourseHomeDTO">
 
+        SELECT
+              c.course_no AS courseNo
+            , c.course_name AS courseName
+            , c.course_score AS courseScore
+            , c.course_classroom AS classroom
+            , p.user_name AS professorName
+            , ct.course_time_yoil AS courseTimeYoil
+            , ct.course_time_start AS courseTimeStart
+            , ct.course_time_end AS courseTimeEnd
+        FROM tb_course c
+        JOIN tb_sysuser p
+            ON c.professor_user_no = p.user_no
+        LEFT JOIN tb_course_time ct
+            ON c.course_no = ct.course_no
+        WHERE c.course_no = #{courseNo}
     </select>
 
-    <!-- 최근 공지 -->
-    <select id="selectRecentNotices" parameterType="int"
-        resultType="com.example.lms.dto.StudentCourseNoticeDTO">
 
-	    SELECT course_notice_no AS courseNoticeNo,
-	          course_notice_title AS courseNoticeTitle,
-	           DATE_FORMAT(createdate, '%Y-%m-%d') AS createdate
-	    FROM tb_course_notice
-	    WHERE course_no = #{courseNo}
-	    ORDER BY createdate DESC
-	    LIMIT 3
-	</select>
+    <select id="selectRecentNotices"
+            parameterType="int"
+            resultType="com.example.lms.dto.StudentCourseNoticeDTO">
 
-
-    <!-- 최근 과제 -->
-    <select id="selectRecentAssignment" parameterType="map" resultType="com.example.lms.dto.StudentAssignmentListDTO">
-        SELECT 
-		    a.assignment_no AS assignmentNo,
-		    a.assignment_title AS assignmentTitle,
-		    DATE_FORMAT(a.assignment_due_date, '%Y-%m-%d') AS assignmentDeadline,
-		    IFNULL(s.assignment_score, 0) AS assignmentScore,
-            CASE WHEN s.assignment_submission_no IS NULL THEN 0 ELSE 1 END AS submitted
-		FROM tb_assignment a
-		LEFT JOIN tb_assignment_submission s
-		    ON a.assignment_no = s.assignment_no AND s.writer_user_no = #{studentUserNo}
-		WHERE a.course_no = #{courseNo}
-		ORDER BY a.assignment_due_date ASC
-		LIMIT 1   
+        SELECT
+              course_notice_no AS courseNoticeNo
+            , course_notice_title AS courseNoticeTitle
+            , DATE_FORMAT(createdate, '%Y-%m-%d') AS createdate
+        FROM tb_course_notice
+        WHERE course_no = #{courseNo}
+        ORDER BY createdate DESC
+        LIMIT 3
     </select>
 
-    <!-- 출석 요약 -->
-    <select id="selectAttendanceSummary" parameterType="map" resultType="com.example.lms.dto.AttendanceSummaryDTO">
-        SELECT SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END) AS attendanceCount,
-               SUM(CASE WHEN attendance_status = 1 THEN 1 ELSE 0 END) AS lateCount,
-               SUM(CASE WHEN attendance_status = 2 THEN 1 ELSE 0 END) AS absentCount,
-               ROUND(SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END) / COUNT(*) * 100, 1) AS attendanceRate
+
+    <select id="selectRecentAssignment"
+            parameterType="map"
+            resultType="com.example.lms.dto.StudentAssignmentListDTO">
+
+        SELECT
+              a.assignment_no AS assignmentNo
+            , a.assignment_title AS assignmentTitle
+            , DATE_FORMAT(a.assignment_due_date, '%Y-%m-%d') AS assignmentDeadline
+            , IFNULL(s.assignment_score, 0) AS assignmentScore
+            , CASE WHEN s.assignment_submission_no IS NULL THEN 0 ELSE 1 END AS submitted
+        FROM tb_assignment a
+        LEFT JOIN tb_assignment_submission s
+            ON a.assignment_no = s.assignment_no
+           AND s.writer_user_no = #{studentUserNo}
+        WHERE a.course_no = #{courseNo}
+        ORDER BY a.assignment_due_date ASC
+        LIMIT 1
+    </select>
+
+
+    <select id="selectAttendanceSummary"
+            parameterType="map"
+            resultType="com.example.lms.dto.AttendanceSummaryDTO">
+
+        SELECT
+              SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END) AS attendanceCount
+            , SUM(CASE WHEN attendance_status = 1 THEN 1 ELSE 0 END) AS lateCount
+            , SUM(CASE WHEN attendance_status = 2 THEN 1 ELSE 0 END) AS absentCount
+            , ROUND(
+                  SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END)
+                  / COUNT(*) * 100
+                  , 1
+              ) AS attendanceRate
         FROM tb_attendance
-        WHERE course_no = #{courseNo} AND student_user_no = #{studentUserNo}
+        WHERE course_no = #{courseNo}
+          AND student_user_no = #{studentUserNo}
     </select>
 
-    <!-- 성적 요약 -->
-    <select id="selectStudentGradeSummary" parameterType="map" resultType="com.example.lms.dto.StudentGradeDTO">
-        SELECT grade_value AS gradeValue,
-               grade_score AS gradeScore
+
+    <select id="selectStudentGradeSummary"
+            parameterType="map"
+            resultType="com.example.lms.dto.StudentGradeDTO">
+
+        SELECT
+              grade_value AS gradeValue
+            , grade_score AS gradeScore
         FROM tb_grade
-        WHERE course_no = #{courseNo} AND student_user_no = #{studentUserNo}
+        WHERE course_no = #{courseNo}
+          AND student_user_no = #{studentUserNo}
     </select>
-
-    <!-- 최근 Q&A -->
-    <select id="selectRecentQuestions" parameterType="int" resultType="com.example.lms.dto.StudentQuestionDTO">
-	    SELECT 
-	        course_question_no AS questionNo,
-	        course_question_title AS questionTitle, 
-	        writer_user_no AS writerUserNo,
-	        is_private AS privatePost,
-	        
-            (
-                SELECT COUNT(*) 
-                FROM tb_course_question_answer a
-                WHERE a.course_question_no = tb.course_question_no
-            ) AS answerCount,
-            
-	        DATE_FORMAT(createdate, '%Y-%m-%d %H:%i:%s') AS createdate
-	    FROM tb_course_question tb
-	    WHERE course_no = #{courseNo}
-	    ORDER BY createdate DESC
+	
+	<select id="selectRecentQuestionsForStudent"
+	        parameterType="int"
+	        resultType="com.example.lms.dto.CourseQuestionDTO">
+	     SELECT
+	        cq.course_question_no AS courseQuestionNo,
+	        cq.course_question_title AS courseQuestionTitle,
+	        DATE_FORMAT(cq.createdate, '%Y-%m-%d %H:%i:%s') AS createdate,
+	        cq.is_private AS privatePost,
+	        cq.writer_user_no AS writerUserNo,
+	
+	        u.user_name AS writerName,
+	
+	        EXISTS (
+	            SELECT 1
+	            FROM tb_course_question_answer a
+	            WHERE a.course_question_no = cq.course_question_no
+	        ) AS answered
+	
+	    FROM tb_course_question cq
+	    LEFT JOIN tb_sysuser u
+	      ON cq.writer_user_no = u.user_no
+	
+	    WHERE cq.course_no = #{courseNo}
+	    ORDER BY cq.createdate DESC
 	    LIMIT 3
 	</select>
-
-
+		
 </mapper>

@@ -34,30 +34,32 @@ public class StudentCourseHomeController {
         if (loginUser == null) return "redirect:/login";
 
         int studentUserNo = loginUser.getUserNo();
+        String userAuth = loginUser.getUserAuth(); // 또는 getUserRole()
 
-        // 공통 헤더/서브네비용 course 정보
+        // 헤더 / 서브네비용 기본 강의 정보
         StudentCourseDetailDTO courseHeader =
                 studentCourseService.getStudentCourseDetail(courseNo);
-
         model.addAttribute("course", courseHeader);
         model.addAttribute("courseNo", courseNo);
         model.addAttribute("nav_home", true);
 
-        // 홈 화면 전용 요약 데이터
+        // 홈 화면 요약
         StudentCourseHomeDTO courseInfo =
                 service.getStudentCourseHome(courseNo, studentUserNo);
         model.addAttribute("courseInfo", courseInfo);
 
+        // 공지 / 과제 / 출석 / 성적
         model.addAttribute("noticeList", service.getRecentNotices(courseNo));
         model.addAttribute("assignment", service.getRecentAssignment(courseNo, studentUserNo));
         model.addAttribute("attendance", service.getAttendanceSummary(courseNo, studentUserNo));
         model.addAttribute("grade", service.getStudentGradeSummary(courseNo, studentUserNo));
 
+        // 최근 질문 3개
         List<StudentQuestionDTO> recentQuestions =
-                service.getRecentQuestionList(courseNo, studentUserNo, loginUser.getUserAuth());
+                service.getRecentQuestionList(courseNo, studentUserNo, userAuth);
         model.addAttribute("questionList", recentQuestions);
-        
-       
+
+        // 로그인 사용자명
         model.addAttribute("loginUserName", loginUser.getUserName());
 
         return "studentCourse/studentCourseHome";

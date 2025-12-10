@@ -26,7 +26,6 @@
     </div>
 </div>
 
-<!-- 메인 -->
 <main class="max-w-6xl mx-auto px-4 py-10">
 
     <!-- 출석 요약 -->
@@ -49,38 +48,40 @@
         {{/summary}}
 
         {{^summary}}
+        <!-- 요약 없음 -->
         <p class="text-gray-400">출석 정보가 아직 없습니다.</p>
         {{/summary}}
     </section>
 
     <!-- 회차별 출석 카드 -->
-	<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-	
-	    {{#detailList}}
-	    <div class="bg-white shadow rounded-xl p-5 border border-gray-200">
-	
-	        <!-- 회차 -->
-	        <div class="text-sm text-gray-500 mb-1">Week {{weekNo}}</div>
-	
-	        <!-- 상태 -->
-	        <div class="text-lg font-bold
-	            {{#isAttend}} text-indigo-600 {{/isAttend}}
-	            {{#isLate}} text-amber-600 {{/isLate}}
-	            {{#isAbsent}} text-rose-600 {{/isAbsent}}
-	        ">
-	            {{#isAttend}}출석{{/isAttend}}
-	            {{#isLate}}지각{{/isLate}}
-	            {{#isAbsent}}결석{{/isAbsent}}
-	        </div>
-	
-	    </div>
-	    {{/detailList}}
-	
-	    {{^detailList}}
-	    <p class="text-gray-400">출석 정보가 아직 없습니다.</p>
-	    {{/detailList}}
-	
-	</section>
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        {{#detailList}}
+        <div class="bg-white shadow rounded-xl p-5 border border-gray-200">
+
+            <!-- 회차 번호 -->
+            <div class="text-sm text-gray-500 mb-1">Week {{weekNo}}</div>
+
+            <!-- 출석 상태 -->
+            <div class="text-lg font-bold
+                {{#isAttend}} text-indigo-600 {{/isAttend}}
+                {{#isLate}} text-amber-600 {{/isLate}}
+                {{#isAbsent}} text-rose-600 {{/isAbsent}}
+            ">
+                {{#isAttend}}출석{{/isAttend}}
+                {{#isLate}}지각{{/isLate}}
+                {{#isAbsent}}결석{{/isAbsent}}
+            </div>
+
+        </div>
+        {{/detailList}}
+
+        {{^detailList}}
+        <!-- 상세 없음 -->
+        <p class="text-gray-400">출석 정보가 아직 없습니다.</p>
+        {{/detailList}}
+
+    </section>
 
 </main>
 

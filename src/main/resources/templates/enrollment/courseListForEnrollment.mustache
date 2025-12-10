@@ -11,9 +11,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <style>
-/* ============================================
-   RESET & GLOBAL
-============================================ */
+/* Reset */
 * {
     margin: 0;
     padding: 0;
@@ -26,23 +24,19 @@ body {
     line-height: 1.6;
 }
 
-/* ============================================
-   CARD — 고급형 Smart UI (Blue)
-============================================ */
+/* Card */
 .card {
     background-color: #FFFFFF;
     border-radius: 12px;
     padding: 30px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 20px rgba(30, 64, 175, 0.12); /* Blue shadow */
+    box-shadow: 0 4px 20px rgba(30, 64, 175, 0.12);
     transition: transform 0.3s ease;
 }
 
-/* ============================================
-   BUTTON — Blue Smart UI
-============================================ */
+/* Button */
 .btn-primary {
-    background-color: #2563EB; /* blue-600 */
+    background-color: #2563EB;
     color: white;
     padding: 12px 20px;
     border-radius: 8px;
@@ -55,11 +49,11 @@ body {
     transition: background-color .3s, transform .3s;
 }
 .btn-primary:hover {
-    background-color: #1D4ED8; /* blue-700 */
+    background-color: #1D4ED8;
     transform: scale(1.05);
 }
 
-/* Danger 버튼 */
+/* Danger Button */
 .btn-danger {
     background-color: #EF4444;
     color: white;
@@ -71,21 +65,17 @@ body {
     background-color: #DC2626;
 }
 
-/* ============================================
-   ALERT — Blue 스타일
-============================================ */
+/* Alert */
 .alert-blue {
-    background-color: #DBEAFE; /* blue-200 */
-    color: #1E40AF;           /* blue-800 */
-    border: 1px solid #BFDBFE; /* blue-300 */
+    background-color: #DBEAFE;
+    color: #1E40AF;
+    border: 1px solid #BFDBFE;
     padding: 15px;
     border-radius: 8px;
     margin-top: 15px;
 }
 
-/* ============================================
-   TABLE — Modern Blue Accent
-============================================ */
+/* Table */
 .table-wrap {
     border-radius: 10px;
     overflow: hidden;
@@ -96,12 +86,12 @@ table {
     border-collapse: collapse;
 }
 th {
-    background-color: #EFF6FF; /* blue-50 */
-    color: #1E3A8A; /* blue-900 */
+    background-color: #EFF6FF;
+    color: #1E3A8A;
     padding: 12px;
     text-align: left;
     font-weight: 600;
-    border-bottom: 2px solid #DBEAFE; /* blue-200 */
+    border-bottom: 2px solid #DBEAFE;
 }
 td {
     padding: 12px;
@@ -109,12 +99,10 @@ td {
     border-bottom: 1px solid #E5E7EB;
 }
 tr:hover {
-    background-color: rgba(37, 99, 235, 0.10); /* blue-hover */
+    background-color: rgba(37, 99, 235, 0.10);
 }
 
-/* ============================================
-   PAGINATION — Blue Theme
-============================================ */
+/* Pagination */
 .pagination-area a {
     padding: 8px 12px;
     border-radius: 6px;
@@ -134,7 +122,7 @@ tr:hover {
     border-color: #2563EB !important;
 }
 .nav-btn {
-    background-color: #E5EFFE; /* 연한 블루 */
+    background-color: #E5EFFE;
 }
 .nav-btn:hover {
     background-color: #2563EB;
@@ -143,7 +131,6 @@ tr:hover {
 </style>
 
 </head>
-
 <body class="text-gray-800">
 
 {{> studentLayout/studentPageHeader }}
@@ -200,6 +187,7 @@ tr:hover {
             <table>
                 <thead>
                 <tr>
+                	<th>강의번호</th>
                     <th>강의명</th>
                     <th>교수명</th>
                     <th>학과</th>
@@ -215,6 +203,7 @@ tr:hover {
                 {{#courseList}}
                 <tr onclick="location.href='/studentCourseDetail?courseNo={{courseNo}}'">
 
+                    <td>{{courseNo}}</td>
                     <td>{{courseName}}</td>
                     <td>{{professorName}}</td>
                     <td>{{deptName}}</td>
@@ -223,20 +212,49 @@ tr:hover {
                     <td>{{courseTimeStart}} ~ {{courseTimeEnd}}</td>
                     <td>{{courseCapacity}} / {{currentCount}}</td>
 
-                    <td class="text-center">
-
-                        {{#isFull}}
-                        <span class="px-3 py-1 rounded bg-red-100 text-red-700 text-xs font-semibold">정원초과</span>
-                        {{/isFull}}
-
-                        {{^isFull}}
-                        <form action="/addEnrollment" method="post" onclick="event.stopPropagation();">
-                            <input type="hidden" name="courseNo" value="{{courseNo}}">
-                            <button class="btn-primary text-xs px-3 py-1">신청</button>
-                        </form>
-                        {{/isFull}}
-
-                    </td>
+                    <td class="text-center relative" style="pointer-events: auto;">
+					    {{#isFull}}
+					    <!-- 정원 초과 -->
+					    <span class="inline-block px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold border border-red-300 shadow-sm">
+					        정원초과
+					    </span>
+					    {{/isFull}}
+					
+					    {{^isFull}}
+					
+					        {{#zeroStatus}}
+					        <!-- 이미 신청 완료 -->
+					        <span class="inline-block px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold border border-green-300 shadow-sm cursor-default">
+							    신청완료
+							</span>
+					        {{/zeroStatus}}
+					
+					        {{^zeroStatus}}
+					            {{#myStatus}}
+					            <!-- 과거 취소 → 재신청 가능 -->
+					            <form action="/addEnrollment" method="post" onclick="event.stopPropagation();" class="inline-block">
+					                <input type="hidden" name="courseNo" value="{{courseNo}}">
+					                <input type="hidden" name="currentPage" value="{{currentPage}}">
+					                <button class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-full shadow-sm">
+					                    신청
+					                </button>
+					            </form>
+					            {{/myStatus}}
+					
+					            {{^myStatus}}
+					            <!-- 최초 신청 -->
+					            <form action="/addEnrollment" method="post" onclick="event.stopPropagation();" class="inline-block">
+					                <input type="hidden" name="courseNo" value="{{courseNo}}">
+					                <input type="hidden" name="currentPage" value="{{currentPage}}">
+					                <button class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-full shadow-sm">
+					                    신청
+					                </button>
+					            </form>
+					            {{/myStatus}}
+					        {{/zeroStatus}}
+					
+					    {{/isFull}}
+					</td>
 
                 </tr>
                 {{/courseList}}

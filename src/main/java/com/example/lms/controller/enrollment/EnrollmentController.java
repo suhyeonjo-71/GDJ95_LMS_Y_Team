@@ -120,7 +120,7 @@ public class EnrollmentController {
 	 public String addEnrollment(
 	         EnrollmentDTO dto,
 	         @RequestParam(defaultValue="1") int currentPage,
-	         // ✅ 1. 필터링 파라미터 추가
+	         // 필터링 파라미터 추가
 	         @RequestParam(value = "yoil", required = false) Integer yoil,
 	         @RequestParam(value = "professor", required = false) String professor,
 	         @RequestParam(value = "deptCode", required = false) String deptCode,
@@ -137,7 +137,7 @@ public class EnrollmentController {
 	     redirectAttributes.addFlashAttribute("message", msg);
 	     redirectAttributes.addFlashAttribute("currentPage", currentPage);
 	     
-	     // ✅ 2. 리다이렉트 URL 구성 (필터 파라미터 포함)
+	     // 리다이렉트 URL 구성 (필터 파라미터 포함)
 	     StringBuilder redirectUrl = new StringBuilder("redirect:/courseListForEnrollment?currentPage=").append(currentPage);
 	     
 	     if (yoil != null) {

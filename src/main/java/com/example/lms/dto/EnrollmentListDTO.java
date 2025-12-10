@@ -1,13 +1,12 @@
+package com.example.lms.dto;
+
+import lombok.Data;
 /**
  * 2025. 11. 27.
  * Author - yj
  * 학생 수강신청 내역 DTO
  * TB_ENROLLMENT + TB_COURSE + TB_SYSUSER + TB_COURSE_TIME JOIN 결과
  */
-package com.example.lms.dto;
-
-import lombok.Data;
-
 @Data
 public class EnrollmentListDTO {
 

@@ -11,9 +11,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
-        /* ============================================
-           RESET & GLOBAL
-        ============================================ */
+        /* Reset */
         * {
             margin: 0;
             padding: 0;
@@ -25,9 +23,7 @@
             color: #333;
         }
 
-        /* ============================================
-           CARD — 전체 박스
-        ============================================ */
+        /* Card */
         .card {
             background-color: #FFFFFF;
             border-radius: 14px;
@@ -40,15 +36,13 @@
             transform: translateY(-3px);
         }
 
-        /* 중심 정렬 */
+        /* Wrapper */
         .timetable-wrapper {
             max-width: 900px;
             margin: 0 auto;
         }
 
-        /* ============================================
-           TABLE 
-        ============================================ */
+        /* Table */
         .table-wrap {
             border-radius: 12px;
             overflow: hidden;
@@ -67,24 +61,20 @@
             font-weight: 600;
             border-bottom: 2px solid #DBEAFE;
         }
-
         .compact-cell {
             height: 65px !important;
         }
-
         tbody td {
             border: 1px solid #E5E7EB;
             padding: 0;
         }
 
-        /* ============================================
-           시간표 블록
-        ============================================ */
+        /* Timetable Block */
         .timetable-block {
             width: 100%;
             height: 100%;
-            background-color: #DBEAFE; /* blue-200 */
-            color: #1E40AF;            /* blue-800 */
+            background-color: #DBEAFE;
+            color: #1E40AF;
             border-radius: 10px;
             padding: 6px 4px;
             cursor: pointer;
@@ -97,7 +87,6 @@
         .timetable-block:hover {
             background-color: #BFDBFE;
         }
-
         .timetable-name {
             font-size: 12px;
             font-weight: 600;
@@ -122,7 +111,7 @@
 
 <main class="max-w-6xl mx-auto px-4 py-10">
 
-    <!-- 전체 박스(Card) 시작 -->
+    <!-- 메인 카드 -->
     <div class="card timetable-wrapper">
 
         <!-- 페이지 제목 -->
@@ -151,6 +140,7 @@
                 </thead>
 
                 <tbody>
+                <!-- 교시 반복 -->
                 {{#periods}}
                 <tr>
 
@@ -159,9 +149,11 @@
                         {{period}}
                     </td>
 
+                    <!-- 요일 반복 -->
                     {{#yoils}}
                     <td class="compact-cell">
 
+                        <!-- 강의가 있는 경우 -->
                         {{#timetable}}
                         <div class="timetable-block"
                              onclick="location.href='/studentCourseDetail?courseNo={{courseNo}}'">
@@ -173,6 +165,7 @@
                         </div>
                         {{/timetable}}
 
+                        <!-- 빈 칸 -->
                         {{^timetable}}
                         <div style="width: 100%; height: 100%;"></div>
                         {{/timetable}}
@@ -187,7 +180,6 @@
         </div>
 
     </div>
-    <!-- 전체 박스 끝 -->
 
 </main>
 

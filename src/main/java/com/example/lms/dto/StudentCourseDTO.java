@@ -1,12 +1,11 @@
+package com.example.lms.dto;
+
+import lombok.Data;
 /**
  * 2025. 11. 26.
  * Author - yj
  * 학생 수강신청 화면용 강의 정보 DTO
  */
-package com.example.lms.dto;
-
-import lombok.Data;
-
 @Data
 public class StudentCourseDTO {
 
@@ -47,5 +46,22 @@ public class StudentCourseDTO {
             case 5 -> "금";
             default -> "";
         };
+    }
+    
+    // Mustache 버튼 렌더링용 상태값
+
+    // 신청 완료한 상태? (myStatus = 0)
+    public boolean getZeroStatus() {
+        return myStatus != null && myStatus == 0;
+    }
+
+    // 취소했던 상태? (myStatus = 1)
+    public boolean getCanceledStatus() {
+        return myStatus != null && myStatus == 1;
+    }
+
+    // 신청한 적 없는 상태? (myStatus = null)
+    public boolean getNeverApplied() {
+        return myStatus == null;
     }
 }

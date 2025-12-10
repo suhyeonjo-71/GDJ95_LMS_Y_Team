@@ -1,8 +1,9 @@
 package com.example.lms.dto;
 
 import lombok.Data;
-
 /**
+ * 2025. 11. 25.
+ * Author - yj
  * 학생 출석 요약 DTO
  * TB_ATTENDANCE 집계 결과용
  */

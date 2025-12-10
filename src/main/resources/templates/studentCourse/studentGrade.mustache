@@ -11,14 +11,18 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
-        body { font-family: 'Pretendard', sans-serif; }
+        /* Global */
+        body { 
+            font-family: 'Pretendard', sans-serif; 
+        }
     </style>
 </head>
+
 <body class="bg-[#F5F7FA] text-gray-800">
 
 {{> studentLayout/studentCoursePageHeader }}
 
-<!-- 서브 네비 -->
+<!-- SubNav -->
 <div class="mt-8 w-full">
     <div class="max-w-6xl mx-auto px-4">
         {{> studentLayout/_studentCourseSubNav }}
@@ -58,7 +62,6 @@
                     <p class="text-2xl font-bold text-gray-900">{{gradeScore}}</p>
                 </div>
 
-                <!-- 추후 다른 지표가 생기면 여기에 추가 가능 -->
                 <div class="p-5 rounded-2xl bg-gray-50 border border-gray-200 shadow-sm flex flex-col justify-center">
                     <p class="text-sm text-gray-500 mb-1">과목 번호</p>
                     <p class="text-xl font-semibold text-gray-800">{{courseNo}}</p>

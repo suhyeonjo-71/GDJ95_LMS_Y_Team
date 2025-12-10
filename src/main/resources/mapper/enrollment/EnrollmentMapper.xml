@@ -16,9 +16,9 @@
         WHERE e.student_user_no = #{studentUserNo}
           AND t1.course_time_yoil = t2.course_time_yoil
           AND (
-                    t1.course_time_start BETWEEN t2.course_time_start AND t2.course_time_end
-                OR  t1.course_time_end   BETWEEN t2.course_time_start AND t2.course_time_end
-                OR  t2.course_time_start BETWEEN t1.course_time_start AND t1.course_time_end
+                   t1.course_time_start BETWEEN t2.course_time_start AND t2.course_time_end
+                OR t1.course_time_end   BETWEEN t2.course_time_start AND t2.course_time_end
+                OR t2.course_time_start BETWEEN t1.course_time_start AND t1.course_time_end
           )
     </select>
 
@@ -34,9 +34,15 @@
     <!-- 신규 신청 -->
     <insert id="insertEnrollment">
         INSERT INTO tb_enrollment
-        (student_user_no, course_no, enrollment_status, createdate)
+        ( student_user_no
+        , course_no
+        , enrollment_status
+        , createdate )
         VALUES
-        (#{studentUserNo}, #{courseNo}, #{enrollmentStatus}, NOW())
+        ( #{studentUserNo}
+        , #{courseNo}
+        , #{enrollmentStatus}
+        , NOW() )
     </insert>
 
     <!-- 수강신청 내역 조회 -->
@@ -47,26 +53,23 @@
               e.enrollment_no        AS enrollmentNo
             , e.enrollment_status    AS enrollmentStatus
             , e.createdate
-
             , c.course_no            AS courseNo
             , c.course_name          AS courseName
             , c.course_score         AS courseScore
             , c.course_capacity      AS courseCapacity
-
             , u.user_name            AS professorName
-
             , t.course_time_yoil     AS courseTimeYoil
             , t.course_time_start    AS courseTimeStart
             , t.course_time_end      AS courseTimeEnd
-
         FROM tb_enrollment e
-        INNER JOIN tb_course c       ON c.course_no = e.course_no
-        INNER JOIN tb_sysuser u      ON u.user_no = c.professor_user_no
-        INNER JOIN tb_course_time t  ON t.course_no = c.course_no
-
+        INNER JOIN tb_course c
+            ON c.course_no = e.course_no
+        INNER JOIN tb_sysuser u
+            ON u.user_no = c.professor_user_no
+        INNER JOIN tb_course_time t
+            ON t.course_no = c.course_no
         WHERE e.student_user_no = #{studentUserNo}
           AND e.enrollment_status = 0
-          
         ORDER BY e.enrollment_no DESC
         LIMIT #{startRow}, #{rowPerPage}
     </select>
@@ -79,11 +82,12 @@
           AND enrollment_status = 0
     </select>
 
-    <!-- 수강 취소 (DELETE 방식) -->
+    <!-- 수강 취소 -->
     <delete id="cancelEnrollment">
-        DELETE FROM tb_enrollment
+        DELETE
+        FROM tb_enrollment
         WHERE student_user_no = #{studentUserNo}
-          AND enrollment_no = #{enrollmentNo};
+          AND enrollment_no = #{enrollmentNo}
     </delete>
 
 </mapper>

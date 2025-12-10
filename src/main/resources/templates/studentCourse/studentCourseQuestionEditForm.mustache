@@ -11,11 +11,13 @@
           href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
 
     <style>
+        /* Global */
         body {
             font-family: 'Pretendard', sans-serif;
             background-color: #F5F7FA;
         }
 
+        /* Card */
         .card {
             background-color: #fff;
             border-radius: 12px;
@@ -25,6 +27,7 @@
             border: 1px solid #E5E7EB;
         }
 
+        /* Title */
         .page-title {
             font-size: 22px;
             font-weight: 800;
@@ -35,33 +38,34 @@
 
 <body class="text-gray-800">
 
-<!-- 📌 공통 헤더 -->
+<!-- Header -->
 {{> studentLayout/studentCoursePageHeader }}
 
-<!-- 📌 서브네비 -->
+<!-- SubNav -->
 <div class="mt-8 w-full">
     <div class="max-w-6xl mx-auto px-4">
         {{> studentLayout/_studentCourseSubNav }}
     </div>
 </div>
 
-<!-- 📌 상세와 동일한 와이드 적용 -->
+<!-- Main -->
 <main class="max-w-6xl mx-auto px-4 py-10">
 
-    <!-- 🔥 상세보기와 동일: card가 전체 폭 사용 -->
     <div class="card">
 
+        <!-- Page Title -->
         <h1 class="page-title flex items-center gap-2 mb-6">
             <i class="fa-solid fa-pen-to-square text-blue-600"></i>
             문의 수정
         </h1>
 
+        <!-- Edit Form -->
         <form action="/studentCourseQuestionEdit" method="post" class="space-y-6">
 
             <input type="hidden" name="courseQuestionNo" value="{{question.courseQuestionNo}}">
             <input type="hidden" name="courseNo" value="{{question.courseNo}}">
 
-            <!-- 제목 -->
+            <!-- Title -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">제목</label>
                 <input type="text"
@@ -72,7 +76,7 @@
                               focus:ring-blue-500 focus:border-blue-500" />
             </div>
 
-            <!-- 내용 -->
+            <!-- Content -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">내용</label>
                 <textarea name="courseQuestionContent" rows="6" required
@@ -80,7 +84,7 @@
                                  focus:ring-blue-500 focus:border-blue-500">{{question.courseQuestionContent}}</textarea>
             </div>
 
-            <!-- 비밀글 체크 -->
+            <!-- Private -->
             <div class="flex items-center gap-2 text-sm">
                 <input type="checkbox" name="privatePost"
                        class="w-4 h-4"
@@ -88,7 +92,7 @@
                 <span class="text-gray-700">비밀글로 설정</span>
             </div>
 
-            <!-- 버튼 -->
+            <!-- Buttons -->
             <div class="flex justify-end gap-3 pt-4">
                 <a href="/studentCourseQuestionDetail?courseQuestionNo={{question.courseQuestionNo}}"
                    class="px-4 py-2 rounded-lg border border-gray-300 text-sm text-gray-600 hover:bg-gray-50">
