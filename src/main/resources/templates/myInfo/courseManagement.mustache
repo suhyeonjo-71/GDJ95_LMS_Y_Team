@@ -181,7 +181,7 @@
                                 <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-800">{{professorUserName}}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-500">{{createdate}}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-500">{{courseScore}}</td>
-                                <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-800">{{gradeFinalScore}}</td>
+                                <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-800">{{gradeFinalScoreNullChk}}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-800">{{gradeValue}}</td>
                             </tr>
                             {{/courseList}}
@@ -316,7 +316,7 @@
                          <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-800">${course.professorUserName}</td>
                          <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-500">${course.createdate || 'N/A'}</td>
                          <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-500">${score}</td>
-                         <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-800">${course.gradeFinalScore || 'N/A'}</td>
+                         <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-800">${course.gradeFinalScoreNullChk || 'N/A'}</td>
                          <td class="px-3 py-2 whitespace-nowrap text-center text-sm text-gray-800">${course.gradeValue || 'N/A'}</td>
                          ${studentNameCell}
                      </tr>

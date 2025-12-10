@@ -19,8 +19,7 @@
 				b.user_name AS professorUserName, -- 교수이름
 				a.course_score AS courseScore, -- 이수학점
 				d.grade_final_score AS gradeFinalScore, -- 평가점수
-				IFNULL(d.grade_final_score, '미채점') AS gradeFinalScoreNullChk, -- 평가점수 미등록 일시..
-				IFNULL(d.grade_value, '미채점') AS gradeValue, -- 평가등급
+				d.grade_value AS gradeValue, -- 평가등급
 				a.createdate AS createdate,
 				d.student_user_no AS studentUserNo,
 				e.user_name AS studentUserName, -- 학생이름
@@ -33,17 +32,12 @@
 			INNER JOIN tb_dept c
 				ON
 				b.dept_code = c.dept_code
-			INNER JOIN tb_enrollment te 	
+			INNER JOIN tb_grade d
 				ON
-				a.course_no = te.course_no
-			LEFT OUTER JOIN tb_grade d
-				ON
-				te.course_no = d.course_no
-				AND te.student_user_no = d.student_user_no
+				a.course_no = d.course_no
 			INNER JOIN tb_sysuser e
 				ON
-				te.student_user_no = e.user_no
-			WHERE te.enrollment_status = '0'
+				d.student_user_no = e.user_no
 			) t
 		ORDER BY rownm DESC
 	    LIMIT #{startRow}, #{limit}
@@ -65,8 +59,7 @@
 				b.user_name AS professorUserName, -- 교수이름
 				a.course_score AS courseScore, -- 이수학점
 				d.grade_final_score AS gradeFinalScore, -- 평가점수
-				IFNULL(d.grade_final_score, '미채점') AS gradeFinalScoreNullChk, -- 평가점수 미등록 일시..
-				IFNULL(d.grade_value, '미채점') AS gradeValue, -- 평가등급
+				d.grade_value AS gradeValue, -- 평가등급
 				a.createdate AS createdate,
 				d.student_user_no AS studentUserNo,
 				e.user_name AS studentUserName, -- 학생이름
@@ -79,17 +72,12 @@
 			INNER JOIN tb_dept c
 				ON
 				b.dept_code = c.dept_code
-			INNER JOIN tb_enrollment te 	
+			INNER JOIN tb_grade d
 				ON
-				a.course_no = te.course_no
-			LEFT OUTER JOIN tb_grade d
-				ON
-				te.course_no = d.course_no
-				AND te.student_user_no = d.student_user_no
+				a.course_no = d.course_no
 			INNER JOIN tb_sysuser e
 				ON
-				te.student_user_no = e.user_no
-			WHERE te.enrollment_status = '0'
+				d.student_user_no = e.user_no
 			) t
 	
 	</select>
@@ -110,8 +98,7 @@
 					b.user_name AS professorUserName, -- 교수이름
 					a.course_score AS courseScore, -- 이수학점
 					d.grade_final_score AS gradeFinalScore, -- 평가점수
-					IFNULL(d.grade_final_score, '미채점') AS gradeFinalScoreNullChk, -- 평가점수 미등록 일시..
-					IFNULL(d.grade_value, '미채점') AS gradeValue, -- 평가등급
+					d.grade_value AS gradeValue, -- 평가등급
 					a.createdate AS createdate,
 					CONCAT(a.course_year, "-", a.course_semester) AS courseYearSemester
 				FROM
@@ -122,16 +109,11 @@
 				INNER JOIN tb_dept c
 					ON
 					b.dept_code = c.dept_code
-				INNER JOIN tb_enrollment te 	
+				INNER JOIN tb_grade d
 					ON
-					a.course_no = te.course_no
-				LEFT OUTER JOIN tb_grade d
-					ON
-					te.course_no = d.course_no
-					AND te.student_user_no = d.student_user_no
+					a.course_no = d.course_no
 				WHERE
-					te.student_user_no = #{userNo}
-					AND te.enrollment_status = '0'
+					d.student_user_no = #{userNo}
 			 ) t
 		 ORDER BY rownm DESC
 		 LIMIT #{startRow}, #{limit}
@@ -153,8 +135,7 @@
 					b.user_name AS professorUserName, -- 교수이름
 					a.course_score AS courseScore, -- 이수학점
 					d.grade_final_score AS gradeFinalScore, -- 평가점수
-					IFNULL(d.grade_final_score, '미채점') AS gradeFinalScoreNullChk, -- 평가점수 미등록 일시..
-					IFNULL(d.grade_value, '미채점') AS gradeValue, -- 평가등급
+					d.grade_value AS gradeValue, -- 평가등급
 					a.createdate AS createdate,
 					CONCAT(a.course_year, "-", a.course_semester) AS courseYearSemester
 				FROM
@@ -165,16 +146,11 @@
 				INNER JOIN tb_dept c
 					ON
 					b.dept_code = c.dept_code
-				INNER JOIN tb_enrollment te 	
+				INNER JOIN tb_grade d
 					ON
-					a.course_no = te.course_no
-				LEFT OUTER JOIN tb_grade d
-					ON
-					te.course_no = d.course_no
-					AND te.student_user_no = d.student_user_no
+					a.course_no = d.course_no
 				WHERE
-					te.student_user_no = #{userNo}
-					AND te.enrollment_status = '0'
+					d.student_user_no = #{userNo}
 			) t
 	
 	</select>
@@ -188,22 +164,17 @@
 		FROM
 			tb_course a
 		INNER JOIN tb_sysuser b
-			ON
-			a.professor_user_no = b.user_no
+		ON
+		a.professor_user_no = b.user_no
 		INNER JOIN tb_dept c
-			ON
-			b.dept_code = c.dept_code
-		INNER JOIN tb_enrollment te 	
-			ON
-			a.course_no = te.course_no
-		LEFT OUTER JOIN tb_grade d
-			ON
-			te.course_no = d.course_no
-			AND te.student_user_no = d.student_user_no
+		ON
+		b.dept_code = c.dept_code
+		INNER JOIN tb_grade d
+		ON
+		a.course_no = d.course_no
 		INNER JOIN tb_sysuser e
-			ON
-			te.student_user_no = e.user_no
-		WHERE te.enrollment_status = '0'
+		ON
+		d.student_user_no = e.user_no
 
 	</select>
 
@@ -217,21 +188,16 @@
 		FROM
 			tb_course a
 		INNER JOIN tb_sysuser b
-			ON
-			a.professor_user_no = b.user_no
+		ON
+		a.professor_user_no = b.user_no
 		INNER JOIN tb_dept c
-			ON
-			b.dept_code = c.dept_code
-		INNER JOIN tb_enrollment te 	
-			ON
-			a.course_no = te.course_no
-		LEFT OUTER JOIN tb_grade d
-			ON
-			te.course_no = d.course_no
-			AND te.student_user_no = d.student_user_no
+		ON
+		b.dept_code = c.dept_code
+		INNER JOIN tb_grade d
+		ON
+		a.course_no = d.course_no
 		WHERE
-		te.student_user_no = #{userNo}
-		AND te.enrollment_status = '0'
+		d.student_user_no = #{userNo}
 
 	</select>
 	
@@ -251,8 +217,7 @@
 					b.user_name AS professorUserName, -- 교수이름
 					a.course_score AS courseScore, -- 이수학점
 					d.grade_final_score AS gradeFinalScore, -- 평가점수
-					IFNULL(d.grade_final_score, '미채점') AS gradeFinalScoreNullChk, -- 평가점수 미등록 일시..
-					IFNULL(d.grade_value, '미채점') AS gradeValue, -- 평가등급
+					d.grade_value AS gradeValue, -- 평가등급
 					a.createdate AS createdate,
 					d.student_user_no AS studentUserNo,
 					e.user_name AS studentUserName, -- 학생이름
@@ -265,18 +230,13 @@
 				INNER JOIN tb_dept c
 					ON
 					b.dept_code = c.dept_code
-				INNER JOIN tb_enrollment te 	
+				INNER JOIN tb_grade d
 					ON
-					a.course_no = te.course_no
-				LEFT OUTER JOIN tb_grade d
-					ON
-					te.course_no = d.course_no
-					AND te.student_user_no = d.student_user_no
+					a.course_no = d.course_no
 				INNER JOIN tb_sysuser e
 					ON
-					te.student_user_no = e.user_no
+					d.student_user_no = e.user_no
 				WHERE 1=1
-						AND te.enrollment_status = '0'
 					<if test="selectedCourseYearAndSemester != null and selectedCourseYearAndSemester.trim() != ''">
 		                AND CONCAT(CAST(a.course_year AS CHAR), "-", CAST(a.course_semester AS CHAR)) = #{selectedCourseYearAndSemester}
 		            </if>
@@ -309,8 +269,7 @@
 					b.user_name AS professorUserName, -- 교수이름
 					a.course_score AS courseScore, -- 이수학점
 					d.grade_final_score AS gradeFinalScore, -- 평가점수
-					IFNULL(d.grade_final_score, '미채점') AS gradeFinalScoreNullChk, -- 평가점수 미등록 일시..
-					IFNULL(d.grade_value, '미채점') AS gradeValue, -- 평가등급
+					d.grade_value AS gradeValue, -- 평가등급
 					a.createdate AS createdate,
 					d.student_user_no AS studentUserNo,
 					e.user_name AS studentUserName, -- 학생이름
@@ -323,18 +282,13 @@
 				INNER JOIN tb_dept c
 					ON
 					b.dept_code = c.dept_code
-				INNER JOIN tb_enrollment te 	
+				INNER JOIN tb_grade d
 					ON
-					a.course_no = te.course_no
-				LEFT OUTER JOIN tb_grade d
-					ON
-					te.course_no = d.course_no
-					AND te.student_user_no = d.student_user_no
+					a.course_no = d.course_no
 				INNER JOIN tb_sysuser e
 					ON
-					te.student_user_no = e.user_no
+					d.student_user_no = e.user_no
 				WHERE 1=1
-						AND te.enrollment_status = '0'
 					<if test="selectedCourseYearAndSemester != null and selectedCourseYearAndSemester.trim() != ''">
 		                AND CONCAT(CAST(a.course_year AS CHAR), "-", CAST(a.course_semester AS CHAR)) = #{selectedCourseYearAndSemester}
 		            </if>
@@ -366,8 +320,7 @@
 					b.user_name AS professorUserName, -- 교수이름
 					a.course_score AS courseScore, -- 이수학점
 					d.grade_final_score AS gradeFinalScore, -- 평가점수
-					IFNULL(d.grade_final_score, '미채점') AS gradeFinalScoreNullChk, -- 평가점수 미등록 일시..
-					IFNULL(d.grade_value, '미채점') AS gradeValue, -- 평가등급
+					d.grade_value AS gradeValue, -- 평가등급
 					a.createdate AS createdate,
 					CONCAT(a.course_year, "-", a.course_semester) AS courseYearSemester
 				FROM
@@ -378,16 +331,11 @@
 				INNER JOIN tb_dept c
 					ON
 					b.dept_code = c.dept_code
-				INNER JOIN tb_enrollment te 	
+				INNER JOIN tb_grade d
 					ON
-					a.course_no = te.course_no
-				LEFT OUTER JOIN tb_grade d
-					ON
-					te.course_no = d.course_no
-					AND te.student_user_no = d.student_user_no
+					a.course_no = d.course_no
 				WHERE 1=1
 						AND d.student_user_no = #{userNo}
-						AND te.enrollment_status = '0'
 					<if test="selectedCourseYearAndSemester != null and selectedCourseYearAndSemester.trim() != ''">
 		                AND CONCAT(CAST(a.course_year AS CHAR), "-", CAST(a.course_semester AS CHAR)) = #{selectedCourseYearAndSemester}
 		            </if>
@@ -419,8 +367,7 @@
 					b.user_name AS professorUserName, -- 교수이름
 					a.course_score AS courseScore, -- 이수학점
 					d.grade_final_score AS gradeFinalScore, -- 평가점수
-					IFNULL(d.grade_final_score, '미채점') AS gradeFinalScoreNullChk, -- 평가점수 미등록 일시..
-					IFNULL(d.grade_value, '미채점') AS gradeValue, -- 평가등급
+					d.grade_value AS gradeValue, -- 평가등급
 					a.createdate AS createdate,
 					CONCAT(a.course_year, "-", a.course_semester) AS courseYearSemester
 				FROM
@@ -431,16 +378,11 @@
 				INNER JOIN tb_dept c
 					ON
 					b.dept_code = c.dept_code
-				INNER JOIN tb_enrollment te 	
+				INNER JOIN tb_grade d
 					ON
-					a.course_no = te.course_no
-				LEFT OUTER JOIN tb_grade d
-					ON
-					te.course_no = d.course_no
-					AND te.student_user_no = d.student_user_no
+					a.course_no = d.course_no
 				WHERE 1=1
-						AND te.student_user_no = #{userNo}
-						AND te.enrollment_status = '0'
+						AND d.student_user_no = #{userNo}
 					<if test="selectedCourseYearAndSemester != null and selectedCourseYearAndSemester.trim() != ''">
 		                AND CONCAT(CAST(a.course_year AS CHAR), "-", CAST(a.course_semester AS CHAR)) = #{selectedCourseYearAndSemester}
 		            </if>

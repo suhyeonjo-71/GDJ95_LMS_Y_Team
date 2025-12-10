@@ -62,4 +62,7 @@ public class CourseManagementDTO {
 		
 		// 개설코드한글명 필요함
 		private String courseStatusName; // 0 종료 , 1 개설
+		
+		// 평가점수 등록 안됬을때 사용해야함
+		private String gradeFinalScoreNullChk;
 }
