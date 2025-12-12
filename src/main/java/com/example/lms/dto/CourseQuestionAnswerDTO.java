@@ -1,13 +1,12 @@
+package com.example.lms.dto;
+
+import lombok.Data;
 /**
  * 2025. 11. 24.
  * Author - yj
  * TB_COURSE_QUESTION_ANSWER TABLE DTO
  * 강의 문의사항 답변 정보
  */
-package com.example.lms.dto;
-
-import lombok.Data;
-
 @Data
 public class CourseQuestionAnswerDTO {
 

@@ -59,4 +59,6 @@ public class CourseManagementDTO {
 
 		// 조회 카테고리 셀렉박스용
 		private String courseYearSemester; // 연도별-학기별
+		
+		private String gradeFinalScoreNullChk;
 }

@@ -1,4 +1,3 @@
-<!-- studentAttendance.mustache -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -15,10 +14,17 @@
         body { font-family: 'Pretendard', sans-serif; }
     </style>
 </head>
+
 <body class="bg-[#F5F7FA] text-gray-800">
 
-{{> studentLayout/studentHeader }}
-{{> studentCourse/_studentCourseSubNav }}
+{{> studentLayout/studentCoursePageHeader }}
+
+<!-- 서브 네비 -->
+<div class="mt-8 w-full">
+    <div class="max-w-6xl mx-auto px-4">
+        {{> studentLayout/_studentCourseSubNav }}
+    </div>
+</div>
 
 <main class="max-w-6xl mx-auto px-4 py-10">
 
@@ -29,49 +35,52 @@
             <p class="text-sm text-gray-600">출석</p>
             <p class="text-2xl font-bold text-indigo-700">{{attendanceCount}}</p>
         </div>
+
         <div class="bg-white rounded-xl p-5 shadow flex flex-col items-center">
             <p class="text-sm text-gray-600">지각</p>
             <p class="text-2xl font-bold text-amber-700">{{lateCount}}</p>
         </div>
+
         <div class="bg-white rounded-xl p-5 shadow flex flex-col items-center">
             <p class="text-sm text-gray-600">결석</p>
             <p class="text-2xl font-bold text-rose-700">{{absentCount}}</p>
         </div>
         {{/summary}}
+
         {{^summary}}
+        <!-- 요약 없음 -->
         <p class="text-gray-400">출석 정보가 아직 없습니다.</p>
         {{/summary}}
     </section>
 
-    <!-- 회차별 출석 상세 -->
-    <section class="bg-white rounded-2xl shadow p-6">
-        <table class="w-full text-sm text-gray-700 border">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="p-2 border">회차</th>
-                    <th class="p-2 border">상태</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#detailList}}
-                <tr>
-                    <td class="p-2 border text-center">{{weekNo}}</td>
-                    <td class="p-2 border text-center">
-                        {{#attendanceStatus}}
-                            {{#isAttend}}출석{{/isAttend}}
-                            {{#isLate}}지각{{/isLate}}
-                            {{#isAbsent}}결석{{/isAbsent}}
-                        {{/attendanceStatus}}
-                    </td>
-                </tr>
-                {{/detailList}}
-                {{^detailList}}
-                <tr>
-                    <td colspan="3" class="p-2 text-center text-gray-400">출석 정보가 없습니다.</td>
-                </tr>
-                {{/detailList}}
-            </tbody>
-        </table>
+    <!-- 회차별 출석 카드 -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        {{#detailList}}
+        <div class="bg-white shadow rounded-xl p-5 border border-gray-200">
+
+            <!-- 회차 번호 -->
+            <div class="text-sm text-gray-500 mb-1">Week {{weekNo}}</div>
+
+            <!-- 출석 상태 -->
+            <div class="text-lg font-bold
+                {{#isAttend}} text-indigo-600 {{/isAttend}}
+                {{#isLate}} text-amber-600 {{/isLate}}
+                {{#isAbsent}} text-rose-600 {{/isAbsent}}
+            ">
+                {{#isAttend}}출석{{/isAttend}}
+                {{#isLate}}지각{{/isLate}}
+                {{#isAbsent}}결석{{/isAbsent}}
+            </div>
+
+        </div>
+        {{/detailList}}
+
+        {{^detailList}}
+        <!-- 상세 없음 -->
+        <p class="text-gray-400">출석 정보가 아직 없습니다.</p>
+        {{/detailList}}
+
     </section>
 
 </main>

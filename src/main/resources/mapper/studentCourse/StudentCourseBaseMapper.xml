@@ -5,44 +5,53 @@
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseBaseMapper">
 
-    <!-- =========================
-         내 수강과목 목록
-         ========================= -->
-    <select id="selectMyCourseList" parameterType="int" resultType="com.example.lms.dto.StudentCourseDTO">
-        SELECT 
-            c.course_no AS courseNo,
-            c.course_name AS courseName,
-            c.course_score AS courseScore,
-            c.classroom AS classroom,
-            p.user_name AS professorName,
-            d.dept_name AS deptName,
-            ct.course_time_yoil AS courseTimeYoil,
-            ct.course_time_start AS courseTimeStart,
-            ct.course_time_end AS courseTimeEnd
+    <!-- 내 수강과목 목록 -->
+    <select id="selectMyCourseList"
+            parameterType="int"
+            resultType="com.example.lms.dto.StudentCourseDTO">
+
+        SELECT
+              c.course_no AS courseNo
+            , c.course_name AS courseName
+            , c.course_score AS courseScore
+            , c.course_classroom AS classroom
+            , p.user_name AS professorName
+            , d.dept_name AS deptName
+            , ct.course_time_yoil AS courseTimeYoil
+            , ct.course_time_start AS courseTimeStart
+            , ct.course_time_end AS courseTimeEnd
         FROM tb_enrollment e
-        JOIN tb_course c ON e.course_no = c.course_no
-        JOIN tb_sysuser p ON c.professor_user_no = p.user_no
-        JOIN tb_dept d ON p.dept_code = d.dept_code
-        LEFT JOIN tb_course_time ct ON c.course_no = ct.course_no
-        WHERE e.student_user_no = #{studentUserNo} 
+        JOIN tb_course c
+            ON e.course_no = c.course_no
+        JOIN tb_sysuser p
+            ON c.professor_user_no = p.user_no
+        JOIN tb_dept d
+            ON c.dept_code = d.dept_code 
+        LEFT JOIN tb_course_time ct
+            ON c.course_no = ct.course_no
+        WHERE e.student_user_no = #{studentUserNo}
           AND e.enrollment_status = 0
         ORDER BY c.course_no
     </select>
 
-    <!-- =========================
-         학생 시간표
-         ========================= -->
-    <select id="selectStudentTimetable" parameterType="int" resultType="com.example.lms.dto.StudentTimetableDTO">
-        SELECT 
-            c.course_no AS courseNo,
-            c.course_name AS courseName,
-            ct.course_time_yoil AS courseTimeYoil,
-            ct.course_time_start AS courseTimeStart,
-            ct.course_time_end AS courseTimeEnd
+
+    <!-- 시간표 조회 -->
+    <select id="selectStudentTimetable"
+            parameterType="int"
+            resultType="com.example.lms.dto.StudentTimetableDTO">
+
+        SELECT
+              c.course_no AS courseNo
+            , c.course_name AS courseName
+            , ct.course_time_yoil AS courseTimeYoil
+            , ct.course_time_start AS courseTimeStart
+            , ct.course_time_end AS courseTimeEnd
         FROM tb_enrollment e
-        JOIN tb_course c ON e.course_no = c.course_no
-        JOIN tb_course_time ct ON c.course_no = ct.course_no
-        WHERE e.student_user_no = #{studentUserNo} 
+        JOIN tb_course c
+            ON e.course_no = c.course_no
+        JOIN tb_course_time ct
+            ON c.course_no = ct.course_no
+        WHERE e.student_user_no = #{studentUserNo}
           AND e.enrollment_status = 0
         ORDER BY ct.course_time_yoil, ct.course_time_start
     </select>

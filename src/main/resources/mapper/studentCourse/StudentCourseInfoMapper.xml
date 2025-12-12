@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseInfoMapper">
+
+    <!-- 강의 기본 상세 정보 조회 -->
+    <select id="selectCourseDetail"
+            resultType="com.example.lms.dto.StudentCourseDetailDTO">
+
+        SELECT
+              c.course_no           AS courseNo
+            , c.course_name         AS courseName
+            , c.course_year         AS courseYear
+            , c.course_semester     AS courseSemester
+            , c.course_score        AS courseScore
+            , c.course_capacity     AS courseCapacity
+            , c.course_description  AS courseDescription
+            , c.course_classroom    AS classroom
+
+            , u.user_name           AS professorName
+            , d.dept_name           AS deptName
+
+        FROM tb_course c
+        LEFT JOIN tb_sysuser u
+            ON u.user_no = c.professor_user_no
+        LEFT JOIN tb_dept d
+            ON d.dept_code = c.dept_code
+
+        WHERE c.course_no = #{courseNo}
+    </select>
+
+
+    <!-- 강의 시간 목록 조회 -->
+    <select id="selectCourseTimeList"
+            parameterType="int"
+            resultType="com.example.lms.dto.CourseTimeDTO">
+        SELECT
+            course_time_no    AS courseTimeNo,
+            professor_user_no AS professorUserNo,
+            course_no         AS courseNo,
+            course_time_yoil  AS courseTimeYoil,
+            course_time_start AS courseTimeStart,
+            course_time_end   AS courseTimeEnd
+        FROM tb_course_time
+        WHERE course_no = #{courseNo}
+        ORDER BY course_time_yoil, course_time_start
+    </select>
+
+    <!-- 현재 수강 인원 조회 -->
+    <select id="selectCurrentEnrollmentCount" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_enrollment
+        WHERE course_no = #{courseNo}
+          AND enrollment_status = 0   <!-- 0 = 신청 완료 -->
+    </select>
+
+</mapper>

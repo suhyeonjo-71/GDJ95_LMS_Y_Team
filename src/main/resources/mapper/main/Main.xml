@@ -48,7 +48,7 @@
 			a.course_no AS courseNo,
 			a.course_name AS courseName,
 			b.user_name AS professorUserName,
-			a.course_classroom AS courseClassroom,
+			a.course_classroom AS classroom,
 			c.course_time_yoil AS courseTimeYoil,
 			c.course_time_start AS courseTimeStart,
 			c.course_time_end AS courseTimeEnd

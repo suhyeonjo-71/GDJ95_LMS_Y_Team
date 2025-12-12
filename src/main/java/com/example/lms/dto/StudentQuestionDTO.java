@@ -1,22 +1,43 @@
 package com.example.lms.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 /**
- * 학생 질문(Q&A) 요약 DTO
- * TB_COURSE_QUESTION / TB_COURSE_QUESTION_ANSWER 조회용
+ * 2025. 11. 24.
+ * Author - yj
+ * STUDENT COURSE QUESTION LIST DTO
+ * 학생 문의사항 목록 조회 정보
  */
 @Data
 public class StudentQuestionDTO {
 
-    private Integer questionNo;   // 질문 번호
-    private String  questionTitle;// 질문 제목
-    private String  createdate;   // 질문 작성일 (String으로 받아도 됨)
-    private Boolean answered;     // 답변 여부 (true = 답변 있음)
-    
-    private Integer answerCount;   
+    // 기본 질문 정보
+    private Integer questionNo;        
+    private String  questionTitle;     
+    private String  questionContent;
+    private String  createdate;
 
-    private Boolean privatePost;     // 비밀글 여부
-    private Integer writerUserNo;    // 작성자
-    private Boolean canView;         // 열람 가능 여부
+    // 답변 여부
+    private Boolean answered;          
+
+    // 비밀글 여부
+    private Integer privatePost;
+    public boolean isPrivatePost() {
+        return privatePost != null && privatePost == 1;
+    }
+
+    private Boolean privatePostFlag;
+    private Boolean canView;
+
+    // 작성자 정보
+    private Integer writerUserNo;
+    private String writerName;
+
+    // 상세 조회용 댓글 리스트
+    private List<CourseQuestionAnswerDTO> answerList;
+
+    // 목록 표시용 index (옵션)
+    private Integer index;
 }
