@@ -3,8 +3,10 @@ package com.example.lms.dto;
 import lombok.Data;
 
 /**
- * 학생 성적 요약 DTO
- * TB_GRADE 조회용
+ * 2025. 11. 24.
+ * Author - yj
+ * TB_GRADE SUMMARY DTO
+ * 학생 성적 요약 정보
  */
 @Data
 public class GradeSummaryDTO {

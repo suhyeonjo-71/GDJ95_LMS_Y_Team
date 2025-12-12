@@ -1,0 +1,46 @@
+<!-- 공통 네비게이션 -->
+<div class="bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4">
+
+        <nav class="flex space-x-8 overflow-x-auto scrollbar-hide">
+
+            <a href="/courseListForEnrollment"
+               class="flex items-center gap-2 py-4
+                      {{#nav_enrollment}}text-blue-600 border-b-2 border-blue-600 font-semibold{{/nav_enrollment}}
+                      text-gray-600 hover:text-blue-600 font-medium
+                      border-b-2 border-transparent hover:border-blue-600 transition">
+                <i class="fa-solid fa-book-open"></i>
+                수강신청
+            </a>
+
+            <a href="/enrollmentList"
+               class="flex items-center gap-2 py-4
+                      {{#nav_enrollmentList}}text-blue-600 border-b-2 border-blue-600 font-semibold{{/nav_enrollmentList}}
+                      text-gray-600 hover:text-blue-600 font-medium
+                      border-b-2 border-transparent hover:border-blue-600 transition">
+                <i class="fa-solid fa-list-check"></i>
+                수강신청 내역
+            </a>
+
+            <a href="/myCourses"
+               class="flex items-center gap-2 py-4
+                      {{#nav_myCourses}}text-blue-600 border-b-2 border-blue-600 font-semibold{{/nav_myCourses}}
+                      text-gray-600 hover:text-blue-600 font-medium
+                      border-b-2 border-transparent hover:border-blue-600 transition">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                내 수강과목
+            </a>
+
+            <a href="/studentTimetable"
+               class="flex items-center gap-2 py-4
+                      {{#nav_timetable}}text-blue-600 border-b-2 border-blue-600 font-semibold{{/nav_timetable}}
+                      text-gray-600 hover:text-blue-600 font-medium
+                      border-b-2 border-transparent hover:border-blue-600 transition">
+                <i class="fa-solid fa-table"></i>
+                내 시간표
+            </a>
+
+        </nav>
+
+    </div>
+</div>

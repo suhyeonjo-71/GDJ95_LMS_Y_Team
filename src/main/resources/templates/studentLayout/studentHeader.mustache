@@ -1,91 +1,26 @@
-<style>
-    .hero-bg {
-        background-image: linear-gradient(to right, rgba(37, 99, 235, 0.9), rgba(30, 64, 175, 0.8)),
-            url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-        background-size: cover;
-        background-position: center;
-    }
+<header class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto py-4 px-6 flex items-center justify-between">
 
-    .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-    }
-</style>
+        <!-- 로고 클릭 시 메인 이동 -->
+        <a href="/main" class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                <i class="fa-solid fa-graduation-cap text-xl"></i>
+            </div>
 
-<header>
+            <div>
+                <h1 class="text-lg font-bold text-gray-800 leading-none">학사관리시스템</h1>
+                <p class="text-xs text-gray-500 leading-none mt-1">Academic Management System</p>
+            </div>
+        </a>
 
-    <!-- 상단 로고 영역 -->
-    <div class="bg-white py-4 px-6 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto flex items-center gap-3">
-
-            <a href="/main" class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white">
-                    <i class="fa-solid fa-graduation-cap text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-lg font-bold text-gray-800">학사관리시스템</h1>
-                    <p class="text-xs text-gray-500">Academic Management System</p>
-                </div>
+        <!-- 로그인 정보 -->
+        <div class="text-sm text-gray-600 flex items-center gap-4">
+            <p>{{loginUserName}}님 로그인 중입니다</p>
+            <a href="/logout" class="text-red-500 hover:text-red-600 transition flex items-center gap-1">
+                <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                로그아웃
             </a>
-
         </div>
+
     </div>
-
-    <!-- 히어로 이미지 -->
-    <div class="hero-bg h-32 w-full"></div>
-
-    <!-- 네비게이션 메뉴 -->
-    <div class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <nav class="flex space-x-8 overflow-x-auto scrollbar-hide">
-			
-			    <!-- 수강신청 -->
-			    <a href="/courseListForEnrollment"
-			       class="flex items-center gap-2 py-4
-			              {{#nav_enrollment}}{{nav_enrollment}}{{/nav_enrollment}}
-			              text-gray-600 hover:text-blue-600 font-medium 
-			              border-b-2 border-transparent hover:border-blue-600 transition">
-			        <i class="fa-solid fa-book-open"></i> 수강신청
-			    </a>
-			
-			    <!-- 수강신청 내역 -->
-			    <a href="/enrollmentList"
-			       class="flex items-center gap-2 py-4
-			              {{#nav_enrollmentList}}{{nav_enrollmentList}}{{/nav_enrollmentList}}
-			              text-gray-600 hover:text-blue-600 font-medium 
-			              border-b-2 border-transparent hover:border-blue-600 transition">
-			        <i class="fa-solid fa-list-check"></i> 수강신청 내역
-			    </a>
-			
-			    <!-- 내 수강과목 -->
-				<a href="/myCourses"
-				   class="flex items-center gap-2 py-4
-				          {{#nav_myCourses}}{{nav_myCourses}}{{/nav_myCourses}}
-				          text-gray-600 hover:text-blue-600 font-medium 
-				          border-b-2 border-transparent hover:border-blue-600 transition">
-				    <i class="fa-solid fa-chalkboard-user"></i> 내 수강과목
-				</a>
-
-			    <!-- 내 시간표 -->
-			    <a href="/studentTimetable"
-			       class="flex items-center gap-2 py-4
-			              {{#nav_timetable}}{{nav_timetable}}{{/nav_timetable}}
-			              text-gray-600 hover:text-blue-600 font-medium 
-			              border-b-2 border-transparent hover:border-blue-600 transition">
-			        <i class="fa-solid fa-table"></i> 내 시간표
-			    </a>
-			
-			    <!-- 내 정보 -->
-			    <a href="/myInfo"
-			       class="flex items-center gap-2 py-4
-			              {{#nav_info}}{{nav_info}}{{/nav_info}}
-			              text-gray-600 hover:text-blue-600 font-medium 
-			              border-b-2 border-transparent hover:border-blue-600 transition">
-			        <i class="fa-solid fa-user-circle"></i> 내 정보
-			    </a>
-			
-			</nav>
-
-        </div>
-    </div>
-
 </header>

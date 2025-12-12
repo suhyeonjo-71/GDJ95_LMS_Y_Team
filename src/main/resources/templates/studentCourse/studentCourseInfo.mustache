@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{course.courseName}} | 강의 정보</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background: #F5F7FA;
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+
+{{> studentLayout/studentPageHeader }}
+
+<main class="max-w-6xl mx-auto px-4 py-10">
+
+    <!-- 강의 기본 정보 -->
+    <section class="bg-white rounded-xl shadow p-8 mb-10">
+        <h1 class="text-2xl font-bold mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-book-open text-blue-600"></i>
+            {{course.courseName}}
+        </h1>
+
+        <p class="text-gray-600 mb-2">
+            담당 교수 : <span class="font-medium">{{course.professorName}}</span>
+        </p>
+        <p class="text-gray-600 mb-2">
+            학점 : {{course.courseScore}}학점
+        </p>
+        <p class="text-gray-600 mb-4">
+            강의실 : {{course.classroom}}
+        </p>
+
+        <!-- 강의 시간 -->
+        <div class="mt-6">
+            <h2 class="text-lg font-semibold mb-2 flex items-center gap-2">
+                <i class="fa-regular fa-clock text-blue-500"></i>
+                강의 시간
+            </h2>
+
+            <ul class="space-y-2">
+                {{#timeList}}
+                <li class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                    <span class="font-medium">{{yoilName}}</span>
+                    {{courseTimeStart}}교시 ~ {{courseTimeEnd}}교시
+                </li>
+                {{/timeList}}
+            </ul>
+        </div>
+
+        <!-- 수강신청 버튼 (enroll 모드에서만 노출) -->
+        {{#mode_enroll}}
+        <div class="mt-8">
+            <form action="/addEnrollment" method="post">
+                <input type="hidden" name="courseNo" value="{{course.courseNo}}">
+                <button 
+                    class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow">
+                    수강신청
+                </button>
+            </form>
+        </div>
+        {{/mode_enroll}}
+
+    </section>
+
+</main>
+
+</body>
+</html>
