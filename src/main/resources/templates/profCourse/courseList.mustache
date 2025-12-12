@@ -11,7 +11,10 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { font-family: Pretendard, sans-serif; background:#F5F7FA; }
+        body { 
+	        font-family: Pretendard, sans-serif; 
+	        background:#F5F7FA; 
+        }
 
         .btn-primary { background-color: #2563EB; }
         .btn-primary:hover { background-color: #1D4ED8; }
@@ -115,14 +118,26 @@
                                     {{courseName}}
                                 </a>
                             </td>
+                            
                             <td class="px-6 py-4 text-sm text-gray-700">
                                 {{#courseTimeYoil}}{{getYoilName}} / {{courseTimeStart}}~{{courseTimeEnd}}교시{{/courseTimeYoil}}
                                 {{^courseTimeYoil}}-{{/courseTimeYoil}}
                             </td>
+                            
                             <td class="px-6 py-4 text-sm text-gray-700">{{courseCapacity}}</td>
+                            
                             <td class="px-6 py-4 text-sm">
-                                {{#isOpened}}<span class="px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs">개설</span>{{/isOpened}}
-                                {{#isClosed}}<span class="px-2 py-1 bg-gray-200 text-gray-500 rounded-md text-xs">종료</span>{{/isClosed}}
+                                {{#isOpened}}
+                                	<span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">
+                                		개설
+                                	</span>
+                                {{/isOpened}}
+                                
+                                {{#isClosed}}
+	                                <span class="px-2 py-1 bg-gray-200 text-gray-500 rounded-full text-xs">
+	                                종료
+	                                </span>
+                                {{/isClosed}}
                             </td>
                             <td class="px-6 py-4 text-sm text-center">
                                 <a href="/removeCourse?courseNo={{courseNo}}"
