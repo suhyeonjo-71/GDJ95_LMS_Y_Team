@@ -215,10 +215,14 @@
                 <nav class="flex space-x-8 overflow-x-auto scrollbar-hide">
                 
                 	{{#useAdmin}}
-                	<!-- 관리자 기능 사용할 헤더 메뉴 -->
+	                	<!-- 관리자 기능 사용할 헤더 메뉴 -->
+	                	<a href="/admin/userManagement" class="flex items-center gap-2 py-4 text-gray-600 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition">
+	                        <i class="fa-solid fa-gear"></i> 시스템 관리
+	                    </a>
 			        {{/useAdmin}}
 			        
 			        {{#useStudent}}
+
 			        <!-- 학생 기능 사용할 헤더 메뉴 -->
 				        <!-- 수강신청 -->
 				    <a href="/courseListForEnrollment"
@@ -255,10 +259,12 @@
 				              border-b-2 border-transparent hover:border-blue-600 transition">
 				        <i class="fa-solid fa-table"></i> 내 시간표
 				    </a>
+
 			        {{/useStudent}}
 			        
 			        {{#useProfessor}}
 			        <!-- 교수 기능 사용할 헤더 메뉴 -->
+                    
 			        <a href="/courseList"
 	                   class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
 	                    <i class="fa-solid fa-chalkboard-user"></i> 강의관리
@@ -284,11 +290,7 @@
 	                    <i class="fa-solid fa-gear"></i> 설정
 	                </a>
 			        {{/useProfessor}}
-<<<<<<< HEAD
                     
-=======
-
->>>>>>> refs/remotes/origin/main
                 </nav>
             </div>
         </div>
@@ -359,7 +361,7 @@
 			    
 			    <div class="bg-blue-50 rounded-lg p-4 mb-6">
 			        <span class="text-xs text-gray-500 block mb-1">사용자 이름</span>
-			        <span class="text-blue-700 font-semibold">{{userProfileCard.userName}}님</span> </div>
+			        <span class="text-blue-700 font-semibold">{{userProfileCard.userName}}</span> </div>
 			
 			    <div class="space-y-3">
 			        <a href="/myInfo/userInfo" class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
@@ -367,12 +369,22 @@
 			        </a>
 			        
 			        {{#useAdmin}}
-			        <a href="/admin/courseManagement" class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
-			            <i class="fa-solid fa-book w-5"></i> 학점 관리
-			        </a>
+				        <a href="/admin/courseManagement" class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
+				            <i class="fa-solid fa-book w-5"></i> 학점 관리
+				        </a>
 			        {{/useAdmin}}
 			        
 			        {{#useStudent}}
+<<<<<<< HEAD
+				        <a href="/myInfo/courseManagement" class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
+				            <i class="fa-solid fa-book w-5"></i> 학점 관리
+				        </a>
+				        
+						<a id="certificateLink" href="/main/certificateOfGraduation"
+							class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
+							<i class="fa-solid fa-file-lines w-5"></i> 졸업증명서 발급
+						</a>
+=======
 			        <a href="/myInfo/courseManagement" class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
 			            <i class="fa-solid fa-book w-5"></i> 학점 관리
 			        </a>
@@ -380,6 +392,7 @@
 			           class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
 			            <i class="fa-solid fa-file-lines w-5"></i> 졸업증명서 발급
 			   		</a>
+>>>>>>> origin/main
 			        {{/useStudent}}
 			        
 			        {{#useProfessor}}

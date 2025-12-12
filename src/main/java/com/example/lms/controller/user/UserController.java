@@ -47,6 +47,7 @@ public class UserController {
 			
 			// 세션불러오기
 			SysUserDTO loginSysUserDTO = (SysUserDTO) session.getAttribute("loginUser");
+			String loginUserName = loginSysUserDTO.getUserName();
 			
 			
 			// 사이드 메뉴 권한 필터 처리
@@ -64,6 +65,7 @@ public class UserController {
 			Map<String, Object> userInfoMap = userService.userInfoMap(loginSysUserDTO);
 			
 			//모델 반환값
+			model.addAttribute("loginUserName", loginUserName);
 			model.addAttribute("userInfo", userInfoMap);
 			log.info("userInfoMap 조회 완료: {}", userInfoMap);
 			model.addAttribute("useAdmin", useAdmin);
@@ -94,14 +96,12 @@ public class UserController {
 		        
 		        log.info("UserController$$updateUserInfo : 개인 정보 수정 성공");
 		        
-		        // 1. 성공 메시지 전달
+		        //  성공 메시지 전달
 		        redirectAttributes.addFlashAttribute("message", "개인 정보가 성공적으로 변경되었습니다.");
 		        
-		        // 임시 방편으로 변경된 정보만 갱신 (가장 이상적인 방법은 서비스 레이어에서 DB 재조회 후 세션 갱신)
-		        loginSysUserDTO.setUserName(updatedUserDTO.getUserName());
-		        // ... 변경된 모든 필드를 loginSysUserDTO에 반영해야 합니다.
+		        // loginSysUserDTO.setUserName(updatedUserDTO.getUserName()); -- 1208 잠시 주석처리함 버그생김
 		        
-		        // 3. 원래 페이지(상세 정보 뷰)로 리다이렉트
+		        // 원래 페이지(상세 정보 뷰)로 리다이렉트
 		        return "redirect:/myInfo/userInfo";
 		        
 		    } else {
@@ -126,6 +126,8 @@ public class UserController {
 
 			// 세션에서 로그인 정보 불러오기 (userNo, userId 확보)
 		    SysUserDTO loginSysUserDTO = (SysUserDTO) session.getAttribute("loginUser");
+		    String loginUserName = loginSysUserDTO.getUserName();
+		    
 
 		    // Map에 필요한 정보 추가 (Mapper 파라미터와 일치하도록)
 		    // passwordData에 현재 비밀번호는 'userPassword' 키로, 새 비밀번호는 'userNewPassword' 키로 들어있다고 가정

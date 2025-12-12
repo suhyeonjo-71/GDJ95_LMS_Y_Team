@@ -100,7 +100,7 @@
 			AND user_name = #{userName}
 			AND user_email = #{userEmail}
 			AND user_phone = #{userPhone}
-			AND user_status = 0
+			-- AND user_status = 0
 	
 	</update>
 	

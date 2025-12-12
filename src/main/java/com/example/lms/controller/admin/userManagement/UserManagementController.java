@@ -20,6 +20,7 @@ import com.example.lms.service.admin.AdminCommonMetaDataService;
 import com.example.lms.service.admin.SysAuthService;
 import com.example.lms.service.user.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -48,9 +49,13 @@ public class UserManagementController {
     @GetMapping("/userManagement")
     public String userManagement(Model model, 
                                  @RequestParam(defaultValue = "1") Integer page, 
-                                 @RequestParam(defaultValue = "10") Integer limit) {
+                                 @RequestParam(defaultValue = "10") Integer limit,
+                                 HttpSession session) {
         
-        // 페이징 계산
+    	SysUserDTO sessionUserDto = (SysUserDTO) session.getAttribute("loginUser");
+    	String loginUserName = sessionUserDto.getUserName();
+
+    	// 페이징 계산
         // page 1 -> startRow 0, page 2 -> startRow 10
         Integer startRow = (page - 1) * limit;
         
@@ -68,6 +73,7 @@ public class UserManagementController {
         
         log.info("totalCount : " + totalCount);
         
+        model.addAttribute("loginUserName", loginUserName);
         model.addAttribute("userList", userInfoMapList);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
@@ -92,13 +98,16 @@ public class UserManagementController {
             int result = userService.insertUserInfo(insertSysUserDTO);
             
             if (result == 1) {
+            	
                 response.put("status", "success");
                 response.put("message", "사용자가 성공적으로 등록되었습니다.");
             } else {
+            	
                 response.put("status", "fail");
                 response.put("message", "사용자 등록에 실패했습니다. 다시 시도해주세요.");
             }
         } catch (Exception e) {
+        	
             log.error("사용자 등록 중 오류 발생", e);
             response.put("status", "error");
             response.put("message", "서버 오류가 발생했습니다: " + e.getMessage());
@@ -122,6 +131,7 @@ public class UserManagementController {
             response.put("status", "success");
             response.put("detailList", detailList);
         } catch (Exception e) {
+        	
             log.error("세부 권한 조회 중 오류 발생", e);
             response.put("status", "error");
             response.put("message", "세부 권한 정보를 불러오는 데 실패했습니다.");
@@ -135,10 +145,8 @@ public class UserManagementController {
     @GetMapping("/getUserDetail")
     @ResponseBody
     public Map<String, Object> getUserDetail(@RequestParam String userId) {
-        // 검색 조건을 ID로 설정하여 상세 정보 조회 (기존 검색 서비스 활용)
-        // 단일 사용자 조회 서비스가 없다면 searchUserInfoMapList를 활용하거나 
-        // userService.getUserById(userId) 같은 메서드를 추가하는 것이 좋습니다.
-        
+       
+    	// 검색 조건을 ID로 설정하여 상세 정보 조회 (기존 검색 서비스 활용)
         List<Map<String, Object>> searchResult = userService.userInfoDetailMapList(userId);
         
         Map<String, Object> response = new HashMap<>();
@@ -146,13 +154,11 @@ public class UserManagementController {
         	
         	Map<String, Object> originalData = searchResult.get(0);
             
-            // 🚀 데이터 매핑 (Mapper 쿼리 이름을 JS/HTML 이름에 맞게 수정) 🚀
-            
         	// 🚀 1. 세부 권한 코드 (Mapper의 'userAuth' -> JS/HTML의 'userDetailAuth') 🚀
-            // 요청하신 변수명 관례에 따라 'authDetailCode'로 사용합니다.
             Object authDetailCode = originalData.get("userAuth"); 
             
             if (authDetailCode != null) {
+            	
                 originalData.put("userDetailAuth", authDetailCode); 
                 // 원래 키는 제거
                 originalData.remove("userAuth"); 
@@ -161,6 +167,7 @@ public class UserManagementController {
             // 🚀 2. 상위 권한 코드 (Mapper의 'authCode' -> JS/HTML의 'userAuth') 🚀
             Object userAuthCode = originalData.get("authCode"); // 명확성을 위해 'userAuthCode' 사용
             if (userAuthCode != null) {
+            	
                 originalData.put("userAuth", userAuthCode); 
                 // 원래 키는 제거
                 originalData.remove("authCode"); 
@@ -174,6 +181,7 @@ public class UserManagementController {
             response.put("status", "success");
             response.put("data", originalData);
         } else {
+        	
             response.put("status", "fail");
             response.put("message", "사용자 정보를 찾을 수 없습니다.");
         }
@@ -192,13 +200,16 @@ public class UserManagementController {
             int result = userService.updateUserInfoByAdmin(sysUserDTO);
             
             if (result == 1) {
+            	
                 response.put("status", "success");
                 response.put("message", "사용자 정보가 성공적으로 수정되었습니다.");
             } else {
+            	
                 response.put("status", "fail");
                 response.put("message", "정보 수정에 실패했습니다.");
             }
         } catch (Exception e) {
+        	
             log.error("사용자 수정 중 오류 발생", e);
             response.put("status", "error");
             response.put("message", "서버 오류 발생: " + e.getMessage());
@@ -247,6 +258,7 @@ public class UserManagementController {
         
         try {
             if (retireUserNoList == null || retireUserNoList.isEmpty()) {
+            	
                 response.put("status", "fail");
                 response.put("message", "선택된 사용자가 없습니다.");
                 return response;
@@ -255,13 +267,16 @@ public class UserManagementController {
             int result = userService.modifySysUserStatusRetire(retireUserNoList);
             
             if (result > 0) {
+            	
                 response.put("status", "success");
                 response.put("message", result + "명의 계정이 폐지 처리되었습니다.");
             } else {
+            	
                 response.put("status", "fail");
                 response.put("message", "계정 폐지 처리에 실패했습니다.");
             }
         } catch (Exception e) {
+        	
             log.error("계정 폐지 중 오류 발생", e);
             response.put("status", "error");
             response.put("message", "서버 오류 발생: " + e.getMessage());

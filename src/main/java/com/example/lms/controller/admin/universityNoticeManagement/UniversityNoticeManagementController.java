@@ -36,7 +36,11 @@ public class UniversityNoticeManagementController {
 	@GetMapping("/universityNoticeManagement") // HTML/Mustache 파일을 위한 기본 경로
 	public String universityNoticeManagement(Model model,
 								 @RequestParam(defaultValue = "1") Integer page,
-								 @RequestParam(defaultValue = "10") Integer limit) {
+								 @RequestParam(defaultValue = "10") Integer limit,
+								 HttpSession session) {
+		
+		SysUserDTO sessionUserDto = (SysUserDTO) session.getAttribute("loginUser");
+    	String loginUserName = sessionUserDto.getUserName();
 
 		Integer startRow = (page - 1) * limit;
 
@@ -57,6 +61,7 @@ public class UniversityNoticeManagementController {
 		List<UniversityNoticeDTO> universityNoticePriorityList = universityNoticeService.selectUniversityNoticePriorityList();
 
 		// ⭐️ 누락된 검색 조건을 Model에 추가 (빈 문자열로 초기화) ⭐️
+		model.addAttribute("loginUserName", loginUserName);
 		model.addAttribute("searchUniversityNoticeCondition", "");
 		model.addAttribute("universityNoticeList", universityNoticeList); // ⭐️ 변수명을 mustache와 일치시킴 ⭐️
 		model.addAttribute("currentPage", page);

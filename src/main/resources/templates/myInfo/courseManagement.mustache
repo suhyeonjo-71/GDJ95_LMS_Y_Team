@@ -55,7 +55,7 @@
             </h1>
         </div>
         <div class="text-sm text-gray-600 flex items-center gap-4">
-            <p>홍길동님 로그인 중입니다</p>
+            <p>{{loginUserName}}님 로그인 중입니다</p>
             <a href="/logout" class="text-red-500 hover:text-red-600 transition flex items-center gap-1">
                 <i class="fa-solid fa-right-from-bracket text-xs"></i> 로그아웃
             </a>
@@ -66,7 +66,7 @@
     <div class="admin-hero-bg h-40 p-8 text-white">
         <div class="max-w-screen-2xl mx-auto h-full flex flex-col justify-end">
             <h2 class="text-3xl font-bold">학점 관리</h2>
-            <p class="text-sm text-gray-200 mt-2">수강한 강좌 및 학점 조회</p>
+            <p class="text-sm text-gray-200 mt-2">수강한 강의 및 학점 조회</p>
         </div>
     </div>
 
@@ -98,11 +98,11 @@
             
             <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
                 
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">🎓 나의 강좌/학점 조회</h2>
-                <p class="text-gray-500 mb-6">수강했던 강좌 목록 및 개인별 학점 정보를 조회할 수 있습니다.</p>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">🎓 나의 강의/학점 조회</h2>
+                <p class="text-gray-500 mb-6">수강했던 강의 목록 및 개인별 학점 정보를 조회할 수 있습니다.</p>
 
                 <form id="searchForm" action="" class="mb-8 p-4 border rounded-lg bg-gray-50">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2">강좌 검색</h3>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">강의 검색</h3>
                     <p class="text-sm text-gray-500 mb-3">강의명, 교수명 등으로 검색할 수 있습니다.</p>
                     
                     <div class="flex items-center gap-2">
@@ -139,7 +139,7 @@
                 </form>
 
                 <div class="flex justify-between items-center mb-4">
-                    <p class="text-gray-700 font-medium" id="totalCountDisplay">강좌 목록 (총 {{totalCount}}개의 강좌)</p>
+                    <p class="text-gray-700 font-medium" id="totalCountDisplay">강의 목록 (총 {{totalCount}}개의 강의)</p>
                     <div class="flex space-x-2">
                         <button id="excelDownloadButton" class="px-3 py-1.5 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
                             <i class="fa-solid fa-file-excel mr-1"></i> 목록 엑셀 다운로드
@@ -187,7 +187,7 @@
                             {{/courseList}}
                             {{^courseList}}
                             <tr>
-                                <td colspan="11" class="p-4 text-center text-gray-500 text-sm">조회된 강좌/학점 정보가 없습니다.</td>
+                                <td colspan="11" class="p-4 text-center text-gray-500 text-sm">조회된 강의/학점 정보가 없습니다.</td>
                             </tr>
                             {{/courseList}}
                         </tbody>
@@ -204,7 +204,7 @@
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div class="bg-white rounded-lg shadow-xl w-full max-w-lg p-6">
                     <div class="flex justify-between items-center pb-3 border-b border-gray-200 mb-4">
-                        <h2 class="text-2xl font-bold text-gray-900">강좌 상세 정보</h2>
+                        <h2 class="text-2xl font-bold text-gray-900">강의 상세 정보</h2>
                         <button type="button" class="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-900" id="close-modal-btn">
                             <i class="fa-solid fa-xmark fa-lg"></i>
                         </button>
@@ -250,7 +250,7 @@
         // ----------------------------------------------------------------
         function renderPagination(currentPage, totalPages, totalCount) {
             const container = $('#paginationArea');
-            $('#totalCountDisplay').text(`강좌 목록 (총 ${totalCount}개의 강좌)`); 
+            $('#totalCountDisplay').text(`강의 목록 (총 ${totalCount}개의 강의)`); 
 
             if (totalPages <= 1) {
                 container.empty(); 
@@ -327,7 +327,7 @@
 
          } else {
              // 데이터가 없는 경우, 동적으로 계산된 COL_COUNT를 사용합니다.
-             $tbody.html(`<tr><td colspan="${COL_COUNT}" class="p-4 text-center text-gray-500 text-sm">조회된 강좌/학점 정보가 없습니다.</td></tr>`);
+             $tbody.html(`<tr><td colspan="${COL_COUNT}" class="p-4 text-center text-gray-500 text-sm">조회된 강의/학점 정보가 없습니다.</td></tr>`);
          }
      }
 
@@ -363,13 +363,13 @@
                    updateCourseList([]);
                    renderPagination(1, 1, 0);
               } else {
-                  alert(response.message || '강좌 정보를 불러오는 데 실패했습니다.');
+                  alert(response.message || '강의 정보를 불러오는 데 실패했습니다.');
                   updateCourseList([]); 
                   renderPagination(1, 1, 0);
               }
           },
           error: function(xhr) {
-              alert('강좌 목록을 불러오는 중 오류가 발생했습니다. 서버 연결 상태를 확인하십시오.');
+              alert('강의 목록을 불러오는 중 오류가 발생했습니다. 서버 연결 상태를 확인하십시오.');
               console.error('AJAX Error:', xhr);
               updateCourseList([]);
               renderPagination(1, 1, 0);
@@ -443,14 +443,14 @@
                         let html = `
                             <table class="min-w-full divide-y divide-gray-200 text-sm">
                                 <tbody>
-                                    <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600 w-28">강좌 번호</td><td>${detail.courseNo}</td></tr>
+                                    <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600 w-28">강의 번호</td><td>${detail.courseNo}</td></tr>
                                     <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600">강의명</td><td>${detail.courseName}</td></tr>
                                     <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600">담당 교수</td><td>${detail.professorUserName || 'N/A'}</td></tr>
                                     <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600">교수 연락처</td><td>${detail.userPhone || 'N/A'}</td></tr>
                                     <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600">개설 학과</td><td>${detail.deptName || 'N/A'}</td></tr>
                                     <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600">이수 학점</td><td>${score}</td></tr>
                                     <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600">강의실</td><td>${detail.courseClassroom || 'N/A'}</td></tr>
-                                    <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600">개설 상태</td><td>${detail.courseStatus || 'N/A'}</td></tr>
+                                    <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600">개설 상태</td><td>${detail.courseStatusName || 'N/A'}</td></tr>
                                     <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600">개설일자</td><td>${detail.createdate || 'N/A'}</td></tr>
                                     <tr class="border-b"><td class="py-2 pr-4 font-semibold text-gray-600 align-top">강의 설명</td><td class="whitespace-pre-wrap">${detail.courseDescription || '제공된 강의 설명이 없습니다.'}</td></tr>
                                 </tbody>
