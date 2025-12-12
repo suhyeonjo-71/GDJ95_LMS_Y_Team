@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>강의 Q&A 목록</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        body {
+            font-family:'Pretendard', sans-serif;
+            background-color:#F5F7FA;
+        }
+        .card {
+            background:white;
+            border-radius:14px;
+            padding:32px;
+            border:1px solid #E5E7EB;
+            box-shadow:0 4px 12px rgba(0,0,0,0.06);
+        }
+        .page-title {
+            font-size:22px;
+            font-weight:800;
+            color:#1E3A8A;
+        }
+        .table-wrap {
+            border-radius:10px;
+            overflow:hidden;
+            border:1px solid #E5E7EB;
+        }
+        thead th {
+            background-color:#EFF6FF;
+            color:#1E3A8A;
+            padding:12px;
+            font-size:14px;
+            font-weight:600;
+            border-bottom:2px solid #DBEAFE;
+        }
+        tbody td {
+            padding:12px;
+            font-size:14px;
+            border-bottom:1px solid #E5E7EB;
+        }
+        tbody tr:hover {
+            background-color:rgba(37,99,235,0.06);
+            cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+{{> studentLayout/studentCoursePageHeader }}
+
+<div class="mt-8 w-full">
+    <div class="max-w-6xl mx-auto px-4">
+        {{> studentLayout/_studentCourseSubNav }}
+    </div>
+</div>
+
+<main class="max-w-6xl mx-auto px-4 py-10">
+
+    <div class="card">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="page-title flex items-center gap-2">
+                <i class="fa-solid fa-circle-question text-blue-600 text-xl"></i>
+                강의 문의사항 목록
+            </h2>
+
+            <a href="/studentCourseQuestionWriteForm?courseNo={{courseNo}}"
+               class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow text-sm flex items-center gap-2">
+                <i class="fa-solid fa-pen"></i> 문의하기
+            </a>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap">
+            <table class="w-full border-collapse">
+                <thead>
+                <tr>
+                    <th class="w-16">번호</th>
+                    <th>제목</th>
+                    <th class="w-28">작성자</th>
+                    <th class="w-40">작성일</th>
+                    <th class="w-24">상태</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                {{#questionList}}
+				<tr onclick="
+				    {{#canView}}
+				        location.href='/studentCourseQuestionDetail?courseQuestionNo={{questionNo}}'
+				    {{/canView}}
+				">
+				    <td>{{index}}</td>
+				
+				    <td class="flex items-center gap-1">
+				
+				        {{#privatePostFlag}}
+				            <i class="fa-solid fa-lock text-gray-400"></i>
+				        {{/privatePostFlag}}
+				
+				        {{#canView}}
+				            <span class="hover:text-blue-600 font-medium">
+				                {{questionTitle}}
+				            </span>
+				        {{/canView}}
+				
+				        {{^canView}}
+				            <span class="text-gray-400">비밀글입니다.</span>
+				        {{/canView}}
+				
+				    </td>
+				
+				    <td>{{writerName}}</td>
+				    <td>{{createdate}}</td>
+				
+				    <td>
+				        {{#answered}}
+				            <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-[11px]">
+				                답변완료
+				            </span>
+				        {{/answered}}
+				
+				        {{^answered}}
+				            <span class="px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full text-[11px]">
+				                미답변
+				            </span>
+				        {{/answered}}
+				    </td>
+				</tr>
+				{{/questionList}}
+				
+				{{^questionList}}
+				<tr>
+				    <td colspan="5" class="text-center py-6 text-gray-500">
+				        등록된 문의가 없습니다.
+				    </td>
+				</tr>
+				{{/questionList}}
+
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

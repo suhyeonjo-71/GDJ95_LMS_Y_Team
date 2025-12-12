@@ -11,9 +11,13 @@ import com.example.lms.dto.StudentAttendanceDTO;
 @Mapper
 public interface StudentCourseAttendanceMapper {
 
-    List<StudentAttendanceDTO> selectAttendanceDetailList(@Param("courseNo") int courseNo,
-                                                          @Param("studentUserNo") int studentUserNo);
+    // 회차별 출석 상세 조회
+    List<StudentAttendanceDTO> selectAttendanceDetailList(
+            @Param("courseNo") int courseNo,
+            @Param("studentUserNo") int studentUserNo);
 
-    AttendanceSummaryDTO selectAttendanceSummary(@Param("courseNo") int courseNo,
-                                                 @Param("studentUserNo") int studentUserNo);
+    // 출석 요약
+    AttendanceSummaryDTO selectAttendanceSummary(
+            @Param("courseNo") int courseNo,
+            @Param("studentUserNo") int studentUserNo);
 }

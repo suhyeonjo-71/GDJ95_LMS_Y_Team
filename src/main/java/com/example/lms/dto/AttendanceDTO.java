@@ -1,7 +1,6 @@
 package com.example.lms.dto;
 
 import lombok.Data;
-
 /**
  * 2025. 11. 24.
  * Author - yj

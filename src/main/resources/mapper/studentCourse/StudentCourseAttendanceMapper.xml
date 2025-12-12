@@ -1,35 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseAttendanceMapper">
 
-    <!-- =========================
-         회차별 출석 상세 조회
-         ========================= -->
-    <select id="selectAttendanceDetailList" resultType="com.example.lms.dto.StudentAttendanceDTO">
-        SELECT 
-		      week_no AS weekNo,
-		      attendance_status AS attendanceStatus
-		FROM tb_attendance
-		WHERE course_no = #{courseNo}
-		  AND student_user_no = #{studentUserNo}
-		ORDER BY week_no
+    <!-- 회차별 출석 상세 -->
+    <select id="selectAttendanceDetailList"
+            parameterType="map"
+            resultType="com.example.lms.dto.StudentAttendanceDTO">
+        SELECT
+	          a.attendance_no     AS attendanceNo
+	        , a.course_no         AS courseNo
+	        , a.student_user_no   AS studentUserNo
+	        , a.week_no           AS weekNo
+	        , a.attendance_status AS attendanceStatus
+	    FROM tb_attendance a
+	    WHERE a.course_no = #{courseNo}
+	      AND a.student_user_no = #{studentUserNo}
+	    ORDER BY a.week_no ASC             
     </select>
 
-    <!-- =========================
-         출석 요약 (출석/지각/결석/출석률)
-         ========================= -->
-    <select id="selectAttendanceSummary" resultType="com.example.lms.dto.AttendanceSummaryDTO">
-        SELECT 
-              SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END) AS attendanceCount,
-              SUM(CASE WHEN attendance_status = 1 THEN 1 ELSE 0 END) AS lateCount,
-              SUM(CASE WHEN attendance_status = 2 THEN 1 ELSE 0 END) AS absentCount,
-              ROUND(SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS attendanceRate
+    <!-- 출석 요약 -->
+    <select id="selectAttendanceSummary"
+            parameterType="map"
+            resultType="com.example.lms.dto.AttendanceSummaryDTO">
+
+        SELECT
+              SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END) AS attendanceCount
+            , SUM(CASE WHEN attendance_status = 1 THEN 1 ELSE 0 END) AS lateCount
+            , SUM(CASE WHEN attendance_status = 2 THEN 1 ELSE 0 END) AS absentCount
+            , ROUND(
+                  SUM(CASE WHEN attendance_status = 0 THEN 1 ELSE 0 END)
+                  / COUNT(*) * 100, 1
+              ) AS attendanceRate
         FROM tb_attendance
         WHERE course_no = #{courseNo}
           AND student_user_no = #{studentUserNo}
+
     </select>
 
 </mapper>

@@ -16,9 +16,21 @@ public class ProfCourseQnAService {
 	@Autowired
 	ProfCourseQnAMapper profCourseQnAMapper;
 	
-	public List<Map<String, Object>> getQuestionList(int courseNo) {
+	// 메뉴
+	public List<Map<String, Object>> getCourseQnASummary(int professorUserNo) {
+		
+		return profCourseQnAMapper.selectCourseQnASummary(professorUserNo);
+	}
+	
+	// 강의별 문의사항 리스트
+	public List<Map<String, Object>> getQuestionList(int courseNo, int startRow, int rowPerPage) {
 
-		return profCourseQnAMapper.selectQuestionList(courseNo);
+		return profCourseQnAMapper.selectQuestionList(courseNo, startRow, rowPerPage);
+	}
+	
+	// 리스트 페이징
+	public int getQuestionCount(int courseNo) {
+		return profCourseQnAMapper.selectQuestionCount(courseNo);
 	}
 
 	public Map<String, Object> getQuestionDetail(int courseQuestionNo) {
@@ -51,6 +63,4 @@ public class ProfCourseQnAService {
         	profCourseQnAMapper.updateQuestionStatusReopen(courseQuestionNo);
         }
 	}
-
-
 }

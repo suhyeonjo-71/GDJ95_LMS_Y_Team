@@ -5,8 +5,8 @@
 <mapper namespace="com.example.lms.mapper.prof.ProfCourseStudMapper">
 
     <!-- 해당 강의 학생 목록 + 성적 정보 포함 -->
-    <select id="selectStudentListByProf" resultType="com.example.lms.dto.ProfCourseStudDTO">
-        SELECT
+    <select id="selectCourseStudentList" resultType="com.example.lms.dto.ProfCourseStudDTO">
+SELECT
             e.enrollment_no AS enrollmentNo,
             e.student_user_no AS studentUserNo,
             u.user_id AS studentId,
@@ -15,7 +15,7 @@
             u.user_phone AS studentPhone, 
             d.dept_name AS deptName,
 
-            /* 출석률 */
+            /* 출석률 (원래 COALESCE 적용됨) */
             COALESCE((
                 SELECT ROUND((15 - SUM(
                     CASE 
@@ -29,31 +29,35 @@
                 AND a.student_user_no = e.student_user_no
             ), 100.0) AS attendanceRate,
 
-            /* 과제 점수(이미 저장된 값) */
-            (SELECT grade_assignment_score 
+            /* 과제 점수(NULL일 경우 0.0으로 대체) */
+            COALESCE(
+            (SELECT AVG(tbs.assignment_score) 
+             FROM tb_assignment_submission tbs 
+             JOIN tb_assignment tba ON tbs.assignment_no = tba.assignment_no
+             WHERE tba.course_no = e.course_no 
+             AND tbs.writer_user_no = e.student_user_no
+             AND tbs.assignment_score IS NOT NULL 
+            ), 0.0) AS assignmentScore,
+
+            /* 시험 점수 (NULL일 경우 0.0으로 대체) */
+            COALESCE((SELECT grade_score 
              FROM tb_grade 
              WHERE course_no = e.course_no
-               AND student_user_no = e.student_user_no) AS assignmentScore,
+               AND student_user_no = e.student_user_no), 0.0) AS examScore,
 
-            /* 시험 점수 */
-            (SELECT grade_score 
-             FROM tb_grade 
-             WHERE course_no = e.course_no
-               AND student_user_no = e.student_user_no) AS examScore,
-
-            /* 최종 점수 */
-            ROUND(
+            /* 최종 점수 (NULL일 경우 0.0으로 대체) */
+            COALESCE(ROUND(
 	            (SELECT grade_final_score
 	             FROM tb_grade
 	             WHERE course_no = e.course_no
 	               AND student_user_no = e.student_user_no), 1
-            ) AS finalScore,
+            ), 0.0) AS finalScore,
 
-            /* 등급 */
-            (SELECT grade_value
+            /* 등급 (NULL일 경우 '-' 문자열로 대체) */
+            COALESCE((SELECT grade_value
              FROM tb_grade
              WHERE course_no = e.course_no
-               AND student_user_no = e.student_user_no) AS gradeValue
+               AND student_user_no = e.student_user_no), '-') AS gradeValue
 
         FROM tb_enrollment e
         JOIN tb_sysuser u ON e.student_user_no = u.user_no
@@ -63,8 +67,7 @@
         LIMIT #{startRow}, #{rowPerPage}
     </select>
 
-    <!-- count -->
-    <select id="selectStudentCountByProf" resultType="int">
+    <select id="selectCourseStudentCount" resultType="int">
         SELECT COUNT(*)
         FROM tb_enrollment
         WHERE course_no = #{courseNo}

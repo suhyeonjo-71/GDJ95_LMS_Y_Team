@@ -15,15 +15,21 @@ public interface ProfAssignmentMapper {
 	List<ProfCourseAssignmentDTO> selectCourseAssignmentSummary(int professorUserNo);
 	
 	// 강의별 과제 리스트
-	List<AssignmentDTO> selectAssignmentListByProf(int courseNo, int startRow, int rowPerPage);
-	int selectAssignmentCount(int courseNo); //페이징
+	List<AssignmentDTO> selectCourseAssignmentList(int courseNo, int startRow, int rowPerPage);
+	int selectCourseAssignmentCount(int courseNo); //페이징
 	
 	// 상세보기
-	AssignmentDTO selectAssignmentDetail(int assignmentNo);
+	AssignmentDTO selectCourseAssignmentDetail(int assignmentNo);
 	
 	// 학생 과제 제출 리스트
-	List<ProfCourseAssignmentDTO> selectSubmissionList(@Param("assignmentNo") int assignmentNo,
+	List<ProfCourseAssignmentDTO> selectCourseSubmissionList(@Param("assignmentNo") int assignmentNo,
             											@Param("courseNo") int courseNo);
+	
+	// 점수 저장
+	void updateSubmissionScore(@Param("submissionNo") int submissionNo, @Param("score") Integer score);
+	
+	// 과제 제출 번호 : 사용자번호
+	int selectWriterUserNoBySubmissionNo(int submissionNo);
 	
 	// 등록
 	int insertAssignment(AssignmentDTO a);

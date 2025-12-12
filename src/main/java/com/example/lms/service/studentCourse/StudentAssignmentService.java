@@ -17,16 +17,16 @@ public class StudentAssignmentService {
 
     private final StudentAssignmentMapper mapper;
 
-    // 과제 목록
+    // 홈 화면 요약: 최근 과제 1개 조회
+    public List<StudentAssignmentListDTO> getRecentAssignments(int courseNo, int studentUserNo) {
+        return mapper.selectRecentAssignment(courseNo, studentUserNo);
+    }
+
+    // 전체 과제 목록
     public List<StudentAssignmentListDTO> getAssignmentList(int courseNo, int studentUserNo) {
+        List<StudentAssignmentListDTO> list =
+                mapper.selectAssignmentList(courseNo, studentUserNo);
 
-        System.out.println("DEBUG >>> getAssignmentList() 호출됨");
-        System.out.println("DEBUG >>> courseNo = " + courseNo);
-        System.out.println("DEBUG >>> studentUserNo = " + studentUserNo);
-
-        List<StudentAssignmentListDTO> list = mapper.selectAssignmentList(courseNo, studentUserNo);
-
-        System.out.println("DEBUG >>> mapper.selectAssignmentList 결과 = " + list);
         if (list != null) {
             System.out.println("DEBUG >>> 결과 개수 = " + list.size());
         }
@@ -34,34 +34,42 @@ public class StudentAssignmentService {
         return list;
     }
 
-
-    // 과제 상세 + 내 제출 정보까지
+    // 과제 상세 + 제출 정보
     public StudentAssignmentDetailDTO getAssignmentDetail(int assignmentNo, int studentUserNo) {
         return mapper.selectAssignmentDetail(assignmentNo, studentUserNo);
+    }
+
+    // 제출 정보 조회
+    public AssignmentSubmissionDTO getSubmission(int assignmentNo, int userNo) {
+        return mapper.selectMySubmission(assignmentNo, userNo);
     }
 
     // 과제 제출 또는 수정
     public void submitAssignment(AssignmentSubmissionDTO dto) {
 
-        // 1) 기존 제출 조회
         AssignmentSubmissionDTO existing =
                 mapper.selectMySubmission(dto.getAssignmentNo(), dto.getWriterUserNo());
 
+        // 최초 제출
         if (existing == null) {
-            // 처음 제출 → INSERT
             mapper.insertSubmission(dto);
-
-        } else {
-            // 이미 제출한 적 있음 → UPDATE
-            dto.setAssignmentSubmissionNo(existing.getAssignmentSubmissionNo());
-
-            // 파일을 새로 안 올렸으면 기존 파일 URL 유지
-            if (dto.getAssignmentSubmissionFileUrl() == null ||
-                dto.getAssignmentSubmissionFileUrl().isBlank()) {
-                dto.setAssignmentSubmissionFileUrl(existing.getAssignmentSubmissionFileUrl());
-            }
-
-            mapper.updateSubmission(dto);
+            return;
         }
+
+        // 수정 제출
+        dto.setAssignmentSubmissionNo(existing.getAssignmentSubmissionNo());
+
+        // 파일 미첨부 시 기존 파일 유지
+        if (dto.getAssignmentSubmissionFileUrl() == null ||
+            dto.getAssignmentSubmissionFileUrl().isBlank()) {
+            dto.setAssignmentSubmissionFileUrl(existing.getAssignmentSubmissionFileUrl());
+        }
+
+        mapper.updateSubmission(dto);
+    }
+
+    // 제출 취소
+    public void cancelSubmission(int assignmentNo, int userNo) {
+        mapper.disableSubmission(assignmentNo, userNo);
     }
 }

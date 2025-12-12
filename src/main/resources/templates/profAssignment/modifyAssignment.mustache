@@ -11,7 +11,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { font-family: Pretendard, sans-serif; }
+        body { font-family: Pretendard, sans-serif; 
+        background:#F5F7FA;}
     </style>
 </head>
 
@@ -73,8 +74,8 @@
                                 <td class="px-6 py-4">
                                     <select name="assignmentStatus"
                                             class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
-                                        <option value="1" {{#assignmentStatus1}}selected{{/assignmentStatus1}}>활성</option>
-                                        <option value="0" {{#assignmentStatus0}}selected{{/assignmentStatus0}}>비활성</option>
+                                        <option value="1" {{#assignmentStatus1}}selected{{/assignmentStatus1}}>진행중</option>
+                                        <option value="0" {{#assignmentStatus0}}selected{{/assignmentStatus0}}>종료</option>
                                     </select>
                                 </td>
                             </tr>
@@ -91,7 +92,7 @@
                         <i class="fa-solid fa-check mr-1"></i> 수정 완료
                     </button>
 
-                    <a href="/assignmentDetail?assignmentNo={{assignment.assignmentNo}}&courseNo={{assignment.courseNo}}"
+                    <a href="/profCourseAssignmentDetail?assignmentNo={{assignment.assignmentNo}}&courseNo={{assignment.courseNo}}"
                        class="bg-gray-300 text-gray-700 px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-400">
                         <i class="fa-solid fa-xmark mr-1"></i> 취소
                     </a>

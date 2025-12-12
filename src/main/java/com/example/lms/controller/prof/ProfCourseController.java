@@ -2,7 +2,9 @@ package com.example.lms.controller.prof;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,22 +34,74 @@ public class ProfCourseController {
 	
 	// 교수별 강의 리스트
 	@GetMapping("/courseList")
-	public String courseListByProfessor(HttpSession session, Model model) {
+	public String courseListByProfessor(HttpSession session,
+								        Model model,
+								        @RequestParam(value = "year", required = false) Integer year,
+								        @RequestParam(value = "semester", required = false) String semester,
+								        @RequestParam(value = "status", required = false) String status,
+								        @RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
 
 	    SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
-
 	    if (loginUser == null || !loginUser.getUserAuth().startsWith("P_")) {
 	        return "redirect:/login";
 	    }
+	    
+	    List<Integer> distinctYears = courseService.getDistinctYears(loginUser.getUserNo());
+	    
+	    List<Map<String, Object>> yearOptions = new ArrayList<>();
+	    for (int y : distinctYears) {
+	        Map<String, Object> option = new HashMap<>();
+	        option.put("value", y);
+	        option.put("isSelected", year != null && y == year.intValue()); 
+	        yearOptions.add(option);
+	    }
+	    model.addAttribute("yearOptions", yearOptions);
+	    
+	    Map<String, Boolean> selected = new HashMap<>();
+	    selected.put("semester1", "1".equals(semester));
+	    selected.put("semester2", "2".equals(semester));
+	    selected.put("status1", "1".equals(status));
+	    selected.put("status0", "0".equals(status));
+	    model.addAttribute("selected", selected);
 
-	    List<ProfCourseDTO> courseList = courseService.getCourseListByProfessor(loginUser.getUserNo());
-	    System.out.println("강의 개수 = " + courseList.size());
+	    int rowPerPage = 10;
+	    int startRow = (currentPage - 1) * rowPerPage;
+
+	    List<ProfCourseDTO> courseList =
+	    		courseService.getFilteredCourseList(loginUser.getUserNo(), year, semester, status, startRow, rowPerPage);
+
+	    int totalRow = courseService.getFilteredCourseCount(loginUser.getUserNo(), year, semester, status);
+	    int lastPage = (totalRow % rowPerPage == 0) ? (totalRow / rowPerPage) : (totalRow / rowPerPage) + 1;
+
+	    int startPage = ((currentPage - 1) / 10 * 10) + 1;
+	    int endPage = startPage + 9;
+        if (endPage > lastPage) endPage = lastPage;
+
+	    List<Integer> pages = new ArrayList<>();
+        for (int i = startPage; i <= endPage; i++) pages.add(i);
 
 	    model.addAttribute("list", courseList);
+	    
+	    model.addAttribute("year", (year == null) ? "" : year);
+	    model.addAttribute("semester", (semester == null) ? "" : semester);
+	    model.addAttribute("status", (status == null) ? "" : status);
 
-	    return "profCourse/courseList"; 
+	    model.addAttribute("currentPage", currentPage);
+	    model.addAttribute("startPage", startPage);
+	    model.addAttribute("endPage", endPage);
+	    model.addAttribute("lastPage", lastPage);
+	    model.addAttribute("pages", pages);
+	    
+	    model.addAttribute("prePage", currentPage - 1);
+	    model.addAttribute("nextPage",currentPage + 1);
+	    
+	    model.addAttribute("showPrev", currentPage > 1);
+	    model.addAttribute("showNext", currentPage < lastPage);
+	    model.addAttribute("showPagination", lastPage > 1);
+
+	    return "profCourse/courseList";
 	}
-	
+
 	// 등록 화면
 	@GetMapping("/addCourse")
 	public String addCourse(HttpSession session, Model model) {
@@ -74,13 +128,12 @@ public class ProfCourseController {
 	
 	// 등록 처리
 	@PostMapping("/addCourse")
-	public String addCourse(
-			ProfCourseDTO course, 
-			@RequestParam("yoil")  List<Integer> yoilList,
-		    @RequestParam("start") List<Integer> startList,
-		    @RequestParam("end")   List<Integer> endList,
-		    HttpSession session,
-		    Model model) {
+	public String addCourse(ProfCourseDTO course, 
+							@RequestParam("yoil")  List<Integer> yoilList,
+						    @RequestParam("start") List<Integer> startList,
+						    @RequestParam("end")   List<Integer> endList,
+						    HttpSession session,
+						    Model model) {
 		
 		SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
 		
@@ -117,10 +170,9 @@ public class ProfCourseController {
 	
 	// 수정 화면
 	@GetMapping("/modifyCourse")
-	public String editCourseForm(
-			@RequestParam("courseNo") int courseNo,
-			HttpSession session,
-			Model model) {
+	public String editCourseForm(Model model,
+								@RequestParam("courseNo") int courseNo,
+								HttpSession session) {
 		
 		SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
 		
@@ -148,13 +200,12 @@ public class ProfCourseController {
 	
 	// 수정 처리
 	@PostMapping("/modifyCourse")
-    public String editCourse(
-    		ProfCourseDTO course, 
-    		@RequestParam("yoil")  List<Integer> yoil,
-    	    @RequestParam("start") List<Integer> start,
-    	    @RequestParam("end")   List<Integer> end,
-    	    HttpSession session,
-    	    Model model) {
+    public String editCourse(Model model,
+				    		ProfCourseDTO course, 
+				    		@RequestParam("yoil")  List<Integer> yoil,
+				    	    @RequestParam("start") List<Integer> start,
+				    	    @RequestParam("end")   List<Integer> end,
+				    	    HttpSession session) {
 
         SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
 
@@ -206,10 +257,9 @@ public class ProfCourseController {
 	
 	// 대시보드
 	@GetMapping("/courseDashboard")
-	public String courseDashboard(
-			@RequestParam("courseNo") int courseNo,
-			HttpSession session,
-			Model model) {
+	public String courseDashboard(Model model,
+								  @RequestParam("courseNo") int courseNo,
+								  HttpSession session) {
 
 	    SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
 

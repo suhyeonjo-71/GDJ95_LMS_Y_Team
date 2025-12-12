@@ -11,7 +11,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { font-family: Pretendard, sans-serif; }
+        body { font-family: Pretendard, sans-serif; 
+        background:#F5F7FA;}
     </style>
 </head>
 
@@ -75,7 +76,7 @@
             <div class="flex justify-end space-x-3 pt-6 border-t border-gray-100">
 
                 <a href="/modifyAssignment?assignmentNo={{assignment.assignmentNo}}"
-                   class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition shadow-md">
+                   class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition shadow-md">
                     <i class="fa-solid fa-pen-to-square mr-1"></i> 수정
                 </a>
 
@@ -85,7 +86,7 @@
                     <i class="fa-solid fa-trash-can mr-1"></i> 삭제
                 </a>
 
-                <a href="/assignmentListByProf?courseNo={{assignment.courseNo}}"
+                <a href="/profCourseAssignmentList?courseNo={{assignment.courseNo}}"
                    class="px-4 py-2 bg-gray-400 text-white rounded-lg text-sm font-medium hover:bg-gray-500 transition shadow-md">
                     <i class="fa-solid fa-list mr-1"></i> 목록으로
                 </a>
@@ -111,12 +112,18 @@
                         <th class="py-2 px-3 text-left">내용</th>
                         <th class="py-2 px-3 text-center">제출 여부</th>
                         <th class="py-2 px-3 text-center">제출일</th>
+                        <th class="py-2 px-3 text-center">점수</th>
+                        <th class="py-2 px-3 text-center">저장</th>
                     </tr>
                 </thead>
 
                 <tbody>
 				    {{#submissionList}}
 				    <tr class="border-b">
+				    <form action="/profAssignmentScore" method="POST">
+			            <input type="hidden" name="assignmentSubmissionNo" value="{{assignmentSubmissionNo}}">
+			            <input type="hidden" name="assignmentNo" value="{{assignment.assignmentNo}}">
+			            <input type="hidden" name="courseNo" value="{{assignment.courseNo}}">
 				
 				        <td class="py-2 px-3">{{writerName}}</td>
 				        <td class="py-2 px-3">{{writerId}}</td>
@@ -151,7 +158,27 @@
 				            {{#isSubmitted}}{{createdate}}{{/isSubmitted}}
 				            {{#isNotSubmitted}}-{{/isNotSubmitted}}
 				        </td>
-				
+				        
+				        <td class="py-2 px-3 text-center">
+			                {{#isSubmitted}}
+			                <input type="text" name="assignmentScore"
+			                       value="{{#assignmentScore}}{{assignmentScore}}{{/assignmentScore}}" 
+			                       min="0" max="100" 
+			                       class="w-20 px-2 py-1 border border-gray-300 rounded-md text-center text-sm focus:ring-blue-500 focus:border-blue-500" 
+			                       {{^assignmentSubmissionFileUrl}}readonly{{/assignmentSubmissionFileUrl}}> 
+			                {{/isSubmitted}}
+			            </td>
+			
+			            <td class="py-2 px-3 text-center">
+			                {{#isSubmitted}}
+			                <button type="submit" 
+			                        class="px-3 py-1 bg-green- 500 text-white bg-green-500 rounded-md text-xs font-medium hover:bg-green-600 transition shadow-sm">
+			                    저장
+			                </button>
+			                {{/isSubmitted}}
+			            </td>
+			        </form>
+			        
 				    </tr>
 				    {{/submissionList}}
 				

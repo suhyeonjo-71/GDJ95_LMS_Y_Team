@@ -24,7 +24,7 @@ public class ProfCourseNoticeService {
 	// 공지사항 리스트
 	public List<CourseNoticeDTO> getCourseNoticeListByPage(int courseNo, int startRow, int rowPerPage) {
 		
-		return courseNoticeMapper.selectCourseNoticeListByPage(courseNo, startRow, rowPerPage);
+		return courseNoticeMapper.selectCourseNoticeList(courseNo, startRow, rowPerPage);
 	}
 	
 	public int getCourseNoticeCount(int courseNo) {

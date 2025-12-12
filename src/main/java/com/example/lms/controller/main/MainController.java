@@ -100,7 +100,6 @@ public class MainController {
 			}
 			
 			
-			
 			// 메인 페이지 시간표
 			MainDTO mainCourseTimeParams = new MainDTO();
 			mainCourseTimeParams.setUserNo(userNo);

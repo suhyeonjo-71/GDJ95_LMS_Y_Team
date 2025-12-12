@@ -1,7 +1,12 @@
 package com.example.lms.dto;
 
 import lombok.Data;
-
+/**
+ * 2025. 11. 24.
+ * Author - yj
+ * STUDENT ASSIGNMENT LIST DTO
+ * 학생 과제 목록 조회 정보
+ */
 @Data
 public class StudentAssignmentListDTO {
 
@@ -9,7 +14,7 @@ public class StudentAssignmentListDTO {
     private String assignmentTitle;
     private String assignmentDeadline;
 
-    private Boolean assignmentSubmitted;        // 제출 여부
+    private Boolean submitted;        // 제출 여부
 
     private Integer courseNo;         // 과목 번호
 }

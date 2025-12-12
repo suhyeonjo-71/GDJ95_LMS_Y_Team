@@ -17,6 +17,14 @@ public class AssignmentDTO {
 	private String assignmentDescription; // 과제내용
 	private String assignmentDueDate;     // 과제 마감일
 	private int assignmentStatus;         // 0=비활성화, 1=활성화
+	
+	public boolean isOpened() {
+	    return assignmentStatus == 1; 
+	}
+
+	public boolean isClosed() {
+	    return assignmentStatus == 0; 
+	}
 	private String createdate;			  // 생성일시
 	private String updatedate;			  // 수정일시
 }

@@ -4,86 +4,94 @@
 
 <mapper namespace="com.example.lms.mapper.enrollment.EnrollmentMapper">
 
-    <!-- 시간표 겹침 체크 -->
-    <select id="countTimeOverlap" resultType="int">
-        SELECT COUNT(*)
-        FROM tb_enrollment e
-        INNER JOIN tb_course_time t1 
-            ON t1.course_no = e.course_no
-           AND e.enrollment_status = 0
-        INNER JOIN tb_course_time t2
-            ON t2.course_no = #{courseNo}
-        WHERE e.student_user_no = #{studentUserNo}
-          AND t1.course_time_yoil = t2.course_time_yoil
-          AND (
-                    t1.course_time_start BETWEEN t2.course_time_start AND t2.course_time_end
-                OR  t1.course_time_end   BETWEEN t2.course_time_start AND t2.course_time_end
-                OR  t2.course_time_start BETWEEN t1.course_time_start AND t1.course_time_end
-          )
-    </select>
-
-    <!-- 중복 신청 체크 -->
-    <select id="countEnrollment" resultType="int">
-        SELECT COUNT(*)
+    <!-- 현재 신청 상태 조회 -->
+    <select id="selectEnrollmentStatus" resultType="int">
+        SELECT enrollment_status
         FROM tb_enrollment
         WHERE student_user_no = #{studentUserNo}
           AND course_no = #{courseNo}
-          AND enrollment_status = 0
+        LIMIT 1
     </select>
+
+    <!-- 취소된 신청을 다시 활성화 -->
+    <update id="updateEnrollmentStatus">
+        UPDATE tb_enrollment
+        SET enrollment_status = 0
+        WHERE student_user_no = #{studentUserNo}
+          AND course_no = #{courseNo}
+    </update>
 
     <!-- 신규 신청 -->
     <insert id="insertEnrollment">
         INSERT INTO tb_enrollment
-        (student_user_no, course_no, enrollment_status, createdate)
+        ( student_user_no
+        , course_no
+        , enrollment_status
+        , createdate )
         VALUES
-        (#{studentUserNo}, #{courseNo}, #{enrollmentStatus}, NOW())
+        ( #{studentUserNo}
+        , #{courseNo}
+        , #{enrollmentStatus}
+        , NOW() )
     </insert>
 
-    <!-- 수강신청 내역 조회 -->
-    <select id="selectEnrollmentListPaged"
+    <!-- 수강 취소 (상태 변경) -->
+    <update id="cancelEnrollment">
+        UPDATE tb_enrollment
+        SET enrollment_status = 1
+        WHERE student_user_no = #{studentUserNo}
+          AND enrollment_no = #{enrollmentNo}
+    </update>
+
+    <!-- 신청 내역 조회 -->
+    <select id="selectEnrollmentList"
             resultType="com.example.lms.dto.EnrollmentListDTO">
 
         SELECT
               e.enrollment_no        AS enrollmentNo
             , e.enrollment_status    AS enrollmentStatus
             , e.createdate
-
             , c.course_no            AS courseNo
             , c.course_name          AS courseName
             , c.course_score         AS courseScore
             , c.course_capacity      AS courseCapacity
-
             , u.user_name            AS professorName
-
             , t.course_time_yoil     AS courseTimeYoil
             , t.course_time_start    AS courseTimeStart
             , t.course_time_end      AS courseTimeEnd
-
         FROM tb_enrollment e
-        INNER JOIN tb_course c       ON c.course_no = e.course_no
-        INNER JOIN tb_sysuser u      ON u.user_no = c.professor_user_no
-        INNER JOIN tb_course_time t  ON t.course_no = c.course_no
-
+        INNER JOIN tb_course c
+            ON c.course_no = e.course_no
+        INNER JOIN tb_sysuser u
+            ON u.user_no = c.professor_user_no
+        INNER JOIN tb_course_time t
+            ON t.course_no = c.course_no
         WHERE e.student_user_no = #{studentUserNo}
           AND e.enrollment_status = 0
-          
         ORDER BY e.enrollment_no DESC
         LIMIT #{startRow}, #{rowPerPage}
     </select>
 
-    <!-- 전체 row -->
-    <select id="countEnrollmentList" resultType="int">
+    <!-- 전체 row 조회 -->
+    <select id="selectEnrollmentTotalCount" resultType="int">
         SELECT COUNT(*)
         FROM tb_enrollment
         WHERE student_user_no = #{studentUserNo}
           AND enrollment_status = 0
     </select>
-
-    <!-- 수강 취소 (DELETE 방식) -->
-    <delete id="cancelEnrollment">
-        DELETE FROM tb_enrollment
-        WHERE student_user_no = #{studentUserNo}
-          AND enrollment_no = #{enrollmentNo};
-    </delete>
-
+	
+	<!-- 중복확인 -->
+	<select id="countTimeOverlap" resultType="int">
+	    SELECT COUNT(*)
+	    FROM tb_enrollment e
+	    JOIN tb_course_time ct1 ON e.course_no = ct1.course_no
+	    JOIN tb_course_time ct2 ON ct2.course_no = #{courseNo}
+	    WHERE e.student_user_no = #{studentUserNo}
+	      AND e.enrollment_status = 0
+	      AND ct1.course_time_yoil = ct2.course_time_yoil
+	      AND (
+	              (ct1.course_time_start &lt;= ct2.course_time_end)
+	          AND (ct1.course_time_end >= ct2.course_time_start)
+	          )
+	</select>
 </mapper>

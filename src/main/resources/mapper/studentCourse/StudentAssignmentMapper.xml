@@ -5,68 +5,57 @@
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentAssignmentMapper">
 
     <!-- 학생 과제 목록 -->
-    <select id="selectAssignmentList" parameterType="map"
+    <select id="selectAssignmentList"
+            parameterType="map"
             resultType="com.example.lms.dto.StudentAssignmentListDTO">
 
-        SELECT 
-	        a.assignment_no AS assignmentNo,
-	        a.course_no AS courseNo,
-	        a.assignment_title AS assignmentTitle,
-	        DATE_FORMAT(a.assignment_due_date, '%Y-%m-%d') AS assignmentDeadline,
-	        IFNULL(s.assignment_score, 0) AS assignmentScore,
-	        CASE WHEN s.assignment_submission_no IS NULL THEN 0 ELSE 1 END AS assignmentSubmitted
-	    FROM tb_assignment a
-	    LEFT JOIN tb_assignment_submission s
-	        ON a.assignment_no = s.assignment_no
-	       AND s.writer_user_no = #{writerUserNo}
-	    WHERE a.course_no = #{courseNo}
-	    ORDER BY a.assignment_due_date ASC
-
+        SELECT
+              a.assignment_no AS assignmentNo
+            , a.course_no AS courseNo
+            , a.assignment_title AS assignmentTitle
+            , DATE_FORMAT(a.assignment_due_date, '%Y-%m-%d') AS assignmentDeadline
+            , IFNULL(s.assignment_score, 0) AS assignmentScore
+            , CASE WHEN s.assignment_submission_no IS NULL THEN 0 ELSE 1 END AS submitted
+        FROM tb_assignment a
+        LEFT JOIN tb_assignment_submission s
+            ON s.assignment_no = a.assignment_no
+           AND s.writer_user_no = #{writerUserNo}
+           AND s.assignment_submission_status = 0
+        WHERE a.course_no = #{courseNo}
+        ORDER BY a.assignment_due_date ASC
     </select>
 
-    <!-- 과제 상세 + 내 제출 정보 -->
+    <!-- 과제 상세 조회 -->
     <select id="selectAssignmentDetail"
-	        resultType="com.example.lms.dto.StudentAssignmentDetailDTO">
-	
-	    SELECT 
-	          a.assignment_no AS assignmentNo
-	        , a.assignment_title AS assignmentTitle
-	        , a.assignment_description AS assignmentDescription
-	        , a.assignment_due_date AS assignmentDeadline
-	        , a.course_no AS courseNo
-	
-	        , s.assignment_submission_no AS assignmentSubmissionNo
-	        , s.assignment_submission_content AS assignmentSubmissionContent
-	        , s.assignment_submission_file_url AS assignmentSubmissionFileUrl
-	        , s.assignment_score AS assignmentScore
-	        , s.createdate AS submittedDate
-	
-	        , CASE 
-	            WHEN s.assignment_submission_no IS NULL THEN FALSE
-	            ELSE TRUE
-	          END AS submitted
-	
-	        , CASE 
-	            WHEN a.assignment_due_date &lt; NOW() THEN TRUE
-	            ELSE FALSE
-	          END AS deadlinePassed
-	
-	    FROM tb_assignment a
-	    LEFT JOIN tb_assignment_submission s
-	        ON s.assignment_no = a.assignment_no
-	       AND s.writer_user_no = #{writerUserNo}
-	       AND s.assignment_submission_status = 0
-	
-	    WHERE a.assignment_no = #{assignmentNo}
-	    LIMIT 1
-	</select>
-	    
+            resultType="com.example.lms.dto.StudentAssignmentDetailDTO">
+
+        SELECT
+              a.assignment_no AS assignmentNo
+            , a.assignment_title AS assignmentTitle
+            , a.assignment_description AS assignmentDescription
+            , a.assignment_due_date AS assignmentDeadline
+            , a.course_no AS courseNo
+            , s.assignment_submission_no AS assignmentSubmissionNo
+            , s.assignment_submission_content AS assignmentSubmissionContent
+            , s.assignment_submission_file_url AS assignmentSubmissionFileUrl
+            , s.assignment_score AS assignmentScore
+            , s.createdate AS submittedDate
+            , (s.assignment_submission_no IS NOT NULL) AS submitted
+            , (a.assignment_due_date &lt; NOW()) AS deadlinePassed
+        FROM tb_assignment a
+        LEFT JOIN tb_assignment_submission s
+            ON s.assignment_no = a.assignment_no
+           AND s.writer_user_no = #{writerUserNo}
+           AND s.assignment_submission_status = 0
+        WHERE a.assignment_no = #{assignmentNo}
+        LIMIT 1
+    </select>
 
     <!-- 기존 제출 조회 -->
     <select id="selectMySubmission"
             resultType="com.example.lms.dto.AssignmentSubmissionDTO">
 
-        SELECT 
+        SELECT
               assignment_submission_no AS assignmentSubmissionNo
             , assignment_no AS assignmentNo
             , writer_user_no AS writerUserNo
@@ -83,19 +72,22 @@
         LIMIT 1
     </select>
 
-    <!-- INSERT -->
+    <!-- INSERT 제출 -->
     <insert id="insertSubmission"
             useGeneratedKeys="true"
             keyProperty="assignmentSubmissionNo"
             parameterType="com.example.lms.dto.AssignmentSubmissionDTO">
 
-        INSERT INTO tb_assignment_submission (
+        INSERT INTO tb_assignment_submission
+        (
               assignment_no
             , writer_user_no
             , assignment_submission_file_url
             , assignment_submission_content
             , assignment_submission_status
-        ) VALUES (
+        )
+        VALUES
+        (
               #{assignmentNo}
             , #{writerUserNo}
             , #{assignmentSubmissionFileUrl}
@@ -104,17 +96,52 @@
         )
     </insert>
 
-    <!-- UPDATE -->
+    <!-- UPDATE 제출 수정 -->
     <update id="updateSubmission"
             parameterType="com.example.lms.dto.AssignmentSubmissionDTO">
 
         UPDATE tb_assignment_submission
-        SET 
+        SET
               assignment_submission_file_url = #{assignmentSubmissionFileUrl}
             , assignment_submission_content = #{assignmentSubmissionContent}
             , updatedate = NOW()
         WHERE assignment_submission_no = #{assignmentSubmissionNo}
           AND writer_user_no = #{writerUserNo}
     </update>
+
+    <!-- 제출 무효화 -->
+    <update id="disableSubmission">
+
+        UPDATE tb_assignment_submission
+        SET
+              assignment_submission_status = 1
+            , assignment_submission_file_url = NULL
+            , assignment_submission_content = NULL
+            , updatedate = NOW()
+        WHERE assignment_no = #{assignmentNo}
+          AND writer_user_no = #{userNo}
+          AND assignment_submission_status = 0
+    </update>
+
+
+    <!-- 홈 화면 요약: 최근 과제 1개 -->
+    <select id="selectRecentAssignment"
+            parameterType="map"
+            resultType="com.example.lms.dto.StudentAssignmentListDTO">
+
+        SELECT
+              a.assignment_no AS assignmentNo
+            , a.assignment_title AS assignmentTitle
+            , DATE_FORMAT(a.assignment_due_date, '%Y-%m-%d') AS assignmentDeadline
+            , IFNULL(s.assignment_score, 0) AS assignmentScore
+            , CASE WHEN s.assignment_submission_no IS NULL THEN 0 ELSE 1 END AS submitted
+        FROM tb_assignment a
+        LEFT JOIN tb_assignment_submission s
+            ON a.assignment_no = s.assignment_no
+           AND s.writer_user_no = #{writerUserNo}
+        WHERE a.course_no = #{courseNo}
+        ORDER BY a.assignment_due_date ASC
+        LIMIT 1
+    </select>
 
 </mapper>

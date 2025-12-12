@@ -11,9 +11,15 @@ import com.example.lms.dto.CourseQuestionDTO;
 
 @Mapper
 public interface ProfCourseQnAMapper {
+	
+	// 메뉴
+	List<Map<String, Object>> selectCourseQnASummary(int professorUserNo);
 
 	// 문의 목록 조회
-	List<Map<String, Object>> selectQuestionList(int courseNo);
+	List<Map<String, Object>> selectQuestionList(int courseNo, int startRow, int rowPerPage);
+	
+	// 목록 페이징
+	int selectQuestionCount(int courseNo);
 	
 	// 상세보기
 	Map<String, Object> selectQuestionDetail(int courseQuestionNo);
@@ -40,7 +46,4 @@ public interface ProfCourseQnAMapper {
 	void updateQuestionStatusAnswered(int courseQuestionNo);
 	// 답변 삭제 -> 상태 0
 	void updateQuestionStatusReopen(int courseQuestionNo);
-	
-	
-
 }

@@ -222,89 +222,74 @@
 			        {{/useAdmin}}
 			        
 			        {{#useStudent}}
-			        	<!-- 학생 기능 사용할 헤더 메뉴 -->
-			        	<!-- 수강신청 -->
-						<a href="/courseListForEnrollment"
-						   class="flex items-center gap-2 py-4
-						          {{#nav_enrollment}}{{nav_enrollment}}{{/nav_enrollment}}
-						          text-gray-600 hover:text-blue-600 font-medium 
-						          border-b-2 border-transparent hover:border-blue-600 transition">
-						    <i class="fa-solid fa-book-open"></i> 수강신청
-						</a>
-						
-						<!-- 수강신청 내역 -->
-						<a href="/enrollmentList"
-						   class="flex items-center gap-2 py-4
-						          {{#nav_enrollmentList}}{{nav_enrollmentList}}{{/nav_enrollmentList}}
-						          text-gray-600 hover:text-blue-600 font-medium 
-						          border-b-2 border-transparent hover:border-blue-600 transition">
-						    <i class="fa-solid fa-list-check"></i> 수강신청 내역
-						</a>
-						
-						<!-- 내 수강과목 -->
-						<a href="/myCourses"
-						   class="flex items-center gap-2 py-4
-						          {{#nav_myCourses}}{{nav_myCourses}}{{/nav_myCourses}}
-						          text-gray-600 hover:text-blue-600 font-medium 
-						          border-b-2 border-transparent hover:border-blue-600 transition">
-						    <i class="fa-solid fa-chalkboard-user"></i> 내 수강과목
-						</a>
-						
-						<!-- 내 시간표 -->
-						<a href="/studentTimetable"
-						   class="flex items-center gap-2 py-4
-						          {{#nav_timetable}}{{nav_timetable}}{{/nav_timetable}}
-						          text-gray-600 hover:text-blue-600 font-medium 
-						          border-b-2 border-transparent hover:border-blue-600 transition">
-						    <i class="fa-solid fa-table"></i> 내 시간표
-						</a>
+
+			        <!-- 학생 기능 사용할 헤더 메뉴 -->
+				        <!-- 수강신청 -->
+				    <a href="/courseListForEnrollment"
+				       class="flex items-center gap-2 py-4
+				              {{#nav_enrollment}}{{nav_enrollment}}{{/nav_enrollment}}
+				              text-gray-600 hover:text-blue-600 font-medium 
+				              border-b-2 border-transparent hover:border-blue-600 transition">
+				        <i class="fa-solid fa-book-open"></i> 수강신청
+				    </a>
+				
+				    <!-- 수강신청 내역 -->
+				    <a href="/enrollmentList"
+				       class="flex items-center gap-2 py-4
+				              {{#nav_enrollmentList}}{{nav_enrollmentList}}{{/nav_enrollmentList}}
+				              text-gray-600 hover:text-blue-600 font-medium 
+				              border-b-2 border-transparent hover:border-blue-600 transition">
+				        <i class="fa-solid fa-list-check"></i> 수강신청 내역
+				    </a>
+				
+				    <!-- 내 수강과목 -->
+					<a href="/myCourses"
+					   class="flex items-center gap-2 py-4
+					          {{#nav_myCourses}}{{nav_myCourses}}{{/nav_myCourses}}
+					          text-gray-600 hover:text-blue-600 font-medium 
+					          border-b-2 border-transparent hover:border-blue-600 transition">
+					    <i class="fa-solid fa-chalkboard-user"></i> 내 수강과목
+					</a>
+	
+				    <!-- 내 시간표 -->
+				    <a href="/studentTimetable"
+				       class="flex items-center gap-2 py-4
+				              {{#nav_timetable}}{{nav_timetable}}{{/nav_timetable}}
+				              text-gray-600 hover:text-blue-600 font-medium 
+				              border-b-2 border-transparent hover:border-blue-600 transition">
+				        <i class="fa-solid fa-table"></i> 내 시간표
+				    </a>
+
 			        {{/useStudent}}
 			        
 			        {{#useProfessor}}
 			        <!-- 교수 기능 사용할 헤더 메뉴 -->
-			        
+                    
 			        <a href="/courseList"
-						class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
-						<i class="fa-solid fa-chalkboard-user"></i> 강의관리
-					</a>
-						
-					<a href="/profCourseNotice"
-						 class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
-						 <i class="fa-solid fa-bullhorn"></i> 공지관리
-					</a>
-						
-					<a href="/profCourseAssignment"
-						 class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
-						 <i class="fa-solid fa-file-pen"></i> 과제관리
-					</a>
-						
-					<a href="/profCourseQnAList"
-						  class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
-						  <i class="fa-solid fa-circle-question"></i> 문의관리
-					</a>
-						
-					<a href="/profSetting"
-						  class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
-						  <i class="fa-solid fa-gear"></i> 설정
-					</a>
-			        
+	                   class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
+	                    <i class="fa-solid fa-chalkboard-user"></i> 강의관리
+	                </a>
+	
+	                <a href="/profCourseNotice"
+	                   class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
+	                    <i class="fa-solid fa-bullhorn"></i> 공지관리
+	                </a>
+	
+	                <a href="/profCourseAssignment"
+	                   class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
+	                    <i class="fa-solid fa-file-pen"></i> 과제관리
+	                </a>
+	
+	                <a href="/profCourseQnAList"
+	                   class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
+	                    <i class="fa-solid fa-circle-question"></i> 문의관리
+	                </a>
+	
+	                <a href="/profSetting"
+	                   class="menu-link flex items-center gap-2 py-4 text-gray-600 font-medium border-b-2 border-transparent transition">
+	                    <i class="fa-solid fa-gear"></i> 설정
+	                </a>
 			        {{/useProfessor}}
-			        
-			        <!-- 
-                    <a href="/courseListForEnrollment" class="flex items-center gap-2 py-4 text-gray-600 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition">
-                        <i class="fa-solid fa-book-open"></i> 수강신청
-                    </a>
-                    <a href="#" class="flex items-center gap-2 py-4 text-gray-600 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition">
-                        <i class="fa-solid fa-chart-bar"></i> 성적조회
-                    </a>
-                    <a href="#" class="flex items-center gap-2 py-4 text-gray-600 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition">
-                        <i class="fa-regular fa-calendar-check"></i> 학사일정
-                    </a>
-                    <a id="certificateLink"
-			           href="/main/certificateOfGraduation"
-			           class="flex items-center gap-2 py-4 text-gray-600 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition cursor-pointer">
-			            <i class="fa-solid fa-file-lines"></i> 졸업증명서 발급 (팝업)
-			        </a> -->
                     
                 </nav>
             </div>
@@ -390,6 +375,7 @@
 			        {{/useAdmin}}
 			        
 			        {{#useStudent}}
+<<<<<<< HEAD
 				        <a href="/myInfo/courseManagement" class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
 				            <i class="fa-solid fa-book w-5"></i> 학점 관리
 				        </a>
@@ -398,6 +384,15 @@
 							class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
 							<i class="fa-solid fa-file-lines w-5"></i> 졸업증명서 발급
 						</a>
+=======
+			        <a href="/myInfo/courseManagement" class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
+			            <i class="fa-solid fa-book w-5"></i> 학점 관리
+			        </a>
+			        <a id="certificateLink" href="/main/certificateOfGraduation"
+			           class="w-full py-2.5 px-4 border border-gray-300 rounded-lg text-gray-600 text-sm hover:bg-gray-50 flex items-center gap-3 transition">
+			            <i class="fa-solid fa-file-lines w-5"></i> 졸업증명서 발급
+			   		</a>
+>>>>>>> origin/main
 			        {{/useStudent}}
 			        
 			        {{#useProfessor}}
