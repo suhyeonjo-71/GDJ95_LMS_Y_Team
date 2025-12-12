@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.lms.dto.StudentCourseDetailDTO;
 import com.example.lms.dto.StudentGradeDTO;
 import com.example.lms.dto.SysUserDTO;
-import com.example.lms.service.studentCourse.StudentCourseService;
+import com.example.lms.service.studentCourse.StudentCourseInfoService;
 import com.example.lms.service.studentCourse.StudentGradeService;
 
 import jakarta.servlet.http.HttpSession;
@@ -18,8 +18,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudentGradeController {
 
-    private final StudentGradeService service;
-    private final StudentCourseService studentCourseService;
+    private final StudentGradeService gradeService;
+    private final StudentCourseInfoService infoService;
 
     // 학생 성적 페이지
     @GetMapping("/student/grade")
@@ -33,17 +33,16 @@ public class StudentGradeController {
 
         int studentUserNo = user.getUserNo();
 
-        // ★ 강의 Header/SubNav 정보
-        StudentCourseDetailDTO courseHeader =
-                studentCourseService.getStudentCourseDetail(courseNo);
+        // 강의 Header/SubNav 정보
+        StudentCourseDetailDTO courseHeader = infoService.getCourseDetail(courseNo);
 
         model.addAttribute("course", courseHeader);
         model.addAttribute("courseNo", courseNo);
         model.addAttribute("nav_grade", true);
 
-        // ★ 학생 성적 조회
+        // 학생 성적 요약 조회 (옵션 B 적용)
         StudentGradeDTO grade =
-                service.getStudentGrade(courseNo, studentUserNo);
+                gradeService.getStudentGradeSummary(courseNo, studentUserNo);
 
         model.addAttribute("grade", grade);
 

@@ -29,9 +29,7 @@ public class CourseTimeDTO {
     private String createdate;
     private String updatedate;
 
-    // ---------------------------------------------------------
-    // ✔ 화면용: 요일 한글 반환
-    // ---------------------------------------------------------
+    // 화면용: 요일 한글 반환
     public String getYoilName() {
         return switch (courseTimeYoil) {
             case 1 -> "월";
@@ -43,10 +41,10 @@ public class CourseTimeDTO {
         };
     }
 
-    // ---------------------------------------------------------
-    // ✔ 화면용: 교시 문자열 변환 ("2 ~ 4교시")
-    // ---------------------------------------------------------
+    // 화면용: 교시 문자열 변환 ("2 ~ 4교시")
     public String getPeriodRange() {
         return courseTimeStart + " ~ " + courseTimeEnd + "교시";
     }
+    
+    private boolean isFirst;
 }

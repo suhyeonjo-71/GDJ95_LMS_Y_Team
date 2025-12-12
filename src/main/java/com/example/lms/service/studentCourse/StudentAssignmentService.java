@@ -17,9 +17,13 @@ public class StudentAssignmentService {
 
     private final StudentAssignmentMapper mapper;
 
-    // 학생 과제 목록 조회
-    public List<StudentAssignmentListDTO> getAssignmentList(int courseNo, int studentUserNo) {
+    // 홈 화면 요약: 최근 과제 1개 조회
+    public List<StudentAssignmentListDTO> getRecentAssignments(int courseNo, int studentUserNo) {
+        return mapper.selectRecentAssignment(courseNo, studentUserNo);
+    }
 
+    // 전체 과제 목록
+    public List<StudentAssignmentListDTO> getAssignmentList(int courseNo, int studentUserNo) {
         List<StudentAssignmentListDTO> list =
                 mapper.selectAssignmentList(courseNo, studentUserNo);
 
@@ -30,12 +34,12 @@ public class StudentAssignmentService {
         return list;
     }
 
-    // 학생 과제 상세 + 제출 정보 조회
+    // 과제 상세 + 제출 정보
     public StudentAssignmentDetailDTO getAssignmentDetail(int assignmentNo, int studentUserNo) {
         return mapper.selectAssignmentDetail(assignmentNo, studentUserNo);
     }
 
-    // 제출 기록 조회
+    // 제출 정보 조회
     public AssignmentSubmissionDTO getSubmission(int assignmentNo, int userNo) {
         return mapper.selectMySubmission(assignmentNo, userNo);
     }

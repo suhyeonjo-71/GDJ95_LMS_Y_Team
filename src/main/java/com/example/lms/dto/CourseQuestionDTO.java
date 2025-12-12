@@ -51,10 +51,10 @@ public class CourseQuestionDTO {
     // 화면 표시용 번호
     private int index;
 
-    // 기존 방식 유지 (호환용)
-    public boolean isPrivatePost() {
-        return privatePost == 1;
-    }
+//    // 기존 방식 유지 (호환용)
+//    public boolean isPrivatePost() {
+//        return privatePost == 1;
+//    }
 
     private Integer answerCount;
 }

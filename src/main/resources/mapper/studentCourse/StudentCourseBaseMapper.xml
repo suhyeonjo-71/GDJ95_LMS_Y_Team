@@ -5,6 +5,7 @@
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseBaseMapper">
 
+    <!-- 내 수강과목 목록 -->
     <select id="selectMyCourseList"
             parameterType="int"
             resultType="com.example.lms.dto.StudentCourseDTO">
@@ -13,7 +14,7 @@
               c.course_no AS courseNo
             , c.course_name AS courseName
             , c.course_score AS courseScore
-            , c.classroom AS classroom
+            , c.course_classroom AS classroom
             , p.user_name AS professorName
             , d.dept_name AS deptName
             , ct.course_time_yoil AS courseTimeYoil
@@ -25,7 +26,7 @@
         JOIN tb_sysuser p
             ON c.professor_user_no = p.user_no
         JOIN tb_dept d
-            ON p.dept_code = d.dept_code
+            ON c.dept_code = d.dept_code 
         LEFT JOIN tb_course_time ct
             ON c.course_no = ct.course_no
         WHERE e.student_user_no = #{studentUserNo}
@@ -34,6 +35,7 @@
     </select>
 
 
+    <!-- 시간표 조회 -->
     <select id="selectStudentTimetable"
             parameterType="int"
             resultType="com.example.lms.dto.StudentTimetableDTO">

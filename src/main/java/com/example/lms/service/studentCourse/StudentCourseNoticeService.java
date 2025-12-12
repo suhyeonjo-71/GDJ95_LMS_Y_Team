@@ -15,12 +15,6 @@ import lombok.RequiredArgsConstructor;
 public class StudentCourseNoticeService {
 
     private final StudentCourseNoticeMapper mapper;
-    private final StudentCourseHomeService courseHomeService;
-
-    // 강의 홈 정보 조회
-    public StudentCourseHomeDTO getStudentCourseHome(int courseNo, int studentUserNo) {
-        return courseHomeService.getStudentCourseHome(courseNo, studentUserNo);
-    }
 
     // 공지 목록 조회 (페이징)
     public List<StudentCourseNoticeDTO> getNoticeList(int courseNo, int startRow, int rowPerPage) {
@@ -35,5 +29,10 @@ public class StudentCourseNoticeService {
     // 공지 총 개수 조회
     public int getNoticeTotal(int courseNo) {
         return mapper.selectNoticeTotal(courseNo);
+    }
+
+    // ⭐ 홈 화면 요약용: 최근 공지
+    public List<StudentCourseNoticeDTO> getRecentNotices(int courseNo) {
+        return mapper.selectRecentNotices(courseNo);
     }
 }

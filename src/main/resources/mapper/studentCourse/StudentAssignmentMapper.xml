@@ -25,7 +25,6 @@
         ORDER BY a.assignment_due_date ASC
     </select>
 
-
     <!-- 과제 상세 조회 -->
     <select id="selectAssignmentDetail"
             resultType="com.example.lms.dto.StudentAssignmentDetailDTO">
@@ -52,7 +51,6 @@
         LIMIT 1
     </select>
 
-
     <!-- 기존 제출 조회 -->
     <select id="selectMySubmission"
             resultType="com.example.lms.dto.AssignmentSubmissionDTO">
@@ -73,7 +71,6 @@
           AND assignment_submission_status = 0
         LIMIT 1
     </select>
-
 
     <!-- INSERT 제출 -->
     <insert id="insertSubmission"
@@ -99,7 +96,6 @@
         )
     </insert>
 
-
     <!-- UPDATE 제출 수정 -->
     <update id="updateSubmission"
             parameterType="com.example.lms.dto.AssignmentSubmissionDTO">
@@ -113,8 +109,7 @@
           AND writer_user_no = #{writerUserNo}
     </update>
 
-
-    <!-- 제출 무효화 (삭제 대신 상태변경) -->
+    <!-- 제출 무효화 -->
     <update id="disableSubmission">
 
         UPDATE tb_assignment_submission
@@ -127,5 +122,26 @@
           AND writer_user_no = #{userNo}
           AND assignment_submission_status = 0
     </update>
+
+
+    <!-- 홈 화면 요약: 최근 과제 1개 -->
+    <select id="selectRecentAssignment"
+            parameterType="map"
+            resultType="com.example.lms.dto.StudentAssignmentListDTO">
+
+        SELECT
+              a.assignment_no AS assignmentNo
+            , a.assignment_title AS assignmentTitle
+            , DATE_FORMAT(a.assignment_due_date, '%Y-%m-%d') AS assignmentDeadline
+            , IFNULL(s.assignment_score, 0) AS assignmentScore
+            , CASE WHEN s.assignment_submission_no IS NULL THEN 0 ELSE 1 END AS submitted
+        FROM tb_assignment a
+        LEFT JOIN tb_assignment_submission s
+            ON a.assignment_no = s.assignment_no
+           AND s.writer_user_no = #{writerUserNo}
+        WHERE a.course_no = #{courseNo}
+        ORDER BY a.assignment_due_date ASC
+        LIMIT 1
+    </select>
 
 </mapper>

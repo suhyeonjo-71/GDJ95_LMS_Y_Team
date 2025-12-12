@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 
 import com.example.lms.dto.StudentCourseNoticeDTO;
 
-// 학생 공지사항 조회 Mapper
 @Mapper
 public interface StudentCourseNoticeMapper {
 
@@ -22,4 +21,7 @@ public interface StudentCourseNoticeMapper {
 
     // 공지사항 총 개수 조회
     int selectNoticeTotal(int courseNo);
+
+    // 학생 홈 화면용: 최근 공지 3개 조회
+    List<StudentCourseNoticeDTO> selectRecentNotices(int courseNo);
 }

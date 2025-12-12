@@ -468,7 +468,7 @@
 			b.user_name AS professorUserName, -- 교수이름
 			b.user_phone AS userPhone,
 			a.course_score AS courseScore, -- 이수학점
-			a.course_classroom AS courseClassroom, -- 강의실
+			a.classroom AS courseClassroom, -- 강의실
 			a.course_status AS courseStatus,  -- 개설상태코드
 			CASE a.course_status
 			    WHEN 1 THEN '개설'

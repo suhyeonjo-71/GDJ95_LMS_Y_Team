@@ -3,6 +3,7 @@ package com.example.lms.mapper.studentCourse;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.lms.dto.StudentCourseDTO;
 import com.example.lms.dto.StudentTimetableDTO;
@@ -12,8 +13,13 @@ import com.example.lms.dto.StudentTimetableDTO;
 public interface StudentCourseBaseMapper {
 
     // 내 수강 과목 목록 조회
-    List<StudentCourseDTO> selectMyCourseList(int studentUserNo);
+	List<StudentCourseDTO> selectMyCourseList(
+            @Param("studentUserNo") int studentUserNo
+    );
+
 
     // 학생 시간표 조회
-    List<StudentTimetableDTO> selectStudentTimetable(int studentUserNo);
+	List<StudentTimetableDTO> selectStudentTimetable(
+            @Param("studentUserNo") int studentUserNo
+    );
 }

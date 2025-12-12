@@ -13,8 +13,8 @@ public class StudentGradeService {
 
     private final StudentGradeMapper mapper;
 
-    // 학생 성적 조회
-    public StudentGradeDTO getStudentGrade(int courseNo, int studentUserNo) {
-        return mapper.selectStudentGrade(courseNo, studentUserNo);
+    // 홈 화면 요약용 성적 조회
+    public StudentGradeDTO getStudentGradeSummary(int courseNo, int studentUserNo) {
+        return mapper.selectStudentGradeSummary(courseNo, studentUserNo);
     }
 }

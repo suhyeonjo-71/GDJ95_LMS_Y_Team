@@ -19,6 +19,7 @@ public class StudentCourseDTO {
     private Integer courseCapacity;      // 정원
     private Integer courseScore;         // 학점
     private String deptName;			 // 학과
+    private String classroom;
     
     // 강의 시간
     private Integer courseTimeYoil;      // 요일 코드

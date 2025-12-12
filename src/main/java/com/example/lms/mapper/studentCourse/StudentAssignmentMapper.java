@@ -22,8 +22,8 @@ public interface StudentAssignmentMapper {
             @Param("assignmentNo") int assignmentNo,
             @Param("writerUserNo") int writerUserNo);
 
-    // 제출 여부 확인
-    Integer selectSubmissionExists(
+    // 기존 제출 조회
+    AssignmentSubmissionDTO selectMySubmission(
             @Param("assignmentNo") int assignmentNo,
             @Param("writerUserNo") int writerUserNo);
 
@@ -33,13 +33,13 @@ public interface StudentAssignmentMapper {
     // 제출 UPDATE
     void updateSubmission(AssignmentSubmissionDTO dto);
 
-    // 기존 제출 조회
-    AssignmentSubmissionDTO selectMySubmission(
-            @Param("assignmentNo") int assignmentNo,
-            @Param("writerUserNo") int writerUserNo);
-
-    // 제출 전체 무효화 (파일 삭제 + 제출 취소)
+    // 제출 무효화 (삭제 대신 상태 변경)
     void disableSubmission(
             @Param("assignmentNo") int assignmentNo,
             @Param("userNo") int userNo);
+
+    // 홈 화면 요약: 최근 마감 과제 1개
+    List<StudentAssignmentListDTO> selectRecentAssignment(
+            @Param("courseNo") int courseNo,
+            @Param("writerUserNo") int writerUserNo);
 }

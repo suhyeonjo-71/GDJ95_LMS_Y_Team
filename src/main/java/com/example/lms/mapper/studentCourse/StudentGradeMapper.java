@@ -10,7 +10,7 @@ import com.example.lms.dto.StudentGradeDTO;
 public interface StudentGradeMapper {
 
     // 학생 성적 조회
-    StudentGradeDTO selectStudentGrade(
+	StudentGradeDTO selectStudentGradeSummary(
             @Param("courseNo") int courseNo,
             @Param("studentUserNo") int studentUserNo);
 }

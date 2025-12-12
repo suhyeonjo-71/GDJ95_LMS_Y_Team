@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.lms.dto.StudentCourseDTO;
 import com.example.lms.dto.StudentTimetableDTO;
-import com.example.lms.mapper.studentCourse.StudentCourseMapper;
+import com.example.lms.mapper.studentCourse.StudentCourseBaseMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,9 +14,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudentCourseBaseService {
 
-    private final StudentCourseMapper mapper;
+    private final StudentCourseBaseMapper mapper;
 
-    // 내 수강 과목 목록 조회
+    // 내 수강 과목 목록
     public List<StudentCourseDTO> getMyCourseList(int studentUserNo) {
         return mapper.selectMyCourseList(studentUserNo);
     }

@@ -5,9 +5,11 @@
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentGradeMapper">
 
-    <select id="selectStudentGrade"
+    <!-- 학생 성적 요약 조회 -->
+    <select id="selectStudentGradeSummary"
             parameterType="map"
             resultType="com.example.lms.dto.StudentGradeDTO">
+
         SELECT
               student_user_no AS studentUserNo
             , course_no       AS courseNo
@@ -16,6 +18,7 @@
         FROM tb_grade
         WHERE course_no       = #{courseNo}
           AND student_user_no = #{studentUserNo}
+
     </select>
 
 </mapper>

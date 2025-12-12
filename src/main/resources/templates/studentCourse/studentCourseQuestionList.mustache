@@ -1,115 +1,61 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>강의 Q&A 목록</title>
+    <meta charset="UTF-8">
+    <title>강의 Q&A 목록</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
-<link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-<style>
-/* Global */
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-    font-family:'Pretendard', sans-serif;
-    background-color:#F5F7FA;
-    color:#333;
-}
-
-/* Card */
-.card {
-    background-color:#fff;
-    border-radius:12px;
-    padding:30px;
-    margin-bottom:20px;
-    box-shadow:0 4px 20px rgba(30,64,175,0.12);
-}
-
-/* Table */
-.table-wrap {
-    border-radius:10px;
-    overflow:hidden;
-    border:1px solid #E5E7EB;
-}
-table { width:100%; border-collapse:collapse; }
-thead th {
-    background-color:#EFF6FF;
-    color:#1E3A8A;
-    padding:12px;
-    border-bottom:2px solid #DBEAFE;
-    font-weight:600;
-    font-size:14px;
-}
-tbody td {
-    padding:12px;
-    border-bottom:1px solid #E5E7EB;
-    font-size:14px;
-}
-tbody tr:hover {
-    background-color:rgba(37,99,235,0.08);
-}
-
-/* Badge */
-.badge {
-    padding:3px 8px;
-    border-radius:6px;
-    font-size:12px;
-    font-weight:600;
-}
-.badge-green { background:#E8FEEB; color:#1A7F37; }
-.badge-red   { background:#FEECEC; color:#D11A2A; }
-
-/* Pagination */
-.pagination-area a {
-    padding:8px 12px;
-    border-radius:6px;
-    font-size:13px;
-    border:1px solid #D1D5DB;
-    background:white;
-    margin:0 3px;
-    transition:0.25s;
-}
-.pagination-area a:hover {
-    background-color:#2563EB;
-    color:white;
-    border-color:#2563EB;
-}
-.active-page {
-    background-color:#2563EB !important;
-    color:white !important;
-    border-color:#2563EB !important;
-}
-.nav-btn { background-color:#E5EFFE; }
-.nav-btn:hover { background-color:#2563EB; color:white; }
-
-/* Title */
-.page-title {
-    font-size:22px;
-    font-weight:800;
-    color:#1E3A8A;
-}
-
-/* Modal */
-@keyframes fadeIn {
-    from { opacity:0; transform:translateY(10px); }
-    to   { opacity:1; transform:translateY(0); }
-}
-.animate-fadeIn {
-    animation: fadeIn 0.25s ease-out;
-}
-</style>
-
+    <style>
+        body {
+            font-family:'Pretendard', sans-serif;
+            background-color:#F5F7FA;
+        }
+        .card {
+            background:white;
+            border-radius:14px;
+            padding:32px;
+            border:1px solid #E5E7EB;
+            box-shadow:0 4px 12px rgba(0,0,0,0.06);
+        }
+        .page-title {
+            font-size:22px;
+            font-weight:800;
+            color:#1E3A8A;
+        }
+        .table-wrap {
+            border-radius:10px;
+            overflow:hidden;
+            border:1px solid #E5E7EB;
+        }
+        thead th {
+            background-color:#EFF6FF;
+            color:#1E3A8A;
+            padding:12px;
+            font-size:14px;
+            font-weight:600;
+            border-bottom:2px solid #DBEAFE;
+        }
+        tbody td {
+            padding:12px;
+            font-size:14px;
+            border-bottom:1px solid #E5E7EB;
+        }
+        tbody tr:hover {
+            background-color:rgba(37,99,235,0.06);
+            cursor:pointer;
+        }
+    </style>
 </head>
 
 <body>
 
-<!-- Header -->
 {{> studentLayout/studentCoursePageHeader }}
 
-<!-- SubNav -->
 <div class="mt-8 w-full">
     <div class="max-w-6xl mx-auto px-4">
         {{> studentLayout/_studentCourseSubNav }}
@@ -118,152 +64,97 @@ tbody tr:hover {
 
 <main class="max-w-6xl mx-auto px-4 py-10">
 
-<!-- Card -->
-<div class="card">
+    <div class="card">
 
-    <!-- Title + Button -->
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="page-title flex items-center gap-3">
-            <i class="fa-solid fa-circle-question text-blue-600 text-xl"></i>
-            강의 문의사항 목록
-        </h2>
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="page-title flex items-center gap-2">
+                <i class="fa-solid fa-circle-question text-blue-600 text-xl"></i>
+                강의 문의사항 목록
+            </h2>
 
-        <a href="/studentCourseQuestionWriteForm?courseNo={{courseNo}}"
-           class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow text-sm flex items-center gap-2">
-            <i class="fa-solid fa-pen"></i> 문의하기
-        </a>
-    </div>
+            <a href="/studentCourseQuestionWriteForm?courseNo={{courseNo}}"
+               class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow text-sm flex items-center gap-2">
+                <i class="fa-solid fa-pen"></i> 문의하기
+            </a>
+        </div>
 
-    <!-- Table -->
-    <div class="table-wrap">
-        <table>
-            <thead>
-            <tr>
-                <th class="w-16">번호</th>
-                <th>제목</th>
-                <th class="w-28">작성자</th>
-                <th class="w-40">작성일</th>
-                <th class="w-24">상태</th>
-            </tr>
-            </thead>
+        <!-- Table -->
+        <div class="table-wrap">
+            <table class="w-full border-collapse">
+                <thead>
+                <tr>
+                    <th class="w-16">번호</th>
+                    <th>제목</th>
+                    <th class="w-28">작성자</th>
+                    <th class="w-40">작성일</th>
+                    <th class="w-24">상태</th>
+                </tr>
+                </thead>
 
-            <tbody>
+                <tbody>
 
-            {{#questionList}}
-            <tr 
-                onclick="{{#canView}}location.href='/studentCourseQuestionDetail?courseQuestionNo={{courseQuestionNo}}'{{/canView}}
-                         {{^canView}}openPrivateModal(){{/canView}}"
-                class="
-                    {{#canView}}hover:bg-blue-50 cursor-pointer{{/canView}}
-                    {{^canView}}bg-gray-50 cursor-not-allowed{{/canView}}
-                "
-            >
-                <td>{{index}}</td>
-
-                <td class="flex items-center gap-1">
-				    {{#privatePostFlag}}
-				        <i class="fa-solid fa-lock text-gray-400"></i>
-				    {{/privatePostFlag}}
-				
+                {{#questionList}}
+				<tr onclick="
 				    {{#canView}}
-				        <span class="hover:text-blue-600 font-medium">
-				            {{courseQuestionTitle}}
-				        </span>
+				        location.href='/studentCourseQuestionDetail?courseQuestionNo={{questionNo}}'
 				    {{/canView}}
+				">
+				    <td>{{index}}</td>
 				
-				    {{^canView}}
-				        <span class="text-gray-400">
-				            비밀글입니다.
-				        </span>
-				    {{/canView}}
-				</td>
+				    <td class="flex items-center gap-1">
+				
+				        {{#privatePostFlag}}
+				            <i class="fa-solid fa-lock text-gray-400"></i>
+				        {{/privatePostFlag}}
+				
+				        {{#canView}}
+				            <span class="hover:text-blue-600 font-medium">
+				                {{questionTitle}}
+				            </span>
+				        {{/canView}}
+				
+				        {{^canView}}
+				            <span class="text-gray-400">비밀글입니다.</span>
+				        {{/canView}}
+				
+				    </td>
+				
+				    <td>{{writerName}}</td>
+				    <td>{{createdate}}</td>
+				
+				    <td>
+				        {{#answered}}
+				            <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-[11px]">
+				                답변완료
+				            </span>
+				        {{/answered}}
+				
+				        {{^answered}}
+				            <span class="px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full text-[11px]">
+				                미답변
+				            </span>
+				        {{/answered}}
+				    </td>
+				</tr>
+				{{/questionList}}
+				
+				{{^questionList}}
+				<tr>
+				    <td colspan="5" class="text-center py-6 text-gray-500">
+				        등록된 문의가 없습니다.
+				    </td>
+				</tr>
+				{{/questionList}}
 
-                <td>{{writerName}}</td>
-                <td class="text-sm text-gray-600">{{createdate}}</td>
 
-                <td>
-                    {{#answered}}
-                        <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px]">
-				            답변완료
-				        </span>
-                    {{/answered}}
+                </tbody>
+            </table>
+        </div>
 
-                    {{^answered}}
-                        <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[11px]">
-				            미답변
-				        </span>
-                    {{/answered}}
-                </td>
-
-            </tr>
-            {{/questionList}}
-
-            {{^questionList}}
-            <tr>
-                <td colspan="5" class="text-center py-6 text-gray-500">등록된 문의가 없습니다.</td>
-            </tr>
-            {{/questionList}}
-
-            </tbody>
-        </table>
     </div>
-
-    <!-- Pagination -->
-    <div class="flex justify-center mt-8 pagination-area">
-        {{#hasPrev}}
-        <a class="nav-btn" href="?courseNo={{courseNo}}&currentPage=1">« 처음</a>
-        <a class="nav-btn" href="?courseNo={{courseNo}}&currentPage={{prevPage}}">‹ 이전</a>
-        {{/hasPrev}}
-
-        {{#pageList}}
-        <a href="?courseNo={{courseNo}}&currentPage={{page}}"
-           class="{{#current}}active-page{{/current}}">
-            {{page}}
-        </a>
-        {{/pageList}}
-
-        {{#hasNext}}
-        <a class="nav-btn" href="?courseNo={{courseNo}}&currentPage={{nextPage}}">다음 ›</a>
-        <a class="nav-btn" href="?courseNo={{courseNo}}&currentPage={{lastPage}}">마지막 »</a>
-        {{/hasNext}}
-    </div>
-
-</div>
 
 </main>
-
-<!-- Private Modal -->
-<div id="privateModal"
-     class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-
-    <div class="bg-white rounded-2xl shadow-xl p-8 w-[360px] animate-fadeIn">
-        <h3 class="text-lg font-bold text-gray-900 mb-2">비밀글입니다</h3>
-
-        <p class="text-sm text-gray-600 leading-6">
-            이 글은 작성자와 담당 교수만 열람할 수 있습니다.
-        </p>
-
-        <div class="flex justify-end gap-3 mt-6">
-            <button onclick="closePrivateModal()"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                확인
-            </button>
-        </div>
-    </div>
-
-</div>
-
-<script>
-function openPrivateModal() {
-    document.getElementById("privateModal").classList.remove("hidden");
-}
-function closePrivateModal() {
-    document.getElementById("privateModal").classList.add("hidden");
-}
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closePrivateModal();
-});
-</script>
 
 </body>
 </html>

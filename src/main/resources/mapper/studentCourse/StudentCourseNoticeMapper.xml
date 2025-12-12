@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseNoticeMapper">
 
+    <!-- 공지사항 목록 (페이징) -->
     <select id="selectNoticeList"
+            parameterType="map"
             resultType="com.example.lms.dto.StudentCourseNoticeDTO">
         SELECT
-              course_notice_no    AS courseNoticeNo
+              course_notice_no AS courseNoticeNo
             , course_notice_title AS courseNoticeTitle
             , DATE_FORMAT(createdate, '%Y-%m-%d') AS createdate
         FROM tb_course_notice
@@ -17,26 +18,44 @@
         LIMIT #{startRow}, #{rowPerPage}
     </select>
 
+    <!-- 공지 상세 -->
     <select id="selectNoticeDetail"
-            resultType="com.example.lms.dto.StudentCourseNoticeDTO">
-        SELECT
-              n.course_notice_no     AS courseNoticeNo
-            , n.course_no            AS courseNo
-            , n.course_notice_title  AS courseNoticeTitle
-            , n.course_notice_content AS courseNoticeContent
-            , u.user_name            AS writerUserName
-            , DATE_FORMAT(n.createdate, '%Y-%m-%d') AS createdate
-        FROM tb_course_notice n
-        LEFT JOIN tb_sysuser u
-            ON n.writer_user_no = u.user_no
-        WHERE n.course_notice_no = #{courseNoticeNo}
-    </select>
-
+	        parameterType="int"
+	        resultType="com.example.lms.dto.StudentCourseNoticeDTO">
+	
+	    SELECT
+	          n.course_notice_no AS courseNoticeNo
+	        , n.course_notice_title AS courseNoticeTitle
+	        , n.course_notice_content AS courseNoticeContent
+	        , DATE_FORMAT(n.createdate, '%Y-%m-%d %H:%i:%s') AS createdate
+	        , u.user_name AS writerUserName
+	    FROM tb_course_notice n
+	    LEFT JOIN tb_sysuser u ON n.writer_user_no = u.user_no
+	    WHERE n.course_notice_no = #{courseNoticeNo}
+	
+	</select>
+	
+    <!-- 공지 총 개수 -->
     <select id="selectNoticeTotal"
+            parameterType="int"
             resultType="int">
         SELECT COUNT(*)
         FROM tb_course_notice
         WHERE course_no = #{courseNo}
+    </select>
+
+    <!-- 홈 화면용: 최근 공지 3개 -->
+    <select id="selectRecentNotices"
+            parameterType="int"
+            resultType="com.example.lms.dto.StudentCourseNoticeDTO">
+        SELECT
+              course_notice_no AS courseNoticeNo
+            , course_notice_title AS courseNoticeTitle
+            , DATE_FORMAT(createdate, '%Y-%m-%d') AS createdate
+        FROM tb_course_notice
+        WHERE course_no = #{courseNo}
+        ORDER BY createdate DESC
+        LIMIT 3
     </select>
 
 </mapper>

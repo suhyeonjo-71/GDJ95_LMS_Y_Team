@@ -21,8 +21,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudentCourseBaseController {
 
-    private final StudentCourseBaseService service;
-
+	private final StudentCourseBaseService service;
+	
     // 내 수강 과목 목록
     @GetMapping("/myCourses")
     public String myCourses(HttpSession session, Model model) {
@@ -32,21 +32,19 @@ public class StudentCourseBaseController {
 
         List<StudentCourseDTO> courseList = service.getMyCourseList(loginUser.getUserNo());
         model.addAttribute("courseList", courseList);
-        
-        // HEADER 표시용
+
+        // HEADER
         model.addAttribute("pageTitle", "내 수강과목");
-        model.addAttribute("pageDescription", "현재 수강 중인 강좌 목록을 확인할 수 있습니다.");
+        model.addAttribute("pageDescription", "현재 수강 중인 강의 목록을 확인할 수 있습니다.");
         model.addAttribute("loginUserName", loginUser.getUserName());
-        
-        model.addAttribute("nav_enrollment", "text-blue-600 border-blue-600");
-        
+
+        // NAV 활성화
+        model.addAttribute("nav_myCourses", true);
 
         return "studentCourse/myCourses";
     }
 
-    // ---------------------------------------------------------
     // 학생 시간표
-    // ---------------------------------------------------------
     @GetMapping("/studentTimetable")
     public String studentTimetable(HttpSession session, Model model) {
 
@@ -56,6 +54,7 @@ public class StudentCourseBaseController {
         List<StudentTimetableDTO> timetableList =
                 service.getStudentTimetable(loginUser.getUserNo());
 
+        // 5일 × 8교시
         StudentTimetableDTO[][] grid = new StudentTimetableDTO[5][8];
         for (StudentTimetableDTO t : timetableList) {
             int yIndex = t.getCourseTimeYoil() - 1;
@@ -64,6 +63,7 @@ public class StudentCourseBaseController {
             }
         }
 
+        // Mustache Grid 변환
         List<Map<String, Object>> periods = new ArrayList<>();
         for (int p = 1; p <= 8; p++) {
             Map<String, Object> periodRow = new HashMap<>();
@@ -80,14 +80,15 @@ public class StudentCourseBaseController {
 
         model.addAttribute("periods", periods);
         model.addAttribute("grid", grid);
-        
-        // HEADER 표시용
-        model.addAttribute("pageTitle", "내 시간표");
-        model.addAttribute("pageDescription", "이번 학기의 개인 시간표를 확인할 수 있습니다.");
-        model.addAttribute("loginUserName", loginUser.getUserName());
-        
-        model.addAttribute("nav_enrollment", "text-blue-600 border-blue-600");
 
-        return "enrollment/studentTimetable";
+        // HEADER
+        model.addAttribute("pageTitle", "내 시간표");
+        model.addAttribute("pageDescription", "이번 학기의 시간표를 한눈에 확인할 수 있습니다.");
+        model.addAttribute("loginUserName", loginUser.getUserName());
+
+        // NAV 활성화
+        model.addAttribute("nav_timetable", true);
+
+        return "studentCourse/studentTimetable";
     }
 }

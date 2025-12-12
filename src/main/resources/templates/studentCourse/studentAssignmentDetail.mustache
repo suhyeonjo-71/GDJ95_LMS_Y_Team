@@ -66,7 +66,16 @@
             <i class="fa-solid fa-circle-check"></i>
             제출 완료 ({{detail.submittedDate}})
         </div>
-
+        
+		{{#detail.submitted}}
+		<section class="card">
+		    <h2 class="text-lg font-semibold mb-3">제출한 내용</h2>
+		    <div class="whitespace-pre-line text-gray-800 leading-relaxed">
+		        {{detail.assignmentSubmissionContent}}
+		    </div>
+		</section>
+		{{/detail.submitted}}
+		
         <!-- 제출 파일 -->
         {{#detail.assignmentSubmissionFileUrl}}
         <div class="mt-2 text-sm flex items-center gap-2">

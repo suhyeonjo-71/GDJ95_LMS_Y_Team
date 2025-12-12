@@ -13,7 +13,7 @@ public class StudentTimetableDTO {
 
     private Integer courseNo;        // 강의 번호
     private String  courseName;      // 강의명
-    private String  courseClassroom; // 강의실
+    private String  classroom; // 강의실
 
     private Integer courseTimeYoil;  // 요일 코드 (1=월~5=금)
     private Integer courseTimeStart; // 시작 교시

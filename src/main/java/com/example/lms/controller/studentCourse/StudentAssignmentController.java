@@ -15,7 +15,7 @@ import com.example.lms.dto.StudentAssignmentListDTO;
 import com.example.lms.dto.StudentCourseDetailDTO;
 import com.example.lms.dto.SysUserDTO;
 import com.example.lms.service.studentCourse.StudentAssignmentService;
-import com.example.lms.service.studentCourse.StudentCourseService;
+import com.example.lms.service.studentCourse.StudentCourseInfoService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +24,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudentAssignmentController {
 
-    private final StudentAssignmentService service;
-    private final StudentCourseService studentCourseService;
+	private final StudentAssignmentService service;
+	private final StudentCourseInfoService infoService;
 
     private final String UPLOAD_DIR = "C:/lmsUpload/assignment/";
 
-
-    // ---------------------------------------------------------
-    // 📌 학생 과제 목록 페이지
-    // ---------------------------------------------------------
+    // 학생 과제 목록
     @GetMapping("/student/assignment/list")
     public String assignmentList(
             @RequestParam int courseNo,
@@ -43,8 +40,10 @@ public class StudentAssignmentController {
         if (user == null) return "redirect:/login";
 
         StudentCourseDetailDTO courseHeader =
-                studentCourseService.getStudentCourseDetail(courseNo);
+                infoService.getCourseDetail(courseNo);
+
         model.addAttribute("course", courseHeader);
+        model.addAttribute("courseNo", courseNo);
         model.addAttribute("nav_assignment", true);
 
         List<StudentAssignmentListDTO> list =
@@ -55,10 +54,7 @@ public class StudentAssignmentController {
         return "studentCourse/studentAssignmentList";
     }
 
-
-    // ---------------------------------------------------------
-    // 📌 학생 과제 상세 페이지
-    // ---------------------------------------------------------
+    // 학생 과제 상세
     @GetMapping("/student/assignment/detail")
     public String assignmentDetail(
             @RequestParam int assignmentNo,
@@ -69,14 +65,13 @@ public class StudentAssignmentController {
         SysUserDTO user = (SysUserDTO) session.getAttribute("loginUser");
         if (user == null) return "redirect:/login";
 
-        // 🔥 course 헤더 데이터 조회
         StudentCourseDetailDTO courseHeader =
-                studentCourseService.getStudentCourseDetail(courseNo);
+                infoService.getCourseDetail(courseNo);
 
-        // 🔥 course 를 모델에 넣어야 함
         model.addAttribute("course", courseHeader);
+        model.addAttribute("courseNo", courseNo);
+        model.addAttribute("nav_assignment", true);
 
-        // 과제 상세
         StudentAssignmentDetailDTO detail =
                 service.getAssignmentDetail(assignmentNo, user.getUserNo());
 
@@ -85,11 +80,7 @@ public class StudentAssignmentController {
         return "studentCourse/studentAssignmentDetail";
     }
 
-
-
-    // ---------------------------------------------------------
-    // 📌 제출 / 수정 처리
-    // ---------------------------------------------------------
+    // 과제 제출/수정
     @PostMapping("/student/assignment/submit")
     public String submitAssignment(
             @RequestParam int assignmentNo,
@@ -101,18 +92,39 @@ public class StudentAssignmentController {
         SysUserDTO user = (SysUserDTO) session.getAttribute("loginUser");
         if (user == null) return "redirect:/login";
 
+        System.out.println("\n================= [DEBUG] SUBMIT ASSIGNMENT =================");
+        System.out.println("assignmentNo = " + assignmentNo);
+        System.out.println("courseNo = " + courseNo);
+        System.out.println("content = \"" + content + "\"");
+        System.out.println("file != null ? " + (file != null));
+        System.out.println("file.isEmpty() ? " + (file != null && file.isEmpty()));
+
         AssignmentSubmissionDTO old =
                 service.getSubmission(assignmentNo, user.getUserNo());
+        System.out.println("old submission = " + old);
+        if (old != null) {
+            System.out.println("old.submissionNo = " + old.getAssignmentSubmissionNo());
+            System.out.println("old.content = " + old.getAssignmentSubmissionContent());
+        }
 
         AssignmentSubmissionDTO dto = new AssignmentSubmissionDTO();
         dto.setAssignmentNo(assignmentNo);
         dto.setWriterUserNo(user.getUserNo());
         dto.setAssignmentSubmissionContent(content);
 
-        // 파일 업로드 처리
+        // submissionNo set 확인
+        if (old != null) {
+            dto.setAssignmentSubmissionNo(old.getAssignmentSubmissionNo());
+            System.out.println("SET dto.submissionNo = " + old.getAssignmentSubmissionNo());
+        } else {
+            System.out.println("NEW submission → submissionNo 없음 → INSERT 예정");
+        }
+
+        System.out.println("==============================================================\n");
+
+        
         if (file != null && !file.isEmpty()) {
 
-            // 기존 파일 삭제
             if (old != null && old.getAssignmentSubmissionFileUrl() != null) {
                 String oldUrl = old.getAssignmentSubmissionFileUrl();
                 String oldName = oldUrl.substring(oldUrl.lastIndexOf("/") + 1);
@@ -120,20 +132,15 @@ public class StudentAssignmentController {
                 if (oldFile.exists()) oldFile.delete();
             }
 
-            // 폴더 확인
             File dir = new File(UPLOAD_DIR);
             if (!dir.exists()) dir.mkdirs();
 
-            // 저장 파일명
             String fileName = file.getOriginalFilename();
             File target = new File(UPLOAD_DIR + fileName);
             file.transferTo(target);
 
-            // DB에는 URL 형태로 저장
             dto.setAssignmentSubmissionFileUrl("/upload/assignment/" + fileName);
-        }
-        else {
-            // 파일 유지
+        } else {
             if (old != null) {
                 dto.setAssignmentSubmissionFileUrl(old.getAssignmentSubmissionFileUrl());
             }
@@ -145,7 +152,7 @@ public class StudentAssignmentController {
                 "&courseNo=" + courseNo;
     }
 
-    // 학생 제출 파일 삭제
+    // 제출 파일 삭제 + 제출 취소
     @PostMapping("/student/assignment/fileDelete")
     public String deleteAssignmentFile(
             @RequestParam int assignmentNo,
@@ -160,19 +167,16 @@ public class StudentAssignmentController {
 
         if (old != null && old.getAssignmentSubmissionFileUrl() != null) {
 
-            // 실제 파일 삭제
             String url = old.getAssignmentSubmissionFileUrl();
             String fileName = url.substring(url.lastIndexOf("/") + 1);
 
             File target = new File(UPLOAD_DIR + fileName);
             if (target.exists()) target.delete();
 
-            // 제출 취소 (status=1 + file/content null)
             service.cancelSubmission(assignmentNo, user.getUserNo());
         }
 
         return "redirect:/student/assignment/detail?assignmentNo=" + assignmentNo +
                 "&courseNo=" + courseNo;
     }
-
 }

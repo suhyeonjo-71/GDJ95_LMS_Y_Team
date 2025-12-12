@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.lms.dto.CourseQuestionDTO;
 import com.example.lms.dto.StudentCourseDetailDTO;
+import com.example.lms.dto.StudentCourseQuestionDetailDTO;
+import com.example.lms.dto.StudentQuestionDTO;
 import com.example.lms.dto.SysUserDTO;
+import com.example.lms.service.studentCourse.StudentCourseInfoService;
 import com.example.lms.service.studentCourse.StudentCourseQuestionService;
-import com.example.lms.service.studentCourse.StudentCourseService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -25,61 +27,57 @@ import lombok.RequiredArgsConstructor;
 public class StudentCourseQuestionController {
 
     private final StudentCourseQuestionService service;
-    private final StudentCourseService studentCourseService;
-    
+    private final StudentCourseInfoService infoService;
+
     // 문의 목록
     @GetMapping("/studentCourseQuestionList")
     public String courseQuestionList(
             @RequestParam int courseNo,
             @RequestParam(defaultValue = "1") int currentPage,
-            Model model, HttpSession session) {
+            Model model,
+            HttpSession session) {
 
         SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login";
 
-        StudentCourseDetailDTO courseHeader =
-        		studentCourseService.getStudentCourseHeaderInfo(courseNo, loginUser.getUserNo());
-
+        // 통일된 헤더
+        StudentCourseDetailDTO courseHeader = infoService.getCourseDetail(courseNo);
         model.addAttribute("course", courseHeader);
         model.addAttribute("courseNo", courseNo);
         model.addAttribute("nav_qa", true);
 
-        // 페이징 계산
+        // 페이징
         int rowPerPage = 10;
         int totalCount = service.getTotalQuestionCount(courseNo);
-        int lastPage = (int) Math.ceil((double) totalCount / rowPerPage);
-        if (lastPage == 0) lastPage = 1;
+        int lastPage = Math.max((int) Math.ceil((double) totalCount / rowPerPage), 1);
 
-        if (currentPage < 1) currentPage = 1;
-        if (currentPage > lastPage) currentPage = lastPage;
+        currentPage = Math.max(1, Math.min(currentPage, lastPage));
 
-        List<CourseQuestionDTO> list =
+        List<StudentQuestionDTO> list =
                 service.getPagedQuestionList(courseNo, loginUser, currentPage, rowPerPage);
 
-        int pagePerBlock = 5;
-        int blockStartPage = ((currentPage - 1) / pagePerBlock) * pagePerBlock + 1;
-        int blockEndPage = Math.min(blockStartPage + pagePerBlock - 1, lastPage);
+        int blockSize = 5;
+        int blockStart = ((currentPage - 1) / blockSize) * blockSize + 1;
+        int blockEnd = Math.min(blockStart + blockSize - 1, lastPage);
 
-        boolean hasPrev = blockStartPage > 1;
-        boolean hasNext = blockEndPage < lastPage;
-        int prevPage = blockStartPage - 1;
-        int nextPage = blockEndPage + 1;
-
-        // 페이지 리스트 구성
         List<Map<String, Object>> pageList = new ArrayList<>();
-        for (int i = blockStartPage; i <= blockEndPage; i++) {
-            Map<String, Object> page = new HashMap<>();
-            page.put("page", i);
-            page.put("current", (i == currentPage));
-            pageList.add(page);
+        for (int i = blockStart; i <= blockEnd; i++) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("page", i);
+            map.put("current", i == currentPage);
+            pageList.add(map);
         }
 
         model.addAttribute("questionList", list);
         model.addAttribute("pageList", pageList);
-        model.addAttribute("hasPrev", hasPrev);
-        model.addAttribute("hasNext", hasNext);
-        if (hasPrev) model.addAttribute("prevPage", prevPage);
-        if (hasNext) model.addAttribute("nextPage", nextPage);
+        model.addAttribute("hasPrev", blockStart > 1);
+        model.addAttribute("hasNext", blockEnd < lastPage);
+        model.addAttribute("prevPage", blockStart - 1);
+        model.addAttribute("nextPage", blockEnd + 1);
+        System.out.println("=== DEBUG:list 타입 ===");
+        for (Object o : list) {
+            System.out.println(o.getClass().getName());
+        }
 
         return "studentCourse/studentCourseQuestionList";
     }
@@ -93,29 +91,37 @@ public class StudentCourseQuestionController {
 
         SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login";
-
-        CourseQuestionDTO question =
+        StudentCourseQuestionDetailDTO dto =
                 service.getQuestionDetail(courseQuestionNo, loginUser);
-        
+
+        System.out.println("=== DEBUG: 상세 DTO 값 확인 ===");
+        System.out.println("privatePost = " + dto.getPrivatePost());
+        System.out.println("privatePostFlag = " + dto.isPrivatePostFlag());
+        System.out.println("canView = " + dto.isCanView());
+        System.out.println("answered = " + dto.isAnswered());
+        System.out.println("title = " + dto.getCourseQuestionTitle());
+        StudentCourseQuestionDetailDTO question =
+                service.getQuestionDetail(courseQuestionNo, loginUser);
+
         if (!question.isCanView()) {
             return "redirect:/studentCourseQuestionList?courseNo=" + question.getCourseNo();
         }
-        
-        StudentCourseDetailDTO courseHeader =
-        		 studentCourseService.getStudentCourseHeaderInfo(question.getCourseNo(), loginUser.getUserNo());
 
+        int courseNo = question.getCourseNo();
+
+        StudentCourseDetailDTO courseHeader = infoService.getCourseDetail(courseNo);
         model.addAttribute("course", courseHeader);
+        model.addAttribute("courseNo", courseNo);
         model.addAttribute("nav_qa", true);
-        model.addAttribute("courseNo", question.getCourseNo());
-
-        boolean isOwner =
-                loginUser.getUserNo() == question.getWriterUserNo();
-        model.addAttribute("isOwner", isOwner);
-
+        
         model.addAttribute("question", question);
+
+        model.addAttribute("isOwner",
+                loginUser.getUserNo() == question.getWriterUserNo());
 
         return "studentCourse/studentCourseQuestionDetail";
     }
+
 
     // 문의 작성 폼
     @GetMapping("/studentCourseQuestionWriteForm")
@@ -127,8 +133,7 @@ public class StudentCourseQuestionController {
         SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login";
 
-        StudentCourseDetailDTO courseHeader =
-        		 studentCourseService.getStudentCourseHeaderInfo(courseNo, loginUser.getUserNo());
+        StudentCourseDetailDTO courseHeader = infoService.getCourseDetail(courseNo);
 
         model.addAttribute("course", courseHeader);
         model.addAttribute("courseNo", courseNo);
@@ -141,8 +146,7 @@ public class StudentCourseQuestionController {
     @PostMapping("/studentCourseQuestionWrite")
     public String write(CourseQuestionDTO dto, HttpSession session) {
 
-        SysUserDTO loginUser =
-                (SysUserDTO) session.getAttribute("loginUser");
+        SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login";
 
         dto.setWriterUserNo(loginUser.getUserNo());
@@ -157,19 +161,20 @@ public class StudentCourseQuestionController {
             @RequestParam int courseQuestionNo,
             HttpSession session,
             Model model) {
-
-        SysUserDTO loginUser =
-                (SysUserDTO) session.getAttribute("loginUser");
+        SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login";
 
-        CourseQuestionDTO q = service.getQuestionDetail(courseQuestionNo, loginUser);
-
-        StudentCourseDetailDTO courseHeader =
-        		 studentCourseService.getStudentCourseHeaderInfo(q.getCourseNo(), loginUser.getUserNo());
+        StudentCourseQuestionDetailDTO q = service.getQuestionDetail(courseQuestionNo, loginUser);
+        int courseNo = q.getCourseNo();
+        System.out.println("=== DEBUG: Controller 전달된 수정값 ===");
+        System.out.println("dto.privatePost = " + q.getPrivatePost());
+        System.out.println("dto.courseQuestionTitle = " + q.getCourseQuestionTitle());
+        System.out.println("dto.courseQuestionContent = " + q.getCourseQuestionContent());
+        StudentCourseDetailDTO courseHeader = infoService.getCourseDetail(courseNo);
 
         model.addAttribute("course", courseHeader);
+        model.addAttribute("courseNo", courseNo);
         model.addAttribute("nav_qa", true);
-        model.addAttribute("courseNo", q.getCourseNo());
         model.addAttribute("question", q);
 
         return "studentCourse/studentCourseQuestionEditForm";
@@ -179,8 +184,7 @@ public class StudentCourseQuestionController {
     @PostMapping("/studentCourseQuestionEdit")
     public String edit(CourseQuestionDTO dto, HttpSession session) {
 
-        SysUserDTO loginUser =
-                (SysUserDTO) session.getAttribute("loginUser");
+        SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login";
 
         boolean ok = service.updateQuestion(dto, loginUser);
@@ -195,8 +199,7 @@ public class StudentCourseQuestionController {
             @RequestParam int courseQuestionNo,
             HttpSession session) {
 
-        SysUserDTO loginUser =
-                (SysUserDTO) session.getAttribute("loginUser");
+        SysUserDTO loginUser = (SysUserDTO) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/login";
 
         int courseNo = service.getCourseNoByQuestion(courseQuestionNo);

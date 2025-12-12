@@ -1,5 +1,7 @@
 package com.example.lms.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 /**
@@ -12,24 +14,30 @@ import lombok.Data;
 public class StudentQuestionDTO {
 
     // 기본 질문 정보
-    private Integer questionNo;        // 질문 번호
-    private String  questionTitle;     // 질문 제목
-    private String  createdate;        // 작성일
+    private Integer questionNo;        
+    private String  questionTitle;     
+    private String  questionContent;
+    private String  createdate;
 
-    // 답변 관련 정보
-    private Boolean answered;          // 답변 여부 (true = 답변 있음)
+    // 답변 여부
+    private Boolean answered;          
 
-    // 비밀글 여부 (0=공개,1=비공개)
+    // 비밀글 여부
     private Integer privatePost;
     public boolean isPrivatePost() {
         return privatePost != null && privatePost == 1;
     }
-    
-    // 비밀글 여부 Boolean (템플릿용)
+
     private Boolean privatePostFlag;
-    
-    // 작성자 및 권한
-    private Integer writerUserNo;      // 작성자 번호
+    private Boolean canView;
+
+    // 작성자 정보
+    private Integer writerUserNo;
     private String writerName;
-    private Boolean canView;           // 학생이 열람 가능한지 여부
+
+    // 상세 조회용 댓글 리스트
+    private List<CourseQuestionAnswerDTO> answerList;
+
+    // 목록 표시용 index (옵션)
+    private Integer index;
 }

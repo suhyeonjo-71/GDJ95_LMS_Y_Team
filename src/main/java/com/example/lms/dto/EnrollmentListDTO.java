@@ -20,7 +20,7 @@ public class EnrollmentListDTO {
     private String  courseName;
     private Integer courseScore;
     private Integer courseCapacity;
-
+    private String classroom;
     // 교수명
     private String professorName;
 

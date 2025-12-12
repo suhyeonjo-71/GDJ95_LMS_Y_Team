@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.lms.mapper.studentCourse.StudentCourseQuestionMapper">
 
-    <select id="countQuestion"
-            parameterType="int"
-            resultType="int">
+    <!-- 전체 개수 -->
+    <select id="countQuestion" resultType="int">
         SELECT COUNT(*)
         FROM tb_course_question
         WHERE course_no = #{courseNo}
     </select>
 
-
+    <!-- 페이징 목록 -->
     <select id="selectPagedQuestionList"
             resultType="com.example.lms.dto.CourseQuestionDTO">
         SELECT
@@ -23,7 +21,7 @@
             , u.user_name              AS writerName
             , q.course_question_title  AS courseQuestionTitle
             , q.course_question_status AS courseQuestionStatus
-            , q.createdate             AS createdate
+            , DATE_FORMAT(q.createdate, '%Y-%m-%d %H:%i') AS createdate
             , q.is_private             AS privatePost
             , (
                 SELECT COUNT(*)
@@ -31,40 +29,14 @@
                 WHERE a.course_question_no = q.course_question_no
               ) > 0 AS answered
         FROM tb_course_question q
-        LEFT JOIN tb_sysuser u
-            ON q.writer_user_no = u.user_no
+        LEFT JOIN tb_sysuser u ON q.writer_user_no = u.user_no
         WHERE q.course_no = #{courseNo}
         ORDER BY q.createdate DESC
         LIMIT #{startRow}, #{rowPerPage}
     </select>
 
-
-    <select id="selectQuestionList"
-            resultType="com.example.lms.dto.CourseQuestionDTO">
-        SELECT
-              q.course_question_no     AS courseQuestionNo
-            , q.course_no              AS courseNo
-            , q.writer_user_no         AS writerUserNo
-            , u.user_name              AS writerName
-            , q.course_question_title  AS courseQuestionTitle
-            , q.course_question_status AS courseQuestionStatus
-            , q.createdate             AS createdate
-            , CAST(q.is_private AS SIGNED) AS privatePost
-            , (
-                SELECT COUNT(*)
-                FROM tb_course_question_answer a
-                WHERE a.course_question_no = q.course_question_no
-              ) > 0 AS answered
-        FROM tb_course_question q
-        LEFT JOIN tb_sysuser u
-            ON q.writer_user_no = u.user_no
-        WHERE q.course_no = #{courseNo}
-        ORDER BY q.createdate DESC
-    </select>
-
-
+    <!-- 상세 조회 -->
     <select id="selectQuestionDetail"
-            parameterType="int"
             resultType="com.example.lms.dto.CourseQuestionDTO">
         SELECT
               q.course_question_no      AS courseQuestionNo
@@ -74,22 +46,20 @@
             , q.course_question_title   AS courseQuestionTitle
             , q.course_question_content AS courseQuestionContent
             , q.course_question_status  AS courseQuestionStatus
-            , q.createdate              AS createdate
-            , CASE WHEN q.is_private = 1 THEN TRUE ELSE FALSE END AS privatePost
+            , DATE_FORMAT(q.createdate, '%Y-%m-%d %H:%i') AS createdate
+            , q.is_private              AS privatePost
             , (
                 SELECT COUNT(*)
                 FROM tb_course_question_answer a
                 WHERE a.course_question_no = q.course_question_no
               ) > 0 AS answered
         FROM tb_course_question q
-        LEFT JOIN tb_sysuser u
-            ON q.writer_user_no = u.user_no
+        LEFT JOIN tb_sysuser u ON q.writer_user_no = u.user_no
         WHERE q.course_question_no = #{courseQuestionNo}
     </select>
 
-
+    <!-- 댓글 리스트 -->
     <select id="selectAnswerList"
-            parameterType="int"
             resultType="com.example.lms.dto.CourseQuestionAnswerDTO">
         SELECT
               a.answer_no          AS answerNo
@@ -98,17 +68,15 @@
             , u.user_name          AS writerName
             , a.writer_role        AS writerRole
             , a.answer_content     AS answerContent
-            , a.createdate         AS createdate
+            , DATE_FORMAT(a.createdate, '%Y-%m-%d %H:%i') AS createdate
         FROM tb_course_question_answer a
-        LEFT JOIN tb_sysuser u
-            ON a.writer_user_no = u.user_no
+        LEFT JOIN tb_sysuser u ON a.writer_user_no = u.user_no
         WHERE a.course_question_no = #{courseQuestionNo}
         ORDER BY a.createdate ASC
     </select>
 
-
-    <insert id="insertQuestion"
-            parameterType="com.example.lms.dto.CourseQuestionDTO">
+    <!-- 문의 생성 -->
+    <insert id="insertQuestion" parameterType="com.example.lms.dto.CourseQuestionDTO">
         INSERT INTO tb_course_question (
               course_no
             , writer_user_no
@@ -126,7 +94,7 @@
         )
     </insert>
 
-
+    <!-- 댓글 생성 -->
     <insert id="insertAnswer">
         INSERT INTO tb_course_question_answer (
               course_question_no
@@ -143,69 +111,60 @@
         )
     </insert>
 
-
-    <select id="isOwner"
-            resultType="boolean">
+    <!-- 본인 글 여부 -->
+    <select id="isOwner" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM tb_course_question
         WHERE course_question_no = #{courseQuestionNo}
           AND writer_user_no = #{userNo}
     </select>
 
-
-    <update id="updateQuestion"
-            parameterType="com.example.lms.dto.CourseQuestionDTO">
+    <!-- 수정 -->
+    <update id="updateQuestion">
         UPDATE tb_course_question
         SET
               course_question_title   = #{courseQuestionTitle}
             , course_question_content = #{courseQuestionContent}
-            , is_private              = #{privatePost}
+            , is_private = #{privatePost}
         WHERE course_question_no = #{courseQuestionNo}
     </update>
 
+    <!-- 문의 답변 삭제 -->
+	<delete id="deleteAnswersByQuestionNo">
+	    DELETE FROM tb_course_question_answer
+	    WHERE course_question_no = #{courseQuestionNo}
+	</delete>
+    
+    <!-- 문의 삭제 -->
+	<delete id="deleteQuestion">
+	    DELETE FROM tb_course_question
+	    WHERE course_question_no = #{courseQuestionNo}
+	</delete>
 
-    <delete id="deleteQuestion">
-        DELETE FROM tb_course_question
-        WHERE course_question_no = #{courseQuestionNo}
-    </delete>
-
-
-    <select id="selectCourseNoByQuestion"
-            parameterType="int"
-            resultType="int">
+    <!-- courseNo 조회 -->
+    <select id="selectCourseNoByQuestion" resultType="int">
         SELECT course_no
         FROM tb_course_question
         WHERE course_question_no = #{courseQuestionNo}
     </select>
 
-
-    <select id="isAnswerOwner"
-            resultType="boolean">
+    <!-- 댓글 작성자 여부 -->
+    <select id="isAnswerOwner" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM tb_course_question_answer
         WHERE answer_no = #{answerNo}
           AND writer_user_no = #{profNo}
     </select>
 
-
-    <update id="updateAnswer"
-            parameterType="com.example.lms.dto.CourseQuestionAnswerDTO">
-        UPDATE tb_course_question_answer
-        SET
-              answer_content = #{answerContent}
-            , updatedate     = NOW()
-        WHERE answer_no = #{answerNo}
-    </update>
-
-
+    <!-- 홈 화면: 최근 3개 -->
     <select id="selectRecentQuestionsForStudent"
             resultType="com.example.lms.dto.CourseQuestionDTO">
         SELECT
-              q.course_question_no     AS courseQuestionNo
-            , q.course_question_title  AS courseQuestionTitle
+              q.course_question_no    AS courseQuestionNo
+            , q.course_question_title AS courseQuestionTitle
             , DATE_FORMAT(q.createdate, '%Y-%m-%d') AS createdate
-            , q.writer_user_no         AS writerUserNo
-            , CASE WHEN q.is_private = 1 THEN TRUE ELSE FALSE END AS privatePost
+            , q.writer_user_no        AS writerUserNo
+            , q.is_private            AS privatePost
             , (
                 SELECT COUNT(*)
                 FROM tb_course_question_answer qa

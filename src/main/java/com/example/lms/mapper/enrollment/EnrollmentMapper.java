@@ -11,14 +11,14 @@ import com.example.lms.dto.EnrollmentListDTO;
 @Mapper
 public interface EnrollmentMapper {
 
-    // 시간표 겹침 체크
-    int countTimeOverlap(
+    // 현재 신청 상태 확인 (0=신청중, 1=취소, null=기록 없음)
+    Integer selectEnrollmentStatus(
             @Param("studentUserNo") int studentUserNo,
             @Param("courseNo") int courseNo
     );
 
-    // 중복 신청 체크
-    int countEnrollment(
+    // 이미 취소된 기록을 다시 활성화
+    int updateEnrollmentStatus(
             @Param("studentUserNo") int studentUserNo,
             @Param("courseNo") int courseNo
     );
@@ -26,19 +26,25 @@ public interface EnrollmentMapper {
     // 신규 신청
     int insertEnrollment(EnrollmentDTO dto);
 
-    // 신청 내역 페이징 조회
-    List<EnrollmentListDTO> selectEnrollmentListPaged(
+    // 수강 취소
+    int cancelEnrollment(
+            @Param("studentUserNo") int studentUserNo,
+            @Param("enrollmentNo") int enrollmentNo
+    );
+
+    // 신청 내역 조회 (페이징)
+    List<EnrollmentListDTO> selectEnrollmentList(
             @Param("studentUserNo") int studentUserNo,
             @Param("startRow") int startRow,
             @Param("rowPerPage") int rowPerPage
     );
 
-    // 전체 row
-    int countEnrollmentList(@Param("studentUserNo") int studentUserNo);
-
-    // 수강 취소
-    int cancelEnrollment(
+    // 전체 개수 조회
+    int selectEnrollmentTotalCount(int studentUserNo);
+    
+    // 시간표 중복
+    int countTimeOverlap(
             @Param("studentUserNo") int studentUserNo,
-            @Param("enrollmentNo") int enrollmentNo
+            @Param("courseNo") int courseNo
     );
 }

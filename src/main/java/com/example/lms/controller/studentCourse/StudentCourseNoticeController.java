@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.lms.dto.StudentCourseDetailDTO;
 import com.example.lms.dto.StudentCourseNoticeDTO;
 import com.example.lms.dto.SysUserDTO;
+import com.example.lms.service.studentCourse.StudentCourseInfoService;
 import com.example.lms.service.studentCourse.StudentCourseNoticeService;
-import com.example.lms.service.studentCourse.StudentCourseService;
-
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class StudentCourseNoticeController {
 
     private final StudentCourseNoticeService service;
-    private final StudentCourseService studentCourseService;
+    private final StudentCourseInfoService infoService; 
 
     // 공지 목록
     @GetMapping("/studentCourseNoticeList")
@@ -37,13 +36,14 @@ public class StudentCourseNoticeController {
         SysUserDTO user = (SysUserDTO) session.getAttribute("loginUser");
         if (user == null) return "redirect:/login";
 
-        // 강의 헤더 정보
+        // 통일된 헤더 조회 방식 사용
         StudentCourseDetailDTO courseHeader =
-                studentCourseService.getStudentCourseDetail(courseNo);
+        		infoService.getCourseDetail(courseNo);
         
         model.addAttribute("course", courseHeader);
         model.addAttribute("courseNo", courseNo);
-        model.addAttribute("nav_notice", true);
+        model.addAttribute("nav_notice", true); 
+
 
         int rowPerPage = 10;
         int startRow = (currentPage - 1) * rowPerPage;
@@ -96,12 +96,13 @@ public class StudentCourseNoticeController {
         SysUserDTO user = (SysUserDTO) session.getAttribute("loginUser");
         if (user == null) return "redirect:/login";
 
+        // 통일된 헤더 조회 방식 사용
         StudentCourseDetailDTO courseHeader =
-                studentCourseService.getStudentCourseDetail(courseNo);
+        		infoService.getCourseDetail(courseNo);
         
         model.addAttribute("course", courseHeader);
         model.addAttribute("courseNo", courseNo);
-        model.addAttribute("nav_notice", true);
+        model.addAttribute("nav_notice", true); 
 
         StudentCourseNoticeDTO detail = service.getStudentCourseNoticeDetail(courseNoticeNo);
         model.addAttribute("detail", detail);
