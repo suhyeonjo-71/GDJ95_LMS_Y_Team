@@ -11,7 +11,10 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { font-family: Pretendard, sans-serif; }
+        body { 
+	        font-family: Pretendard, sans-serif; 
+	        background:#F5F7FA;
+        }
         input, textarea {
             border: 1px solid #D1D5DB;
             padding: 8px 10px;
@@ -66,7 +69,7 @@
                         <i class="fa-solid fa-check mr-1"></i> 등록하기
                     </button>
 
-                    <a href="/courseNoticeList?courseNo={{courseNo}}"
+                    <a href="/profCourseNoticeList?courseNo={{courseNo}}"
                         class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg text-sm font-medium hover:bg-gray-400">
                         취소
                     </a>

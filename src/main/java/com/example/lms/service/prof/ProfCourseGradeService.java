@@ -37,6 +37,28 @@ public class ProfCourseGradeService {
 		
     }
 	
+	public void recalculateAndSaveFinalGrade(int courseNo, int assignmentSubmissionNo) {
+	        
+	        // 과제 제출 번호로 학생 UserNo 조회
+	        int studentUserNo = profAssignmentMapper.selectWriterUserNoBySubmissionNo(assignmentSubmissionNo);
+	        
+	        // 최신 성적 데이터 조회
+	        ProfCourseGradeDTO gradeData = getGradeData(courseNo, studentUserNo);
+	        
+	        // 3. 성적 계산 (최종 점수 및 등급 산출)
+	        ProfCourseGradeDTO calculatedDto = calculate(gradeData);
+	        
+	        // 4. tb_grade 테이블에 최종 결과 저장 
+	        saveGrade(
+	            calculatedDto.getStudentUserNo(),
+	            calculatedDto.getCourseNo(),
+	            calculatedDto.getExamScore(),
+	            calculatedDto.getAssignmentScore(),
+	            calculatedDto.getGradeValue(),
+	            calculatedDto.getFinalScore()
+	        );
+	    }
+	
 	// 성적 계산
 	public ProfCourseGradeDTO calculate(ProfCourseGradeDTO dto) {
 		

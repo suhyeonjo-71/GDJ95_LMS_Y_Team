@@ -24,26 +24,34 @@ public class ProfAssignmentService {
     }
 	
 	// 강의별 과제 리스트
-	public List<AssignmentDTO> getAssignmentListByProf(int courseNo, int startRow, int rowPerPage) {
+	public List<AssignmentDTO> getCourseAssignmnetList(int courseNo, int startRow, int rowPerPage) {
 		
-		return assignmentMapper.selectAssignmentListByProf(courseNo, startRow, rowPerPage);
+		return assignmentMapper.selectCourseAssignmentList(courseNo, startRow, rowPerPage);
 	}
-	
-	public int getAssignmentCount(int courseNo) {
+	// 리스트 페이징
+	public int getCourseAssignmentCount(int courseNo) {
 		
-		return assignmentMapper.selectAssignmentCount(courseNo);
+		return assignmentMapper.selectCourseAssignmentCount(courseNo);
 	}
 	
 	// 상세보기
-	public AssignmentDTO getAssignmentDetail(int assignmentNo) {
+	public AssignmentDTO getCourseAssignmentDetail(int assignmentNo) {
 		
-		return assignmentMapper.selectAssignmentDetail(assignmentNo);
+		return assignmentMapper.selectCourseAssignmentDetail(assignmentNo);
 	}
 	
 	// 학생 과제 제출 리스트
-	public List<ProfCourseAssignmentDTO> getSubmissionList(int assignmentNo, int courseNo) {
-		return assignmentMapper.selectSubmissionList(assignmentNo, courseNo);
+	public List<ProfCourseAssignmentDTO> getCourseSubmissionList(int assignmentNo, int courseNo) {
+		return assignmentMapper.selectCourseSubmissionList(assignmentNo, courseNo);
 	}
+	
+	// 점수 저장
+	public void updateSubmissionScore(int submissionNo, Integer score) {
+		assignmentMapper.updateSubmissionScore(submissionNo, score);
+    }
+	
+	// 과제 제출 번호 + 사용자번호
+	
 	
 	// 등록
 	public int addAssignment(AssignmentDTO a) {

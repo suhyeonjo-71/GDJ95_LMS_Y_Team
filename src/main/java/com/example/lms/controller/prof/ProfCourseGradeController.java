@@ -34,44 +34,35 @@ public class ProfCourseGradeController {
 		int rowPerPage = 10;
         int startRow = (currentPage - 1) * rowPerPage;
         
-        List<ProfCourseStudDTO> list = profCourseStudService.getStudentListByProf(courseNo, startRow, rowPerPage);
+        List<ProfCourseStudDTO> list = profCourseStudService.getCourseStudentList(courseNo, startRow, rowPerPage);
         
-        int idx = 0;
-        for (Object o : list) {
-            System.out.println("row[" + idx + "] class = " + o.getClass());
-            try {
-                var m = o.getClass().getMethod("getAssignmentScore");
-                System.out.println("  getAssignmentScore() = " + m.invoke(o));
-            } catch (NoSuchMethodException e) {
-                System.out.println("  >>> getAssignmentScore() 메서드 없음");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            idx++;
-        }
-        
-        int totalRow = profCourseStudService.getStudentCountByProf(courseNo);
+        int totalRow = profCourseStudService.getCourseStudentCount(courseNo);
         int lastPage = (totalRow % rowPerPage == 0) ? (totalRow / rowPerPage) : (totalRow / rowPerPage) + 1;
+       
         int startPage = ((currentPage - 1) / 10 * 10) + 1;
         int endPage = startPage + 9;
         if (endPage > lastPage) endPage = lastPage;
         
         List<Integer> pages = new ArrayList<>();
-        for (int i = startPage; i <= endPage; i++) {
-            pages.add(i);
-        }
+        for (int i = startPage; i <= endPage; i++) pages.add(i);
         
-        model.addAttribute("courseNo", courseNo);
-        model.addAttribute("prePage", currentPage > 1 ? currentPage - 1 : 1);
-        model.addAttribute("nextPage", currentPage < lastPage ? currentPage + 1 : lastPage);
         model.addAttribute("list", list);
+        model.addAttribute("courseNo", courseNo);
+        
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
         model.addAttribute("pages", pages); 
+        
+        model.addAttribute("prePage", currentPage - 1);
+        model.addAttribute("nextPage", currentPage + 1);
+        
+        model.addAttribute("showPrev", currentPage > 1);
+	    model.addAttribute("showNext", currentPage < lastPage);
+	    model.addAttribute("showPagination", lastPage > 1);
 
         return "profCourseGrade/profCourseGradeList";
-	
 	}
 	
 	// 성적 입력 폼

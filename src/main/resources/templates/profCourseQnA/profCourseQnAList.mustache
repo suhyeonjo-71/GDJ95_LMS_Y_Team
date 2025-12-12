@@ -11,7 +11,61 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { font-family: Pretendard, sans-serif; }
+        body { 
+            font-family: Pretendard, sans-serif;
+            background:#F5F7FA;
+        }
+
+        /* 등록 버튼 (courseNoticeList 스타일 적용) */
+        .btn-primary { background-color: #2563EB; }
+        .btn-primary:hover { background-color: #1D4ED8; }
+        
+        /* 테이블 hover (courseNoticeList 스타일 적용) */
+        .divide-y tbody tr {
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+            cursor: pointer !important;
+        }
+        .divide-y tbody tr:hover {
+            background-color: #F9FAFB !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        /* 페이징 공통 (courseNoticeList 스타일 적용) */
+        .pagination-area a {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin: 0 2px;
+            transition: background-color .2s;
+        }
+
+        /* 숫자 평상시 (courseNoticeList 스타일 적용) */
+        .pagination-area .page-btn {
+            background: white;
+            border: 1px solid #DFE3E8;
+        }
+
+        /* 숫자 hover (courseNoticeList 스타일 적용) */
+        .pagination-area .page-btn:hover {
+            background: #2563EB;
+            color: white;
+        }
+
+        /* 현재 페이지 (courseNoticeList 스타일 적용) */
+        .pagination-area .active-page {
+            background: #2563EB !important;
+            color: white !important;
+            font-weight: 600;
+        }
+
+        /* 처음 / 이전 / 다음 / 끝 버튼 (courseNoticeList 스타일 적용) */
+        .pagination-area .nav-btn {
+            background: #E8F0FE;
+        }
+        .pagination-area .nav-btn:hover {
+            background: #2563EB;
+            color: white;
+        }
     </style>
 </head>
 
@@ -21,13 +75,14 @@
 
     <main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
 
-        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-6">
-
-            <div class="flex justify-between items-center pb-4 border-b border-gray-200">
-                <h2 class="text-xl font-bold text-gray-800 flex items-center">
-                    <i class="fa-regular fa-circle-question mr-2 text-blue-600"></i> 문의 목록
-                </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <i class="fa-regular fa-circle-question text-blue-600"></i> 문의 목록
+            </h2>
             </div>
+
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 space-y-6">
 
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
@@ -44,25 +99,30 @@
 
                     <tbody class="bg-white divide-y divide-gray-200">
                         {{#list}}
-                        <tr class="hover:bg-gray-50 transition">
+                        <tr onclick="location.href='/profCourseQnADetail?courseQuestionNo={{courseQuestionNo}}&courseNo={{courseNo}}'">
                             <td class="px-6 py-4 text-sm text-gray-700 font-medium">{{courseQuestionNo}}</td>
                             <td class="px-6 py-4 text-sm font-medium">
                                 <a href="/profCourseQnADetail?courseQuestionNo={{courseQuestionNo}}&courseNo={{courseNo}}"
-                                   class="text-blue-600 hover:text-indigo-900 font-medium">
-                                    {{courseQuestionTitle}}
+                                   class="text-blue-600 hover:text-indigo-900 font-medium"
+                                   onclick="event.stopPropagation()"> {{courseQuestionTitle}}
                                 </a>
                             </td>
 
                             <td class="px-6 py-4 text-sm text-gray-700">{{writerName}}</td>
 
                             <td class="px-6 py-4 text-center">
-                                {{#answered}}
-                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">답변완료</span>
-                                {{/answered}}
-                                {{^answered}}
-                                    <span class="px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full font-medium">미답변</span>
-                                {{/answered}}
-                            </td>
+							    {{#isAnswered}} 
+							        <span class="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
+							            답변완료
+							        </span>
+							    {{/isAnswered}}
+							
+							    {{^isAnswered}} 
+							        <span class="px-3 py-1 bg-red-100 text-red-600 text-xs rounded-full font-medium">
+							            미답변
+							        </span>
+							    {{/isAnswered}}
+							</td>
 
                             <td class="px-6 py-4 text-center text-sm text-gray-700">{{createdate}}</td>
                         </tr>
@@ -78,8 +138,45 @@
                     </tbody>
                 </table>
             </div>
-
+        
+            <div class="flex items-center justify-between mt-6">
+                <div class="flex justify-center pagination-area flex-grow">
+    
+                    {{#showPagination}}
+                    {{#showPrev}}
+                    <a href="/profCourseQnAList?courseNo={{courseNo}}&currentPage=1" class="nav-btn">처음</a>
+                    <a href="/profCourseQnAList?courseNo={{courseNo}}&currentPage={{prePage}}" class="nav-btn">이전</a>
+                    {{/showPrev}}
+                    {{/showPagination}}
+    
+                    {{#pages}}
+                    <a href="/profCourseQnAList?courseNo={{courseNo}}&currentPage={{.}}"
+                       class="page-btn {{#isCurrentPage}}active-page{{/isCurrentPage}}">
+                        {{.}}
+                    </a>
+                    {{/pages}}
+    
+                    {{#showPagination}}
+                    {{#showNext}}
+                    <a href="/profCourseQnAList?courseNo={{courseNo}}&currentPage={{nextPage}}" class="nav-btn">다음</a>
+                    <a href="/profCourseQnAList?courseNo={{courseNo}}&currentPage={{lastPage}}" class="nav-btn">끝</a>
+                    {{/showNext}}
+                    {{/showPagination}}
+    
+                </div>
+            </div>
+			
         </div>
+ 
+        <div class="flex justify-end ml-4">
+            <a href="/courseDashboard?courseNo={{courseNo}}"
+               class="px-4 py-2 bg-gray-400 text-white rounded-lg text-sm font-medium 
+                      hover:bg-gray-500 transition shadow-md">
+                <i class="fa-solid fa-list mr-1"></i> 목록으로
+            </a>
+        </div>
+
+
     </main>
 
     {{> profLayout/profFooter }}

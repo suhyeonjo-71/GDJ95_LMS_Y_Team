@@ -2,43 +2,47 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>출석 관리 | 주차 선택</title>
+    <title>강의 관리</title>
 
-    <link rel="stylesheet" 
-          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css"/>
+    <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { font-family: Pretendard, sans-serif; background:#F5F7FA; }
+        body { 
+	        font-family: Pretendard, sans-serif; 
+	        background:#F5F7FA; 
+        }
 
-        .week-card {
-            background: white;
-            border: 1px solid #E5E7EB;
-            border-radius: 14px;
-            height: 6rem; /* 8rem -> 6rem으로 크기 감소 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px; /* 18px -> 16px로 크기 감소 */
-            font-weight: 600;
-            color: #374151;
-            transition: 0.25s;
+        .btn-primary { background-color: #2563EB; }
+        .btn-primary:hover { background-color: #1D4ED8; }
+
+        .divide-y tbody tr {
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+            cursor: pointer !important;
         }
-        .week-card:hover {
-            background: #EFF6FF;
-            border-color: #3B82F6;
-            color: #1D4ED8;
-            transform: translateY(-3px);
-            box-shadow: 0px 3px 10px rgba(0,0,0,0.08);
+
+        .divide-y tbody tr:hover {
+            background-color: #F9FAFB !important;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important;
         }
-        .week-card i {
-            font-size: 24px; /* 26px -> 24px로 크기 감소 */
-            margin-bottom: 4px; /* 6px -> 4px로 간격 감소 */
+
+        /* 페이징 스타일 */
+        .pagination-area a {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin: 0 2px;
+            transition: background-color .2s;
         }
+
+        .pagination-area .page-btn { background: white; border: 1px solid #DFE3E8; }
+        .pagination-area .page-btn:hover { background: #2563EB; color: white; }
+        .pagination-area .active-page { background: #2563EB !important; color: white !important; font-weight: 600; }
+        .pagination-area .nav-btn { background: #E8F0FE; }
+        .pagination-area .nav-btn:hover { background: #2563EB; color:white; }
     </style>
 </head>
 
@@ -48,28 +52,137 @@
 
     <main class="max-w-7xl mx-auto px-4 py-8 space-y-6">
 
-        <div class="mb-8">
-            <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                <i class="fa-solid fa-calendar-check text-blue-600"></i>
-                출석 관리 – 주차 선택
-            </h1>
-            <p class="text-gray-500 text-sm mt-1">원하는 주차를 선택하여 출석을 관리하세요.</p>
+        <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2 mb-4">
+            <i class="fa-solid fa-chalkboard-user text-blue-600"></i> 강의 관리
+        </h2>
+
+        <div class="flex justify-between items-center">
+        
+            <form method="get" action="/courseList" class="flex gap-2 items-center">
+
+			    <select name="year" id="year" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
+				    <option value="" {{^year}}selected{{/year}}>년도 전체</option> 
+				    
+				    {{#yearOptions}}
+				        <option value="{{value}}" {{#isSelected}}selected{{/isSelected}}>{{value}}년</option>
+				    {{/yearOptions}}
+				
+				</select>
+			
+			    <select name="semester" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
+			        <option value="">전체</option>
+			        <option value="1" {{#selected.semester1}}selected{{/selected.semester1}}>1학기</option>
+			        <option value="2" {{#selected.semester2}}selected{{/selected.semester2}}>2학기</option>
+			    </select>
+			
+			    <select name="status" class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
+			        <option value="">전체</option>
+			        <option value="1" {{#selected.status1}}selected{{/selected.status1}}>개설</option>
+			        <option value="0" {{#selected.status0}}selected{{/selected.status0}}>종료</option>
+			    </select>
+			
+			    <button type="submit"
+			        class="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition">검색</button>
+			</form>
+            
+            <a href="/addCourse"
+               class="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition shadow-md">
+                <i class="fa-solid fa-plus mr-2"></i> 강의 등록
+            </a>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-6">
 
-            {{#weekList}}
-                <a href="/courseAttendList?courseNo={{courseNo}}&weekNo={{.}}" class="week-card">
-                    <i class="fa-solid fa-calendar-week"></i>
-                    {{.}}주차
-                </a>
-            {{/weekList}}
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
 
-            {{^weekList}}
-                <div class="col-span-4 text-center py-10 bg-white border rounded-lg text-gray-500">
-                    등록된 주차가 없습니다.
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">년도</th>
+                            <th class="px-6 py-3 text-left text-xs font font-medium text-gray-500 uppercase tracking-wider">학기</th>
+                            <th class="px-6 py-3 text-left text-xs font font-medium text-gray-500 uppercase tracking-wider">강의명</th>
+                            <th class="px-6 py-3 text-left text-xs font font-medium text-gray-500 uppercase tracking-wider">요일 / 교시</th>
+                            <th class="px-6 py-3 text-left text-xs font font-medium text-gray-500 uppercase tracking-wider">정원</th>
+                            <th class="px-6 py-3 text-left text-xs font font-medium text-gray-500 uppercase tracking-wider">상태</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">관리</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {{#list}}
+                        <tr>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{courseYear}}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{courseSemester}}</td>
+                            <td class="px-6 py-4 text-sm font-medium">
+                                <a href="/courseDashboard?courseNo={{courseNo}}" class="text-indigo-600 hover:text-indigo-900 font-medium">
+                                    {{courseName}}
+                                </a>
+                            </td>
+                            
+                            <td class="px-6 py-4 text-sm text-gray-700">
+                                {{#courseTimeYoil}}{{getYoilName}} / {{courseTimeStart}}~{{courseTimeEnd}}교시{{/courseTimeYoil}}
+                                {{^courseTimeYoil}}-{{/courseTimeYoil}}
+                            </td>
+                            
+                            <td class="px-6 py-4 text-sm text-gray-700">{{courseCapacity}}</td>
+                            
+                            <td class="px-6 py-4 text-sm">
+                                {{#isOpened}}
+                                	<span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">
+                                		개설
+                                	</span>
+                                {{/isOpened}}
+                                
+                                {{#isClosed}}
+	                                <span class="px-2 py-1 bg-gray-200 text-gray-500 rounded-full text-xs">
+	                                종료
+	                                </span>
+                                {{/isClosed}}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-center">
+                                <a href="/removeCourse?courseNo={{courseNo}}"
+                                   onclick="return confirm('정말 삭제할까요?');"
+                                   class="text-red-600 hover:text-red-900 font-medium">삭제</a>
+                            </td>
+                        </tr>
+                        {{/list}}
+
+                        {{^list}}
+                        <tr>
+                            <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                                등록된 강의가 없습니다.
+                            </td>
+                        </tr>
+                        {{/list}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex items-center justify-between mt-6">
+                <div class="flex justify-center pagination-area flex-grow">
+
+                    {{#showPagination}}
+                    {{#showPrev}}
+                    <a href="/courseList?currentPage=1&year={{year}}&semester={{semester}}&status={{status}}" class="nav-btn">처음</a>
+                    <a href="/courseList?currentPage={{prePage}}&year={{year}}&semester={{semester}}&status={{status}}" class="nav-btn">이전</a>
+                    {{/showPrev}}
+                    {{/showPagination}}
+
+                    {{#pages}}
+                        <a href="/courseList?currentPage={{.}}&year={{year}}&semester={{semester}}&status={{status}}"
+                           class="page-btn {{#isCurrentPage}}active-page{{/isCurrentPage}}">
+                            {{.}}
+                        </a>
+                    {{/pages}}
+
+                    {{#showPagination}}
+                    {{#showNext}}
+                    <a href="/courseList?currentPage={{nextPage}}&year={{year}}&semester={{semester}}&status={{status}}" class="nav-btn">다음</a>
+                    <a href="/courseList?currentPage={{lastPage}}&year={{year}}&semester={{semester}}&status={{status}}" class="nav-btn">끝</a>
+                    {{/showNext}}
+                    {{/showPagination}}
                 </div>
-            {{/weekList}}
+            </div>
 
         </div>
 

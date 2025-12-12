@@ -13,7 +13,16 @@ import com.example.lms.dto.ProfCourseTimeDTO;
 public interface ProfCourseMapper {
 	
 	// 교수별 강의 리스트
-	List<ProfCourseDTO> selectCourseListByProf(int professorUserNo);
+	List<ProfCourseDTO> selectFilteredCourseList(
+    	    int professorUserNo, Integer year, String semester, String status, int startRow, int rowPerPage);
+
+	// 리스트 페이징
+    int selectFilteredCourseCount(
+    	    int professorUserNo, Integer year, String semester, String status);
+
+    // 필터 년도 저장
+	List<Integer> selectDistinctYearsByProfessor(int professorUserNo);
+
 	
 	// 등록
 	int insertCourse(ProfCourseDTO c);

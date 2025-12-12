@@ -17,16 +17,11 @@ public class ProfCourseStudService {
 	ProfCourseStudMapper profCourseStudMapper;
 	
 	// 강의별 수강생 리스트
-	public List<ProfCourseStudDTO> getStudentListByProf(int courseNo, int startRow, int rowPerPage) {
-		return profCourseStudMapper.selectStudentListByProf(courseNo, startRow, rowPerPage);
+	public List<ProfCourseStudDTO> getCourseStudentList(int courseNo, int startRow, int rowPerPage) {
+		return profCourseStudMapper.selectCourseStudentList(courseNo, startRow, rowPerPage);
 	}
 	
-	public int getStudentCountByProf(int courseNo) {
-		return profCourseStudMapper.selectStudentCountByProf(courseNo);
+	public int getCourseStudentCount(int courseNo) {
+		return profCourseStudMapper.selectCourseStudentCount(courseNo);
 	}
-	
-	public double getAttendanceRate(int courseNo, int studentUserNo) {
-		return profCourseStudMapper.selectAttendanceRate(courseNo, studentUserNo);
-	}
-	
 }

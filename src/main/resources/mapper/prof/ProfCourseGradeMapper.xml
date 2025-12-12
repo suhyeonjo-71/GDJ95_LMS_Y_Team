@@ -24,25 +24,30 @@
                   AND a.student_user_no = e.student_user_no
             ), 100.0) AS attendanceRate,
 
-            /* 기존 시험 점수 */
-            (SELECT grade_score
+            /* 기존 시험 점수 (tb_grade에서 가져옴) */
+            COALESCE((SELECT grade_score
              FROM tb_grade 
-             WHERE course_no = e.course_no AND student_user_no = e.student_user_no) AS examScore,
+             WHERE course_no = e.course_no AND student_user_no = e.student_user_no), NULL) AS examScore,
 
-            /* 기존 저장된 과제 점수 */
-            (SELECT grade_assignment_score
+            /* 과제 점수: tb_assignment_submission의 평균 점수를 가져옴 */
+            COALESCE((
+                SELECT AVG(tas.assignment_score) 
+                FROM tb_assignment_submission tas
+                JOIN tb_assignment ta ON tas.assignment_no = ta.assignment_no
+                WHERE ta.course_no = e.course_no -- 현재 강의의 과제만
+                  AND tas.writer_user_no = e.student_user_no -- 해당 학생이 제출한 과제만
+                  AND tas.assignment_score IS NOT NULL -- 점수가 부여된 과제만 평균 계산
+            ), 0) AS assignmentScore, 
+            
+            /* 기존 최종 점수 (tb_grade에서 가져옴) */
+            COALESCE((SELECT grade_final_score
              FROM tb_grade 
-             WHERE course_no = e.course_no AND student_user_no = e.student_user_no) AS assignmentScore,
+             WHERE course_no = e.course_no AND student_user_no = e.student_user_no), NULL) AS finalScore,
 
-            /* 기존 최종 점수 */
-            (SELECT grade_final_score
+            /* 기존 등급 (tb_grade에서 가져옴) */
+            COALESCE((SELECT grade_value
              FROM tb_grade 
-             WHERE course_no = e.course_no AND student_user_no = e.student_user_no) AS finalScore,
-
-            /* 기존 등급 */
-            (SELECT grade_value
-             FROM tb_grade 
-             WHERE course_no = e.course_no AND student_user_no = e.student_user_no) AS gradeValue,
+             WHERE course_no = e.course_no AND student_user_no = e.student_user_no), NULL) AS gradeValue,
 
             100 AS examMaxScore
 
