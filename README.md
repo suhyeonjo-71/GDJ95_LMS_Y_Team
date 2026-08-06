@@ -31,19 +31,20 @@
 
 ### 1. 강의 등록 - 시간 중복 방지 및 원자적 트랜잭션 처리
 - **해결:** 서비스 계층에서 중복 시간 사전 검증 후 `@Transactional`로 강의·시간 데이터를 원자적 저장, `useGeneratedKeys`로 생성된 PK를 하위 테이블 FK로 즉시 바인딩
-- 🔗 **[핵심 구현 코드 파일 보기 (`ProfessorCourseServiceImpl.java`)](https://github.com/suhyeonjo-71/GDJ95_LMS_Y_Team/blob/main/src/main/java/com/lms/service/ProfessorCourseServiceImpl.java)**
+- 🔗 **[핵심 구현 코드 파일 보기 (`ProfCourseService.java`)](https://github.com/suhyeonjo-71/GDJ95_LMS_Y_Team/blob/main/src/main/java/com/example/lms/service/prof/ProfCourseService.java)**
 
 ### 2. 강의별 과제 관리 - 성적 자동 반영 구조 설계
 - **해결:** 과제 점수 저장 시 `recalculateAndSaveFinalGrade()` 즉시 호출, 출석률·과제 평균·시험 점수를 SQL로 재집계하여 3개 테이블 데이터를 1쿼리로 처리 및 성적 테이블 자동 갱신
-- 🔗 **[핵심 구현 코드 파일 보기 (`ProfessorAssignmentServiceImpl.java`)](https://github.com/suhyeonjo-71/GDJ95_LMS_Y_Team/blob/main/src/main/java/com/lms/service/ProfessorAssignmentServiceImpl.java)**
+- 🔗 **[핵심 구현 코드 파일 보기 (`ProfAssignmentController.java`)](https://github.com/suhyeonjo-71/GDJ95_LMS_Y_Team/blob/main/src/main/java/com/example/lms/controller/prof/ProfAssignmentController.java)**
 
 ### 3. 출석 관리 - UPSERT 단일 쿼리 및 DB 집계 최적화
 - **해결:** `ON DUPLICATE KEY UPDATE`로 UPSERT 단일 쿼리 처리, SQL `SUM`·`CASE` 구문으로 출석률을 DB에서 직접 계산하고 `COALESCE`로 NULL 기본값 처리
-- 🔗 **[핵심 구현 쿼리 파일 보기 (`ProfessorAttendanceMapper.xml`)](https://github.com/suhyeonjo-71/GDJ95_LMS_Y_Team/blob/main/src/main/resources/mapper/ProfessorAttendanceMapper.xml)**
+- 🔗 **[출석 입력 쿼리 보기 (`ProfCourseAttendMapper.xml`)](https://github.com/suhyeonjo-71/GDJ95_LMS_Y_Team/blob/main/src/main/resources/mapper/prof/ProfCourseAttendMapper.xml)**
+- 🔗 **[출석률 집계 쿼리 보기 (`ProfCourseGradeMapper.xml`)](https://github.com/suhyeonjo-71/GDJ95_LMS_Y_Team/blob/main/src/main/resources/mapper/prof/ProfCourseGradeMapper.xml)**
 
 ### 4. 성적 관리 - NPE 방지 및 중복 저장 방지
 - **해결:** `COALESCE` 다중 적용으로 NPE 사전 방지, `existsGrade()`로 성적 존재 여부 확인 후 INSERT/UPDATE 분기하여 데이터 중복 저장 방지
-- 🔗 **[핵심 구현 코드 파일 보기 (`ProfessorGradeServiceImpl.java`)](https://github.com/suhyeonjo-71/GDJ95_LMS_Y_Team/blob/main/src/main/java/com/lms/service/ProfessorGradeServiceImpl.java)**
+- 🔗 **[성적 관리 쿼리 보기 (`ProfCourseGradeMapper.xml`)](https://github.com/suhyeonjo-71/GDJ95_LMS_Y_Team/blob/main/src/main/resources/mapper/prof/ProfCourseGradeMapper.xml)**
 ---
 
 ## 💡 한계점 및 개선 방향
